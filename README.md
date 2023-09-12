@@ -10,7 +10,7 @@ _Template for classroom SI4-COO_
 
 Présentez vous! 
 
-- ### Yvanne Ponce : DevOps
+- ### Yvann Ponce : DevOps
 - ### Melanie Stanislas : PO
 - ### Lamya Baidouri : QA
 - ### Anas Chhilif : SA
