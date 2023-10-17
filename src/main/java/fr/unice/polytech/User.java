@@ -8,5 +8,10 @@ public class User {
         this.username=username;
     }
 
+    public String get_email()
+    {
+        return this.email;
+    }
+
 
 }

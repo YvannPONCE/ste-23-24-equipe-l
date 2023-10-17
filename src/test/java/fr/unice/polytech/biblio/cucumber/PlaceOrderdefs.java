@@ -4,6 +4,7 @@ import fr.unice.polytech.Order;
 import fr.unice.polytech.User;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 public class PlaceOrderdefs {
     User user;
