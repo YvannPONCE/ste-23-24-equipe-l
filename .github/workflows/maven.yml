@@ -24,5 +24,7 @@ jobs:
         java-version: '19'
         distribution: 'oracle'
         cache: maven
+    - name: run pwd
+      run: pwd
     - name: Build with Maven
       run: mvn -B package --file "${{ github.workspace }}/pom.xml"
