@@ -16,8 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-        with:
-            ref: $GITHUB_REF
+      with:
+        ref: $GITHUB_REF
     - name: Set up JDK 19
       uses: actions/setup-java@v3
       with:
