@@ -25,6 +25,6 @@ jobs:
         distribution: 'oracle'
         cache: maven
     - name: run pwd
-      run: pwd
+      run: ls src/test/Ressources/features
     - name: Build with Maven
-      run: mvn -B package --file "${{ github.workspace }}/pom.xml"
+      run: mvn -B package --file /pom.xml
