@@ -14,7 +14,7 @@ Feature: Placing an Order at Restaurant "chickentacky"  with Discounts and Futur
 
 
   Scenario: User places an order with sub-orders and receives discounts
-    Given the user is on the Restaurant X website
+    Given the user is on the Restaurant chickentacky website
     When the user selects "Menu" and adds 6 items to their order
     And they create a sub-order with 5 items
     And proceeds to checkout
@@ -38,7 +38,7 @@ Feature: Placing an Order at Restaurant "chickentacky"  with Discounts and Futur
     And their credit balance should be $25.00
 
   Scenario: User places a smaller order and does not receive a discount
-    Given the user is on the Restaurant X website
+    Given the user is on the Restaurant chickentacky website
     When the user selects "Menu" and adds 8 items to their order
     And proceeds to checkout
     Then they should not see a discount applied to the order total
