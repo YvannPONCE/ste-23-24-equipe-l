@@ -1,13 +1,13 @@
 
 Feature: Restaurant Opening Hours and Menu
 
-Feature: store managing hour
   Background:
     Given I am a Restaurant  manager
+    And I want to manage Restaurant "chickentacky"  scheduler
+
 
   Scenario: manage store hours for a day
-    When I want to manage Restaurant "chickentacky"  scheduler
-    And I choose 11:00  as start time as 23:00 as end time for "lundi"
+    When I choose 11:00  as start time as 23:00 as end time for "lundi"
     Then I should see the Restaurant  hours 11:30 to 23:30 for "lundi"
 
   Scenario: manage store hours for a week
