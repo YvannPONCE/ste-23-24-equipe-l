@@ -26,13 +26,16 @@ public class Schedule {
     }
 
     public void setOpeningHours(String day, String openingTime, String closingTime) {
-        if (schedule.containsKey(day.toLowerCase())) {
+        String lowercaseDay = day.toLowerCase();
+
+        if (schedule.containsKey(lowercaseDay)) {
             String[] hours = {openingTime, closingTime};
-            schedule.put(day.toLowerCase(), hours);
+            schedule.put(lowercaseDay, hours);
         } else {
             System.out.println("Jour invalide. Veuillez spécifier un jour de la semaine valide.");
         }
     }
+
     public Map<String, String[]> getSchedule() {
         return schedule;
     }
