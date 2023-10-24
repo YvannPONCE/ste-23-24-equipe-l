@@ -1,4 +1,4 @@
-package fr.unice.polytech.biblio.cucumber;
+package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;

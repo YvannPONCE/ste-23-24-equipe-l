@@ -22,4 +22,11 @@ public class User {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public String get_email()
+    {
+        return this.email;
+    }
+
+
 }

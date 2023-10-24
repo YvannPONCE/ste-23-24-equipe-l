@@ -3,6 +3,7 @@ package fr.unice.polytech;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Restaurant {
 
 
@@ -39,7 +40,6 @@ public class Restaurant {
         this.listemenu = listemenu;
     }
 }
-
 
 
 

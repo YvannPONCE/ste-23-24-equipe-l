@@ -4,3 +4,4 @@ public enum Role {
     CUSTOMER_STUDENT,
     CUSTOMER_STAFF
 }
+

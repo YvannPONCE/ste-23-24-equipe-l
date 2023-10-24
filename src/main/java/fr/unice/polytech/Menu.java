@@ -1,4 +1,5 @@
 package fr.unice.polytech;
+
 public class Menu {
     private String itemName;
     private double price;
@@ -20,4 +21,11 @@ public class Menu {
         System.out.println(itemName + " - " + price + " €");
     }
 
+    public String get_name() {
+        return itemName;
+    }
+
+    public double get_price() {
+        return price;
+    }
 }
