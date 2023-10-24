@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
 import io.cucumber.java.bs.A;
 import io.cucumber.java.da.Men;
 import io.cucumber.java.en.Given;
@@ -24,12 +25,12 @@ public class AddOrdertoGroupOrder {
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
         orderManager = new OrderManager();
-        user1 = new User(user_email_1, user_email_1);
-        user2 = new User(user_email_2, user_email_2);
+        user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
+        user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
 
     }
-    @When("The first user add a {string} menu at {double} euros from {string}")
-    public void the_first_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name) {
+    @When("The first user add a {string} menu at {double} euros from {string} to deliver at {string}")
+    public void the_first_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name, String delivery_location) {
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -73,15 +74,25 @@ public class AddOrdertoGroupOrder {
 
 
 
-    @Given("One restaurant, two menu, two users {string} and {string}")
-    public void one_restaurant_two_menu_two_users_and(String user_email_1, String user_email_2) {
+    @Given("One restaurant, two menu, two users {string} and {string} waiting in {string}")
+    public void one_restaurant_two_menu_two_users_and(String user_email_1, String user_email_2, String delivery_location) {
         orderManager = new OrderManager();
-        user1 = new User(user_email_1, user_email_1);
-        user2 = new User(user_email_2, user_email_2);
+        user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
+        user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
     }
-    @Then("Both users can see {string} and {string} menus in the cart at {double} and {double}.")
-    public void both_users_can_see_and_menus_in_the_cart(String menu_user_1, String menu_user_2, double user_1_menu_price, double user_2_menu_price) {
+
+    @When("The second join a {string} menu at {double} euros from {string} to his friend command")
+    public void the_second_join_a_menu_at_euros_from(String menu_name, Double menu_price, String restaurant_name) {
+        Order order = new Order(restaurant_name);
+        order.add_menu(new Menu(menu_name, menu_price));
+        orderManager.place_order(user2.get_email(), order, Locations.HALL_PRINCIPAL, order_id);
+    }
+
+    @Then("Both users can see {string} and {string} menus in the cart at {double} and {double} delivered to {string}.")
+    public void both_users_can_see_and_menus_in_the_cart(String menu_user_1, String menu_user_2, double user_1_menu_price, double user_2_menu_price, String delivery_location) {
         GroupOrder group_order = orderManager.get_current_orders(order_id);
+
+        Assert.assertEquals(Locations.HALL_PRINCIPAL, group_order.get_delivery_location());
 
         List<Order> user_1_orders = group_order.get_orders(user1.get_email());
         List<Order> user_2_orders = group_order.get_orders(user2.get_email());
