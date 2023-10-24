@@ -1,5 +1,7 @@
 Feature: Browsing order history
 
+
+
   Scenario:
     Given One restaurant, One menu and one user "user@exemple.com"
     When The user want to add a "maxibest" menu at 7.50 euros from "mcdonald" to his cart

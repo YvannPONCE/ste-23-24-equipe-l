@@ -1,6 +1,7 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Order;
 import fr.unice.polytech.OrderManager;
@@ -22,7 +23,7 @@ public class AddMenuToCart {
 
     @Given("One restaurant, One menu and one user {string}")
     public void one_restaurant_one_menu_and_one_user(String user_email) {
-        this.user = new User(user_email, user_email);
+        this.user = new User(user_email, user_email, Role.CUSTOMER_STUDENT);
     }
 
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart")
@@ -50,7 +51,7 @@ public class AddMenuToCart {
 
     @Given("Two restaurants, two menus and one user {string}")
     public void two_restaurants_two_menus_and_one_user(String user_email) {
-        this.user = new User(user_email, user_email);
+        this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
     }
 
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart and a {string} menu at {double} euros from {string} to his cart")
@@ -92,7 +93,7 @@ public class AddMenuToCart {
 
     @Given("One restaurant, two menus and one user {string}")
     public void one_restaurant_two_menus_and_one_user(String user_email) {
-        this.user = new User(user_email, user_email);
+        this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
     }
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart and a {string} menu at {double} euros to his cart")
     public void the_user_want_to_add_a_menu_at_euros_from_to_his_cart_and_a_menu_at_euros_to_his_cart(String menu_name_1, Double menu_price_1, String restaurant_name, String menu_name_2, Double menu_price_2) {
