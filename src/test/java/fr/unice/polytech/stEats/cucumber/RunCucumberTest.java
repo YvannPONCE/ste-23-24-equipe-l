@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = {"classpath:Ressources/features/AddMenuToCart.feature"},
+        features = {"src/test/Ressources/features"},
         glue = {"fr.unice.polytech.stEats.cucumber"})
 public class RunCucumberTest {}
 
