@@ -5,11 +5,11 @@ Feature: Placing an Order at Restaurant "chickentacky"  with Discounts and Futur
     And the discount rate "r%" is set to 15
     And the user has a credit balance of $0.00
 
-  Scenario: James place an order at Restaurant chickentacky  and receives a discount
+  Scenario: James place an order at Restaurant chickentacky and receives a discount
     Given the user is on the Restaurant menu
-    When the user selects "Menu" and adds 12 items ton his  order
+    When the user selects "Menu" and adds 12 items ton his order
     And proceeds to checkout
-    Then he  should see a discount of 15% applied to the order total
+    Then he should see a discount of 15% applied to the order total
     And the order status should be "Pending"
 
 

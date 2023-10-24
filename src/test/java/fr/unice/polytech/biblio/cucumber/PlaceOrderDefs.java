@@ -60,7 +60,7 @@ public class PlaceOrderDefs {
         throw new io.cucumber.java.PendingException();
     }
 
-    @Then("a deliveryMan was chosen  to pick up the order")
+    @Then("a deliveryMan was chosen to pick up the order")
     public void a_delivery_man_was_chosen_to_pick_up_the_order() {
         // Write code here that turns the phrase above into concrete actions
         throw new io.cucumber.java.PendingException();

@@ -12,7 +12,7 @@ Feature: place an order
     Then the order status is placed
     And the amount of credit card became 35
     And the Restaurant manager validate order
-    And a deliveryMan was chosen  to pick up the order
+    And a deliveryMan was chosen to pick up the order
 
 
 
