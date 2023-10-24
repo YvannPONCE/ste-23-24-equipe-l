@@ -1,4 +1,4 @@
-Feature: Browsing order history
+Feature: Add menu to cart
 
   Scenario:
     Given One restaurant, One menu and one user "user@exemple.com"
