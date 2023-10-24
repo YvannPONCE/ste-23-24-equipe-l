@@ -71,30 +71,37 @@ public class ManageRestaurantInformationdefs {
             String expectedHours = expectedOpeningTime + " - " + expectedClosingTime;
             Assertions.assertEquals(actualHours, expectedHours);
         }
+
     }
     @When("I add a new item to the menu:{string} priced at {int}")
     public void i_add_a_new_item_to_the_menu_priced_at(String string, Integer int1) {
         restaurant.getListemenu().add(new Menu("chicken nuggets", 8));
         Menu menuwings=new Menu(string,int1);
         restaurant.getListemenu().add(menuwings);
-        throw new io.cucumber.java.PendingException();
+
     }
     @And("I remove the item {string} from the menu")
     public void i_remove_the_item_from_the_menu(String string) {
+        System.out.println(string);
         for (Menu menu : restaurant.getListemenu()){
-            if(menu.getItemName()==string){
+            System.out.println(menu.getItemName());
+            if(menu.getItemName().equals(string)){
+
+
+
+                
                 restaurant.getListemenu().remove(menu);
             }
         }
 
 
-        throw new io.cucumber.java.PendingException();
+
     }
     @Then("I should see the updated menu with {string} priced at {int}")
     public void i_should_see_the_updated_menu_with_priced_at(String string2, Integer int1) {
         System.out.println(restaurant.getListemenu());
         Assertions.assertEquals(restaurant.getListemenu().get(0).getItemName(),string2);
-        Assertions.assertEquals(restaurant.getListemenu().get(0).getPrice(), Optional.ofNullable(int1));
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertEquals(Optional.of(Integer.valueOf((int) restaurant.getListemenu().get(0).getPrice())), Optional.of(int1));
+
     }
 }
