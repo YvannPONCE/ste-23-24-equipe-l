@@ -10,7 +10,7 @@ on:
     branches: [ "Integration" ]
 
 jobs:
-  Validate essentials:
+  Validate-essentials:
 
     runs-on: ubuntu-latest
 
