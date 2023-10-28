@@ -36,16 +36,17 @@ public class ConfirmOrder {
     public void user_pay_his_command(String user_email) {
         orderManager.pay_order(this.orderId, user_email);
     }
+
     @Then("The order {string} at {double} from {string} has been transmit to the restaurant")
-    public void the_order_at_from_has_been_transmit_to_the_restaurant(String restaurantName, String menuName, double menuPrice) {
+    public void the_order_at_from_has_been_transmit_to_the_restaurant(String menuName, double menuPrice, String restaurantName) {
         List<Order> orders = restaurantManager.get_restaurant(restaurantName).getOrders();
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
         Assert.assertEquals(restaurantName, order.get_restaurant_name());
         List<Menu> menus = order.get_menus();
-        Assert.assertEquals(2, menus.size());
+        Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
         Assert.assertEquals(menuName, menu.get_name());
-        Assert.assertEquals(menuPrice, menu.get_price());
+        Assert.assertEquals(menuPrice, menu.get_price(), 0.01);
     }
 }

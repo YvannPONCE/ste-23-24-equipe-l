@@ -20,6 +20,7 @@ public class Restaurant {
         this.name = name;
         this.horaires = new Schedule();
         this.listemenu = new ArrayList<>();
+        this.orders = new ArrayList<>();
 
     }
 

@@ -78,8 +78,7 @@ public class OrderManager {
         HashMap<String, List<Order>> restaurantOrders = groupOrder.getOrdersByRestaurants();
         for(Map.Entry<String, List<Order>> entry: restaurantOrders.entrySet())
         {
-            System.out.println(entry.getKey());
-            Restaurant restaurant = restaurantManager.get_restaurant(entry.getKey());
+            Restaurant restaurant = this.restaurantManager.get_restaurant(entry.getKey());
             restaurant.placeOrder(entry.getValue());
         }
     }

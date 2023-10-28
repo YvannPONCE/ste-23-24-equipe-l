@@ -13,10 +13,9 @@ public class RestaurantManager {
         this.restaurants = new ArrayList<>();
     }
 
-    public Boolean add_restaurant(Restaurant restaurant)
+    public void add_restaurant(Restaurant restaurant)
     {
-        //this.restaurants.add(restaurant);
-        return false;
+        this.restaurants.add(restaurant);
     }
 
     public Boolean remove_restaurant(String restaurant_name)
