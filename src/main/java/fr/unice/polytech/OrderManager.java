@@ -1,21 +1,22 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Status;
+import org.mockito.internal.matchers.Or;
 
 import java.rmi.server.UID;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 public class OrderManager {
 
+    RestaurantManager restaurantManager;
     List<GroupOrder> group_orders;
 
-    public OrderManager() {
+    public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
+        this.restaurantManager = restaurantManager;
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
@@ -62,8 +63,25 @@ public class OrderManager {
     }
 
 
-    public void pay_order(String email){
+    public void pay_order(UUID orderId, String email){
+        GroupOrder groupOrder = get_current_orders(orderId);
+        List<Order> orders= groupOrder.get_orders(email);
 
+        for(Order order : orders)
+        {
+            order.setStatus(Status.PAID);
+        }
+        if(groupOrder.isPaid())sendOrders(groupOrder);
+    }
+
+    private void sendOrders(GroupOrder groupOrder){
+        HashMap<String, List<Order>> restaurantOrders = groupOrder.getOrdersByRestaurants();
+        for(Map.Entry<String, List<Order>> entry: restaurantOrders.entrySet())
+        {
+            System.out.println(entry.getKey());
+            Restaurant restaurant = restaurantManager.get_restaurant(entry.getKey());
+            restaurant.placeOrder(entry.getValue());
+        }
     }
 
     public void validate_order(UUID order_id){
