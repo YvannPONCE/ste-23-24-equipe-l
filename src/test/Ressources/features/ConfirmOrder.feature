@@ -1,4 +1,4 @@
-Feature: As a Registered User with various items in my cart, I want to confirm my order
+Feature: Confirm order
 
   Background:
     given a registered user with a cart full of items
@@ -29,3 +29,10 @@ Feature: As a Registered User with various items in my cart, I want to confirm m
     And The user pays for his order
     And The payment fails
     Then The status of the order "1234" Stays Processing
+
+
+  Scenario: basic confirmation
+    Given user "user@exemple.com" added to his cart a "maxibest" at 7.50 from "mcdonald"
+    When user "user@exemple.com" pay his command
+    Then The order "maxibest" at 7.50 from "mcdonald" has been transmit to the restaurant
+

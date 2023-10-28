@@ -1,6 +1,7 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Status;
 import org.mockito.internal.matchers.Or;
 
 import java.util.*;
@@ -60,4 +61,34 @@ public class GroupOrder {
        return this.global_orders.get(user_email);
    }
 
+    public boolean isPaid() {
+       for (List<Order> orders : this.global_orders.values())
+       {
+            for (Order order : orders)
+            {
+                if(order.status != Status.PAID)return false;
+            }
+       }
+       return true;
+    }
+
+    public HashMap<String, List<Order>> getOrdersByRestaurants() {
+       HashMap<String, List<Order>> restaurant_orders = new HashMap<>();
+        for (List<Order> orders : this.global_orders.values())
+        {
+            for (Order order: orders)
+            {
+                if(restaurant_orders.containsKey(order.get_restaurant_name()))
+                {
+                    List<Order> orders_2 = restaurant_orders.get(order.get_restaurant_name());
+                    orders_2.add(order);
+                }
+                else
+                {
+                    restaurant_orders.put(order.get_restaurant_name(), Arrays.asList(order));
+                }
+            }
+        }
+        return restaurant_orders;
+    }
 }
