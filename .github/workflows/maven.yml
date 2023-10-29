@@ -29,6 +29,7 @@ jobs:
 
   Sonar:
      runs-on: ubuntu-latest
+     needs: Validate-essentials
      if: github.event_name == 'push' && github.ref == 'refs/heads/Integration'
      steps:
        - uses: actions/checkout@v3
@@ -42,12 +43,5 @@ jobs:
        - name: SonarQube
          run: mvn clean verify -Pcoverage sonar:sonar -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} -Dsonar.token=${{ secrets.SONARQUBE_TOKEN }}
 
-stages:
-  - name: Build and Test
-    jobs:
-      - Validate-essentials
-  - name: Scan
-    jobs:
-      - Sonar
 
 
