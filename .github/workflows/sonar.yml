@@ -11,16 +11,3 @@ on:
 
 jobs:
 
-  Sonar:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Set up JDK 17
-          uses: actions/setup-java@v3
-          with:
-            java-version: "21"
-            distribution: "oracle"
-            cache: 'maven'
-
-        - name: SonarQube
-          run: mvn clean verify -Pcoverage sonar:sonar -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} -Dsonar.token=${{ secrets.SONARQUBE_TOKEN }}
