@@ -41,3 +41,13 @@ jobs:
 
        - name: SonarQube
          run: mvn clean verify -Pcoverage sonar:sonar -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} -Dsonar.token=${{ secrets.SONARQUBE_TOKEN }}
+
+stages:
+  - name: Build and Test
+    jobs:
+      - Validate-essentials
+  - name: Scan
+    jobs:
+      - Sonar
+
+
