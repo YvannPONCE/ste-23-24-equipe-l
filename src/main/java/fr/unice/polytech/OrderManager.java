@@ -14,9 +14,14 @@ public class OrderManager {
     RestaurantManager restaurantManager;
     List<GroupOrder> group_orders;
 
+
+
+     public UserManager userManager;
+
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
+        this.userManager=new UserManager();
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
@@ -97,4 +102,20 @@ public class OrderManager {
             }
         }
     }
+    public void validate_order_receipt(UUID order_id, String usermail) {
+        for (GroupOrder groupOrder : this.group_orders) {
+            for (List<Order> orders : groupOrder.global_orders.values()) {
+                for (Order order : orders) {
+                    if (order.getId().equals(order_id)) {
+                        if (order.getStatus() == Status.DELIVERED) {
+
+                            userManager.get_order_history(usermail).add(order);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }
