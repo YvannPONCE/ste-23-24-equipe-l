@@ -41,6 +41,9 @@ public class Order {
     public Status getStatus() {
         return status;
     }
+    public void setCreation_time(Date date){
+         this.creation_time=date;
+    }
 
     public void setStatus(Status status) {
         this.status = status;

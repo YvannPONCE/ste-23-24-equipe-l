@@ -121,6 +121,9 @@ public class OrderManager {
         if (selectedOrder != null) {
             UUID newOrderId = UUID.randomUUID();
             Order newOrder = new Order(selectedOrder.restaurant_name);
+            for(Menu menu:selectedOrder.menus){
+                newOrder.add_menu(menu);
+            }
             place_order(userMail, newOrder, deliveryLocation, newOrderId);
 
             return newOrder;

@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import io.cucumber.java.bs.A;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -13,10 +14,9 @@ import org.mockito.Mockito;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class checkOrderHistorydefs {
     OrderManager orderManager;
@@ -66,8 +66,6 @@ public class checkOrderHistorydefs {
             orderManager.validate_order(orderId,string);
             order.setStatus(Status.DELIVERED);
             orderManager.validate_order_receipt(order.getId(),email);
-
-
         }
     }
     @When("the user wants to view their order history")
@@ -105,13 +103,16 @@ public class checkOrderHistorydefs {
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
 
-      orderSelected=  orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(),user.get_email(),Locations.HALL_PRINCIPAL);
-
+        orderSelected = orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(), user.get_email(), Locations.HALL_PRINCIPAL);
     }
-    @Then("the new order is selected as new order to place")
+        @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {
+
         Assert.assertEquals(orderSelected.getStatus(),Status.CREATED);
         Assert.assertEquals(user.getOrderHistory().get(0).getStatus(),Status.DELIVERED);
+        Assert.assertEquals(orderSelected.get_menus(),user.getOrderHistory().get(0).get_menus());
+        Assert.assertFalse(orderSelected.getCreationTime().equals(user.getOrderHistory().get(0)));
+
 
     }
 }
