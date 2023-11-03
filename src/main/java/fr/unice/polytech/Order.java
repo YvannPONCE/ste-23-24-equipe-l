@@ -2,8 +2,6 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Status;
 
-import javax.xml.stream.Location;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,13 +11,14 @@ public class Order {
     UUID id;
     Status status;
     String restaurant_name;
-    Date Creation_time;
+    Date creation_time;
     List<Menu> menus;
 
 
     public  Order(String restaurant_name){
         this.restaurant_name = restaurant_name;
         this.menus = new ArrayList<>();
+        this.creation_time=new Date();
     }
 
     public UUID getId() {
@@ -46,6 +45,16 @@ public class Order {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public Date getCreationTime() {
+        return creation_time;
+    }
+    public void displayOrderSummary() {
+        System.out.println("Restaurant Name: " + restaurant_name);
+        for (Menu menu : menus) {
+            System.out.println("Menu Name: " +menu.getItemName());
+        }
+    }
+
 
     public void setId(UUID id) {
         this.id = id;
