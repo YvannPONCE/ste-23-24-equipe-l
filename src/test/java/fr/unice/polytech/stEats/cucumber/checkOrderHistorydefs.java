@@ -28,6 +28,7 @@ public class checkOrderHistorydefs {
     String email;
     private StringWriter expectedOutput;
     private String capturedOutput;
+    private Order orderSelected;
 
 
     @Given("a user {string} with the following order history:")
@@ -101,7 +102,18 @@ public class checkOrderHistorydefs {
         Assert.assertEquals(capturedOutput,capturedOutput);
         }
 
+    @When("user choose a order from history")
+    public void user_choose_a_order_from_history() {
+
+      orderSelected=  orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(),user.get_email(),Locations.HALL_PRINCIPAL);
 
     }
+    @Then("the new order is selected as new order to place")
+    public void the_new_order_is_selected_as_new_order_to_place() {
+        Assert.assertEquals(orderSelected.getStatus(),Status.CREATED);
+        Assert.assertEquals(user.getOrderHistory().get(0).getStatus(),Status.DELIVERED);
+
+    }
+}
 
 

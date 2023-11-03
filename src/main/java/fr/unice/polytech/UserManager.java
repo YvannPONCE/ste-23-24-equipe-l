@@ -5,6 +5,7 @@ import fr.unice.polytech.Enum.Role;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 public class UserManager {
 
@@ -39,6 +40,16 @@ public class UserManager {
 
 
     }
+   public Order  find_selectedOrder(UUID orderId,String mail){
+        List<Order> orderHistory=get_order_history(mail);
+        Order selectedOrder = null;
+        for(Order order:orderHistory){
+            if(order.id.equals(orderId)){
+                selectedOrder=order;
+            }
+        }
+        return selectedOrder;
+   }
 
 }
 
