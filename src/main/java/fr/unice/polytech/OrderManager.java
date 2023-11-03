@@ -14,12 +14,18 @@ public class OrderManager {
     RestaurantManager restaurantManager;
     List<GroupOrder> group_orders;
 
+
+
+     public UserManager userManager;
+
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
+        this.userManager=new UserManager();
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
+        order.setId(UUID.randomUUID());
         List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
         if (filtered_group_orders.size() > 0) {
@@ -29,6 +35,7 @@ public class OrderManager {
             return true;
         } else {
             GroupOrder group_order = new GroupOrder(order_id, delivery_location);
+
             group_order.add_order(email, order);
             this.group_orders.add(group_order);
             return true;
@@ -83,7 +90,32 @@ public class OrderManager {
         }
     }
 
-    public void validate_order(UUID order_id){
-
+    public void validate_order(UUID order_id, String restaurant_name){
+        for(GroupOrder groupOrder : this.group_orders)
+        {
+            for (List<Order> orders : groupOrder.global_orders.values())
+            {
+                List<Order> matchingOrders = orders.stream()
+                        .filter(order -> order.getId().equals(order_id))
+                        .collect(Collectors.toList());
+                for (Order order : matchingOrders)order.setStatus(Status.READY);
+            }
+        }
     }
+    public void validate_order_receipt(UUID order_id, String usermail) {
+        for (GroupOrder groupOrder : this.group_orders) {
+            for (List<Order> orders : groupOrder.global_orders.values()) {
+                for (Order order : orders) {
+                    if (order.getId().equals(order_id)) {
+                        if (order.getStatus() == Status.DELIVERED) {
+
+                            userManager.get_order_history(usermail).add(order);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }

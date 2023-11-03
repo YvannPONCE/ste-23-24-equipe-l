@@ -11,9 +11,6 @@ import java.util.UUID;
 
 public class Order {
     UUID id;
-
-
-
     Status status;
     String restaurant_name;
     Date Creation_time;
@@ -24,6 +21,11 @@ public class Order {
         this.restaurant_name = restaurant_name;
         this.menus = new ArrayList<>();
     }
+
+    public UUID getId() {
+        return id;
+    }
+
     public void add_menu(Menu menu)
     {
         this.menus.add(menu);
@@ -45,4 +47,7 @@ public class Order {
         this.status = status;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }
