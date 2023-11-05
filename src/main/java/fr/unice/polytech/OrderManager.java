@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class OrderManager {
 
+    PaymentSystem paymentSystem;
     RestaurantManager restaurantManager;
     List<GroupOrder> group_orders;
 
@@ -70,13 +71,15 @@ public class OrderManager {
     }
 
 
-    public void pay_order(UUID orderId, String email){
+    public void pay_order(UUID orderId, String email, String card_number){
         GroupOrder groupOrder = get_current_orders(orderId);
         List<Order> orders= groupOrder.get_orders(email);
 
         for(Order order : orders)
         {
-            order.setStatus(Status.PAID);
+            if (paymentSystem.pay(card_number)) {
+                order.setStatus(Status.PAID);
+            }
         }
         if(groupOrder.isPaid())sendOrders(groupOrder);
     }
