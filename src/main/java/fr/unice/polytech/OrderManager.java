@@ -16,17 +16,17 @@ public class OrderManager {
     List<GroupOrder> group_orders;
 
 
-
-     public UserManager userManager;
+    public UserManager userManager;
 
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
-        this.userManager=new UserManager();
+        this.userManager = new UserManager();
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(UUID.randomUUID());
+        order.setStatus(Status.CREATED);
         List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
         if (filtered_group_orders.size() > 0) {
@@ -45,6 +45,7 @@ public class OrderManager {
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
         UUID uuid = UUID.randomUUID();
+        order.setStatus(Status.CREATED);
         place_order(email, order, delivery_location, uuid);
         return uuid;
     }
@@ -71,40 +72,37 @@ public class OrderManager {
     }
 
 
-    public void pay_order(UUID orderId, String email, String card_number){
+    public void pay_order(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = get_current_orders(orderId);
-        List<Order> orders= groupOrder.get_orders(email);
+        List<Order> orders = groupOrder.get_orders(email);
 
-        for(Order order : orders)
-        {
+        for (Order order : orders) {
             if (paymentSystem.pay(card_number)) {
                 order.setStatus(Status.PAID);
             }
         }
-        if(groupOrder.isPaid())sendOrders(groupOrder);
+        if (groupOrder.isPaid()) sendOrders(groupOrder);
     }
 
-    private void sendOrders(GroupOrder groupOrder){
+    private void sendOrders(GroupOrder groupOrder) {
         HashMap<String, List<Order>> restaurantOrders = groupOrder.getOrdersByRestaurants();
-        for(Map.Entry<String, List<Order>> entry: restaurantOrders.entrySet())
-        {
+        for (Map.Entry<String, List<Order>> entry : restaurantOrders.entrySet()) {
             Restaurant restaurant = this.restaurantManager.get_restaurant(entry.getKey());
             restaurant.placeOrder(entry.getValue());
         }
     }
 
-    public void validate_order(UUID order_id, String restaurant_name){
-        for(GroupOrder groupOrder : this.group_orders)
-        {
-            for (List<Order> orders : groupOrder.global_orders.values())
-            {
+    public void validate_order(UUID order_id, String restaurant_name) {
+        for (GroupOrder groupOrder : this.group_orders) {
+            for (List<Order> orders : groupOrder.global_orders.values()) {
                 List<Order> matchingOrders = orders.stream()
                         .filter(order -> order.getId().equals(order_id))
                         .collect(Collectors.toList());
-                for (Order order : matchingOrders)order.setStatus(Status.READY);
+                for (Order order : matchingOrders) order.setStatus(Status.READY);
             }
         }
     }
+
     public void validate_order_receipt(UUID order_id, String usermail) {
         for (GroupOrder groupOrder : this.group_orders) {
             for (List<Order> orders : groupOrder.global_orders.values()) {
@@ -120,5 +118,23 @@ public class OrderManager {
         }
     }
 
+    public Order reorderFromHistory(UUID selectedOrderId, String userMail, Locations deliveryLocation) {
+        Order selectedOrder = userManager.find_selectedOrder(selectedOrderId, userMail);
 
+        if (selectedOrder != null) {
+            UUID newOrderId = UUID.randomUUID();
+            Order newOrder = new Order(selectedOrder.restaurant_name);
+            for(Menu menu:selectedOrder.menus){
+                newOrder.add_menu(menu);
+            }
+            place_order(userMail, newOrder, deliveryLocation, newOrderId);
+
+            return newOrder;
+        } else {
+            System.out.println("Commande sélectionnée introuvable dans l'historique de l'utilisateur.");
+            return null;
+        }
+
+
+    }
 }
