@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class OrderManager {
 
-    PaymentSystem paymentSystem;
+    PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     List<GroupOrder> group_orders;
 

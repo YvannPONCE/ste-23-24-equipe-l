@@ -16,24 +16,6 @@ public class ConfirmOrder {
     RestaurantManager restaurantManager;
     UUID order_id;
 
-    @Given("a user {string} added to their cart many items from many restaurants with many prices")
-    public void a_user_added_to_their_cart_many_items_from_many_restaurants_with_many_prices(String email, Map<String, Map<String, Double>> order) {
-
-        throw new io.cucumber.java.PendingException();
-    }
-
-    @When("the user pays their order")
-    public void the_user_pays_their_order() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-
-    @Then("all the orders will be transmitted to the restaurant")
-    public void all_the_orders_will_be_transmitted_to_the_restaurant() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-
     @Given("a user {string} added to their cart a {string} at {double} from {string}")
     public void a_user_added_to_their_cart_a_at_from(String user_email, String menu_name, Double menu_price, String restaurant_name) {
         Restaurant restaurant = new Restaurant(restaurant_name);
