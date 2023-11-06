@@ -16,13 +16,31 @@ public class Restaurant {
     List<Menu> listemenu;
     List<Order> orders;
 
+
+
+    int nbdiscounnt;
+    int percentofdiscount;
+
+
     public Restaurant(String name) {
         this.name = name;
         this.horaires = new Schedule();
         this.listemenu = new ArrayList<>();
         this.orders = new ArrayList<>();
+        nbdiscounnt=10;
+        percentofdiscount=15;
+
+
 
     }
+    public int getPercentofdiscount() {
+        return percentofdiscount;
+    }
+
+    public void setPercentofdiscount(int percentofdiscount) {
+        this.percentofdiscount = percentofdiscount;
+    }
+
 
 
     public Schedule getHoraires() {
@@ -52,6 +70,13 @@ public class Restaurant {
 
     public List<Order> getOrders() {
         return this.orders;
+    }
+    public int getNbdiscounnt() {
+        return nbdiscounnt;
+    }
+
+    public void setNbdiscounnt(int nbdiscounnt) {
+        this.nbdiscounnt = nbdiscounnt;
     }
 }
 
