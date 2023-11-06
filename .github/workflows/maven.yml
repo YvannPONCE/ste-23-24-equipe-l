@@ -30,7 +30,7 @@ jobs:
   Sonar:
      runs-on: ubuntu-latest
      needs: Validate-essentials
-     if: github.event_name == 'push' && github.ref == 'refs/heads/Integration'
+     if: github.event_name == 'push' #&& github.ref == 'refs/heads/Integration'
      steps:
        - uses: actions/checkout@v3
        - name: Set up JDK 17
