@@ -47,7 +47,7 @@ public class ValidateOrderReceipt {
 
         orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
 
-        orderManager.pay_order(orderId, string);
+        orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
         orderManager.validate_order(orderId,string);
 
     }

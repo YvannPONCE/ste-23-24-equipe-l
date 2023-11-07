@@ -62,7 +62,7 @@ public class checkOrderHistorydefs {
 
             orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
 
-            orderManager.pay_order(orderId, string);
+            orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
             orderManager.validate_order(orderId,string);
             order.setStatus(Status.DELIVERED);
             orderManager.validate_order_receipt(string,order.getId());

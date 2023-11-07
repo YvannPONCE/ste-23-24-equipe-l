@@ -71,7 +71,7 @@ public class GroupOrder {
        {
             for (Order order : orders)
             {
-                if(order.status != Status.PAID)return false;
+                if(order.status != Status.PAID) return false;
             }
        }
        return true;
