@@ -62,7 +62,6 @@ public class GroupOrder {
 
    public List<Order> get_orders(String user_email)
    {
-       System.out.println(global_orders);
        return this.global_orders.get(user_email);
    }
 

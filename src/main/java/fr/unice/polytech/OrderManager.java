@@ -28,7 +28,6 @@ public class OrderManager {
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(order_id);
-        System.out.println(email);
         order.setStatus(Status.CREATED);
         List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
@@ -55,10 +54,8 @@ public class OrderManager {
         List<GroupOrder> group_orders = this.group_orders.stream()
                 .filter(group_order -> group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
-        System.out.println(group_orders);
         if (group_orders.size() > 0) {
             GroupOrder group_order = group_orders.get(0);
-            System.out.println(group_order.getGlobal_orders());
             return group_order.get_orders(user_email);
         }
         return new ArrayList<>();
@@ -101,7 +98,6 @@ public class OrderManager {
 
     public void pay_user_orders(String email, String card_number){
         List<Order> orders = get_current_user_orders(email);
-        System.out.println(orders);
         for (Order order : orders) {
                 this.pay_order(order.getId(), email, card_number);
         }

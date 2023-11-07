@@ -53,7 +53,6 @@ public class checkOrderHistorydefs {
 
             orderManager = new OrderManager(mockRestaurantManager);
             orderManager.userManager =mockuserManager;
-            System.out.println(orderManager.userManager.get_order_history(user.get_email()));
 
             order = new Order(restaurantName);
             order.add_menu(new Menu(item,price));
