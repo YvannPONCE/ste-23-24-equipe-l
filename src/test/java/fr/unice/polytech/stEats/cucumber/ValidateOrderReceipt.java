@@ -39,7 +39,6 @@ public class ValidateOrderReceipt {
 
         orderManager = new OrderManager(mockRestaurantManager);
         orderManager.userManager =mockuserManager;
-        System.out.println(orderManager.userManager.get_order_history(user.get_email()));
 
          order = new Order(string3);
         order.add_menu(new Menu(string,double1));
