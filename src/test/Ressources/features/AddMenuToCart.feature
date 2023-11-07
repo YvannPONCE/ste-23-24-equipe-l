@@ -1,4 +1,4 @@
-Feature: Browsing order history
+Feature: Add menu to cart
 
 
 
