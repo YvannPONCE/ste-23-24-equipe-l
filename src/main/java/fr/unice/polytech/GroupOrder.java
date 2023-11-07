@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class GroupOrder {
    UUID uuid;
    Locations delivery_location;
-   HashMap<String, List<Order>> global_orders;
+   public  HashMap<String, List<Order>> global_orders;
 
    public GroupOrder(UUID uuid, Locations delivery_location)
    {
@@ -91,4 +91,15 @@ public class GroupOrder {
         }
         return restaurant_orders;
     }
+
+        public boolean qualifiesForMenuDiscount(int itemCountThreshold) {
+            int totalItemCount = global_orders.values()
+                    .stream()
+                    .flatMap(List::stream)
+                    .mapToInt(Order::getItemCount)
+                    .sum();
+
+            return totalItemCount >= itemCountThreshold;
+        }
+
 }
