@@ -27,7 +27,8 @@ public class OrderManager {
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
-        order.setId(UUID.randomUUID());
+        order.setId(order_id);
+        System.out.println(email);
         order.setStatus(Status.CREATED);
         List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
@@ -38,7 +39,6 @@ public class OrderManager {
             return true;
         } else {
             GroupOrder group_order = new GroupOrder(order_id, delivery_location);
-
             group_order.add_order(email, order);
             this.group_orders.add(group_order);
             return true;
@@ -47,7 +47,6 @@ public class OrderManager {
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
         UUID uuid = UUID.randomUUID();
-        order.setStatus(Status.CREATED);
         place_order(email, order, delivery_location, uuid);
         return uuid;
     }
@@ -56,8 +55,10 @@ public class OrderManager {
         List<GroupOrder> group_orders = this.group_orders.stream()
                 .filter(group_order -> group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
+        System.out.println(group_orders);
         if (group_orders.size() > 0) {
             GroupOrder group_order = group_orders.get(0);
+            System.out.println(group_order.getGlobal_orders());
             return group_order.get_orders(user_email);
         }
         return new ArrayList<>();
@@ -105,15 +106,25 @@ public class OrderManager {
         }
     }
 
-    public void validate_order_receipt(UUID order_id, String usermail) {
+    public void validate_order_receipt(String email, UUID order_id) {
         for (GroupOrder groupOrder : this.group_orders) {
             for (List<Order> orders : groupOrder.global_orders.values()) {
                 for (Order order : orders) {
                     if (order.getId().equals(order_id)) {
-                        if (order.getStatus() == Status.DELIVERED) {
+                        order.setStatus(Status.DELIVERED);
+                        userManager.get_order_history(email).add(order);
+                    }
+                }
+            }
+        }
+    }
 
-                            userManager.get_order_history(usermail).add(order);
-                        }
+    public void setOrderAsClosed(UUID order_id) {
+        for (GroupOrder groupOrder : this.group_orders) {
+            for (List<Order> orders : groupOrder.global_orders.values()) {
+                for (Order order : orders) {
+                    if (order.getId().equals(order_id)) {
+                        order.setStatus(Status.CLOSED);
                     }
                 }
             }

@@ -65,7 +65,7 @@ public class checkOrderHistorydefs {
             orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
             orderManager.validate_order(orderId,string);
             order.setStatus(Status.DELIVERED);
-            orderManager.validate_order_receipt(order.getId(),email);
+            orderManager.validate_order_receipt(string,order.getId());
         }
     }
     @When("the user wants to view their order history")
