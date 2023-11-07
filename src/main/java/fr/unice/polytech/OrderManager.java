@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 
 public class OrderManager {
 
+    PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
+//    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
 
 
@@ -20,6 +22,7 @@ public class OrderManager {
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
+//        this.restaurantList = restaurantManager.get_restaurants();
         this.userManager = new UserManager();
     }
 
@@ -61,6 +64,18 @@ public class OrderManager {
         return new ArrayList<>();
     }
 
+    public List<Order> get_current_user_orders(String user_email){
+        List<GroupOrder> group_orders = new ArrayList<>(this.group_orders);
+        if (!group_orders.isEmpty()) {
+            List<Order> response = new ArrayList<>();
+            for (GroupOrder groupOrder : group_orders) {
+                response.addAll(groupOrder.get_orders(user_email));
+            }
+            return response;
+        }
+        return new ArrayList<>();
+    }
+
     public GroupOrder get_current_orders(UUID order_id) {
         List<GroupOrder> group_orders = this.group_orders.stream()
                 .filter(group_order -> group_order.get_uuid().equals(order_id))
@@ -72,14 +87,24 @@ public class OrderManager {
     }
 
 
-    public void pay_order(UUID orderId, String email) {
+    public void pay_order(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = get_current_orders(orderId);
         List<Order> orders = groupOrder.get_orders(email);
 
         for (Order order : orders) {
-            order.setStatus(Status.PAID);
+            if (paymentSystem.pay(card_number)) {
+                order.setStatus(Status.PAID);
+            }
         }
         if (groupOrder.isPaid()) sendOrders(groupOrder);
+    }
+
+    public void pay_user_orders(String email, String card_number){
+        List<Order> orders = get_current_user_orders(email);
+        System.out.println(orders);
+        for (Order order : orders) {
+                this.pay_order(order.getId(), email, card_number);
+        }
     }
 
     private void sendOrders(GroupOrder groupOrder) {
