@@ -2,26 +2,28 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserManager {
 
+    List<User> users;
 
     public UserManager() {
+        this.users = new ArrayList<>();
     }
 
     public List<Order> get_order_history(String mail) {
         User user = get_user(mail);
         return user.getOrderHistory();
-
-
     }
 
     public User get_user(String email) {
-        return new User("hsjhxj", "jdjd", Role.CUSTOMER_STUDENT);
+        List<User> users = this.users.stream()
+                .filter(user -> user.get_email().equals(email))
+                .collect(Collectors.toList());
+        if(users.size()>0)return users.get(0);
+        return null;
     }
 
     public void displayOrderHistory(String mail) {
@@ -52,17 +54,10 @@ public class UserManager {
    }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    public void signIn(String userEmail, String userPassword) {
+        User user = new User(userEmail, userPassword);
+        users.add(user);
+    }
 }
 
 

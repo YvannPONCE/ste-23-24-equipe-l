@@ -20,12 +20,18 @@ public class User {
 
 
 
-    public User(String email, String username, Role role){
+    public User(String email, String username, String password, Role role){
         this.email=email;
         this.username=username;
         this.OrderHistory =new ArrayList<>();
         this.role=role;
         this.Credit=0.00;
+    }
+    public User(String email, String password, Role role){
+        this(email, email, password, role);
+    }
+    public User(String email, String password){
+        this(email, email, password, Role.CUSTOMER_STUDENT);
     }
     public List<Order> getOrderHistory() {
         return OrderHistory;
