@@ -11,3 +11,7 @@ Feature: Confirm order
     When user "user@exemple.com" pay his command
     Then The order "maxibest" at 7.50 from "mcdonald" has been transmit to the restaurant
 
+  Scenario: user confirms order of 2 menus
+    Given a user "user@exemple.com" added to his cart a "maxibest" at 7.50 from "mcdonald" and "BoxMain" at 9.50 from "ChickenTacky"
+    When the user "user@exemple.com" pays their order
+    Then the order "maxibest" at 7.50 from "mcdonald" and the order "BoxMain" at 9.50 from "ChickenTacky" will be transmitted to the restaurants

@@ -13,6 +13,7 @@ public class OrderManager {
 
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
+    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
 
 
@@ -21,6 +22,7 @@ public class OrderManager {
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
+        this.restaurantList = restaurantManager.get_restaurants();
         this.userManager = new UserManager();
     }
 
