@@ -5,5 +5,6 @@ public enum Status {
     PROCESSING,
     PAID,
     READY,
-    DELIVERED;
+    DELIVERED,
+    CLOSED;
 }
