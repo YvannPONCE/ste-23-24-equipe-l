@@ -64,6 +64,18 @@ public class OrderManager {
         return new ArrayList<>();
     }
 
+    public List<Order> get_current_user_orders(String user_email){
+        List<GroupOrder> group_orders = new ArrayList<>(this.group_orders);
+        if (!group_orders.isEmpty()) {
+            List<Order> response = new ArrayList<>();
+            for (GroupOrder groupOrder : group_orders) {
+                response.addAll(groupOrder.get_orders(user_email));
+            }
+            return response;
+        }
+        return new ArrayList<>();
+    }
+
     public GroupOrder get_current_orders(UUID order_id) {
         List<GroupOrder> group_orders = this.group_orders.stream()
                 .filter(group_order -> group_order.get_uuid().equals(order_id))
@@ -85,6 +97,14 @@ public class OrderManager {
             }
         }
         if (groupOrder.isPaid()) sendOrders(groupOrder);
+    }
+
+    public void pay_user_orders(String email, String card_number){
+        List<Order> orders = get_current_user_orders(email);
+        System.out.println(orders);
+        for (Order order : orders) {
+                this.pay_order(order.getId(), email, card_number);
+        }
     }
 
     private void sendOrders(GroupOrder groupOrder) {

@@ -104,8 +104,7 @@ public class ConfirmOrder {
     }
     @When("the user {string} pays their order")
     public void the_user_pays_their_order(String user_email) {
-        orderManager.pay_order(this.order_id_1, user_email, "7936 3468 9302 8371");
-        orderManager.pay_order(this.order_id_2, user_email, "7936 3468 9302 8371");
+        orderManager.pay_user_orders(user_email, "7936 3468 9302 8371");
     }
     @Then("the order {string} at {double} from {string} and the order {string} at {double} from {string} will be transmitted to the restaurants")
     public void the_order_at_from_and_the_order_at_from_will_be_transmitted_to_the_restaurants(String menu_name_1, Double menu_price_1, String restaurant_name_1, String menu_name_2, Double menu_price_2, String restaurant_name_2) {
