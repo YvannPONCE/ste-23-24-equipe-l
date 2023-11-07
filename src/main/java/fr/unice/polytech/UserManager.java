@@ -13,8 +13,8 @@ public class UserManager {
         this.users = new ArrayList<>();
     }
 
-    public List<Order> get_order_history(String mail) {
-        User user = get_user(mail);
+    public List<Order> get_order_history(String email) {
+        User user = get_user(email);
         return user.getOrderHistory();
     }
 

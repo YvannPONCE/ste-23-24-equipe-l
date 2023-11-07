@@ -25,7 +25,6 @@ public class DeliveryValidation {
         order.add_menu(new Menu("Bucket",21));
         orderManager = new OrderManager(new RestaurantManager());
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
-        System.out.println(orderManager.get_current_orders(orderID,email));
         orderManager.validate_order(order.getId(),email);
     }
 
