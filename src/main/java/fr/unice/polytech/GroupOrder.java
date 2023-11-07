@@ -23,6 +23,10 @@ public class GroupOrder {
         return uuid;
     }
 
+    public HashMap<String, List<Order>> getGlobal_orders() {
+        return global_orders;
+    }
+
     public Locations get_delivery_location() {
         return delivery_location;
     }
@@ -58,6 +62,7 @@ public class GroupOrder {
 
    public List<Order> get_orders(String user_email)
    {
+       System.out.println(global_orders);
        return this.global_orders.get(user_email);
    }
 

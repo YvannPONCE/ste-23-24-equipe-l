@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+
 public class ValidateOrderReceipt {
     OrderManager orderManager;
     Restaurant mockRestaurant;
@@ -22,8 +24,8 @@ public class ValidateOrderReceipt {
     private Order order;
     String email;
 
-    @Given("user {string} as order a {string} at {double} at {string} and as paid his commad")
-    public void user_as_order_a_at_at_and_as_paid_his_commad(String string, String string2, Double double1, String string3) {
+    @Given("user {string} as order a {string} at {double} at {string} and as paid his command")
+    public void user_as_order_a_at_at_and_as_paid_his_command(String string, String string2, Double double1, String string3) {
 
         RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
         mockRestaurant = Mockito.mock(Restaurant.class);
@@ -54,13 +56,12 @@ public class ValidateOrderReceipt {
         order.setStatus(Status.DELIVERED);
 
     }
-    @When("I confirm the receipt")
-    public void i_confirm_the_receipt() {
-       orderManager.validate_order_receipt(order.getId(),email);
+    @When("user {string} confirm the receipt")
+    public void i_confirm_the_receipt(String email) {
+       orderManager.validate_order_receipt(email,order.getId());
     }
-    @Then("the order is added to the order history")
-    public void the_order_is_added_to_the_order_history() {
-        Assert.assertEquals(user.getOrderHistory().size(),1);
-        Assert.assertEquals(user.getOrderHistory().get(0),order);
+    @Then("the order is marked as delivered")
+    public void the_order_is_marked_as_delivered() {
+        assertEquals(order.getStatus(),Status.DELIVERED);
     }
 }
