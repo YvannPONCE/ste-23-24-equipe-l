@@ -70,11 +70,20 @@ public class Order {
         this.id = id;
     }
     public double calculateTotalPrice() {
+        double sum=this.totalPrice;
 
         for (Menu menu : menus) {
-            totalPrice += menu.getPrice();
+            sum =sum+ menu.getPrice();
         }
-        return totalPrice;
+        setTotalePrice(sum);
+        return sum;
     }
 
+    private void setTotalePrice(double sum) {
+        this.totalPrice=sum;
+    }
+
+    public double getTotalPrice(){
+        return this.totalPrice;
+}
 }

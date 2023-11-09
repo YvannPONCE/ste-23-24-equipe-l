@@ -46,7 +46,7 @@ public class checkOrderHistorydefs {
             mockuserManager=Mockito.spy(UserManager.class);
             email=string;
             Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
-
+            mockuserManager.getUserList().add(user);
             Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
             Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
             Mockito.when(mockRestaurant.getName()).thenReturn(restaurantName);

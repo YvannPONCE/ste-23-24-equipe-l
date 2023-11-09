@@ -1,29 +1,20 @@
 Feature: Placing an Order at Restaurant "chickentacky"  with Discounts and Future Credits
 
   Background:
-    Given the discount threshold "n" is set to 10
-    And the discount rate "r%" is set to 15
-    And  user "user@exemple.com" with 0.00 credit
+   Given  user "user@exemple2.com" with 0.00 credit and the discount threshold is set to 10
 
   Scenario: user place an order at Restaurant chickentacky  and receives a discount
     When the user selects "Menu" and adds 12 items ton his  order
-    And proceeds to checkout
-    Then he  should see a discount of 15% applied to the order total
-    And he should pay and get additional credit
+    Then he  should see a discount of 15% applied to the order total and get additional credit
 
-  Scenario: User places an order with sub-orders and receives discounts
-    Given the user is on the Restaurant X website
-    When the user selects "Menu" and adds 6 items to their order
-    And they create a sub-order with 5 items
-    And proceeds to checkout
-    Then they should see a discount of 15% applied to both the main order and the sub-order
-    And the order status should be "Pending"
+  Scenario: Group order of more than 10 item both users got the discount
+    Given One restaurant, two menu, two users "user1@exemple.com" and "user2@exemple.com" waiting in "hall principale" with 0.00 credit
+    When The first user add a 6 "maxibest" menu at 7.50 euros from "mcdonald" to deliver at "hall principale"
+    And  The second join 7 a "maxibestplusplus" menu at 15.00 euros from "mcdonald" to his friend command
+    Then Both users can get discount after paying they have additional credit depending on their order amount
 
 
-
-  Scenario: User places a smaller order and does not receive a discount
-    Given the user is on the Restaurant X website
-    When the user selects "Menu" and adds 8 items to their order
-    And proceeds to checkout
-    Then they should not see a discount applied to the order total
-    And the order status should be "Pending"
+  Scenario: user  place an order at Restaurant chickentacky  and don't receive a discount
+    Given user3 "user3@exemple.com" with 5.00 credit
+    When user add 5 "chickenwings" at 10.00 from "chickentacky" to deliver at "hall principale"
+    Then he   should not receive a  a discount of 15% and his credit should stay 0.00

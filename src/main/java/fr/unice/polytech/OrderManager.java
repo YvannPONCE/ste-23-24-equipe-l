@@ -16,11 +16,12 @@ public class OrderManager {
 
 
     public UserManager userManager;
-
+OrderAmountCalculator orderAmountCalculator;
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
         this.userManager = new UserManager();
+
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
@@ -29,15 +30,17 @@ public class OrderManager {
         List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
         if (filtered_group_orders.size() > 0) {
+          
             GroupOrder group_order = filtered_group_orders.get(0);
             if (group_order.get_delivery_location() != delivery_location) return false;
             group_order.add_order(email, order);
             return true;
         } else {
-            GroupOrder group_order = new GroupOrder(order_id, delivery_location);
 
+            GroupOrder group_order = new GroupOrder(order_id, delivery_location);
             group_order.add_order(email, order);
             this.group_orders.add(group_order);
+
             return true;
         }
     }
@@ -74,6 +77,8 @@ public class OrderManager {
     public void pay_order(UUID orderId, String email) {
         GroupOrder groupOrder = get_current_orders(orderId);
         List<Order> orders = groupOrder.get_orders(email);
+        this.orderAmountCalculator=new OrderAmountCalculator(groupOrder,this.userManager);
+        orderAmountCalculator.applyMenuDiscount(15);
 
         for (Order order : orders) {
             order.setStatus(Status.PAID);
