@@ -23,6 +23,10 @@ public class GroupOrder {
         return uuid;
     }
 
+    public HashMap<String, List<Order>> getGlobal_orders() {
+        return global_orders;
+    }
+
     public Locations get_delivery_location() {
         return delivery_location;
     }
@@ -67,7 +71,7 @@ public class GroupOrder {
        {
             for (Order order : orders)
             {
-                if(order.status != Status.PAID)return false;
+                if(order.status != Status.PAID) return false;
             }
        }
        return true;

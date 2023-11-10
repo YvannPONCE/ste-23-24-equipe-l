@@ -53,7 +53,6 @@ public class checkOrderHistorydefs {
 
             orderManager = new OrderManager(mockRestaurantManager);
             orderManager.userManager =mockuserManager;
-            System.out.println(orderManager.userManager.get_order_history(user.get_email()));
 
             order = new Order(restaurantName);
             order.add_menu(new Menu(item,price));
@@ -62,10 +61,10 @@ public class checkOrderHistorydefs {
 
             orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
 
-            orderManager.pay_order(orderId, string);
+            orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
             orderManager.validate_order(orderId,string);
             order.setStatus(Status.DELIVERED);
-            orderManager.validate_order_receipt(order.getId(),email);
+            orderManager.validate_order_receipt(string,order.getId());
         }
     }
     @When("the user wants to view their order history")
