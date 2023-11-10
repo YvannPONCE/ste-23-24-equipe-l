@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class GroupOrder {
    UUID uuid;
    Locations delivery_location;
-   HashMap<String, List<Order>> global_orders;
+   public  HashMap<String, List<Order>> global_orders;
 
    public GroupOrder(UUID uuid, Locations delivery_location)
    {
@@ -33,8 +33,9 @@ public class GroupOrder {
 
     public boolean add_order(String user_email, Order order)
    {
-       if(order.get_menus().size() != 1)
+       if(order.get_menus().size() < 1)
        {
+           System.out.println("5555");
            return false;
        }
        List<Order> user_orders = global_orders.get(user_email);
@@ -75,24 +76,31 @@ public class GroupOrder {
        }
        return true;
     }
-
     public HashMap<String, List<Order>> getOrdersByRestaurants() {
-       HashMap<String, List<Order>> restaurant_orders = new HashMap<>();
-        for (List<Order> orders : this.global_orders.values())
-        {
-            for (Order order: orders)
-            {
-                if(restaurant_orders.containsKey(order.get_restaurant_name()))
-                {
+        HashMap<String, List<Order>> restaurant_orders = new HashMap<>();
+        for (List<Order> orders : this.global_orders.values()) {
+            for (Order order : orders) {
+                if (restaurant_orders.containsKey(order.get_restaurant_name())) {
                     List<Order> orders_2 = restaurant_orders.get(order.get_restaurant_name());
                     orders_2.add(order);
-                }
-                else
-                {
-                    restaurant_orders.put(order.get_restaurant_name(), Arrays.asList(order));
+                } else {
+                    // Use new ArrayList<>(Arrays.asList(order)) to create a mutable list
+                    restaurant_orders.put(order.get_restaurant_name(), new ArrayList<>(Arrays.asList(order)));
                 }
             }
         }
         return restaurant_orders;
     }
+
+
+        public boolean qualifiesForMenuDiscount(int itemCountThreshold) {
+            int totalItemCount = global_orders.values()
+                    .stream()
+                    .flatMap(List::stream)
+                    .mapToInt(Order::getItemCount)
+                    .sum();
+
+            return totalItemCount >= itemCountThreshold;
+        }
+
 }

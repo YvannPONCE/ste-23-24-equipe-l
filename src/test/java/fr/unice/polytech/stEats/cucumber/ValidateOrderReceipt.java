@@ -55,10 +55,12 @@ public class ValidateOrderReceipt {
         order.setStatus(Status.DELIVERED);
 
     }
+
     @When("user {string} confirm the receipt")
-    public void i_confirm_the_receipt(String email) {
-       orderManager.validate_order_receipt(email,order.getId());
+    public void user_confirm_the_receipt(String string) {
+        orderManager.validate_order_receipt(email, order.getId());
     }
+
     @Then("the order is marked as delivered")
     public void the_order_is_marked_as_delivered() {
         assertEquals(order.getStatus(),Status.DELIVERED);

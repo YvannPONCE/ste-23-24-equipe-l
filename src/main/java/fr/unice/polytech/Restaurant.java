@@ -16,6 +16,10 @@ public class Restaurant {
     List<Menu> listemenu;
     List<Order> orders;
 
+
+
+
+
     public Restaurant(String name) {
         this.name = name;
         this.horaires = new Schedule();
@@ -23,7 +27,6 @@ public class Restaurant {
         this.orders = new ArrayList<>();
 
     }
-
 
     public Schedule getHoraires() {
         return horaires;
@@ -53,6 +56,7 @@ public class Restaurant {
     public List<Order> getOrders() {
         return this.orders;
     }
+
 }
 
 

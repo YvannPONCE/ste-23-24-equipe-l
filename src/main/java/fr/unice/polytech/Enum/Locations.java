@@ -1,5 +1,7 @@
 package fr.unice.polytech.Enum;
 
-public enum Locations {
+import fr.unice.polytech.Restaurant;
+
+public enum Locations  {
     HALL_PRINCIPAL;
 }

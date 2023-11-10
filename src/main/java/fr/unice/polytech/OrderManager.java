@@ -18,12 +18,13 @@ public class OrderManager {
 
 
     public UserManager userManager;
-
+OrderAmountCalculator orderAmountCalculator;
     public OrderManager(RestaurantManager restaurantManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
 //        this.restaurantList = restaurantManager.get_restaurants();
         this.userManager = new UserManager();
+
     }
 
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
@@ -87,6 +88,8 @@ public class OrderManager {
     public void pay_order(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = get_current_orders(orderId);
         List<Order> orders = groupOrder.get_orders(email);
+        this.orderAmountCalculator=new OrderAmountCalculator(groupOrder,this.userManager);
+        orderAmountCalculator.applyMenuDiscount(15);
 
         for (Order order : orders) {
             if (paymentSystem.pay(card_number)) {

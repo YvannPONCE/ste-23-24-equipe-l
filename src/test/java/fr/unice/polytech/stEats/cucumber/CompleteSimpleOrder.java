@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -20,6 +21,7 @@ public class CompleteSimpleOrder {
     String user_email;
 
     DeliveryManager deliveryManager;
+    private User user;
 
     @Given("user {string} order a {string} at {string} for {double} euros")
     public void user_order_a_at_for_euros(String user_email, String menu_name, String restaurant_name, Double menu_price) {
@@ -28,6 +30,8 @@ public class CompleteSimpleOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         orderManager = new OrderManager(restaurantManager);
+        user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
+        orderManager.userManager.getUserList().add(user);
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
