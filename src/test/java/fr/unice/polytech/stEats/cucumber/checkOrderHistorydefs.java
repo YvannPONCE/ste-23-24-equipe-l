@@ -43,7 +43,7 @@ public class checkOrderHistorydefs {
             String restaurantName = row.get("Restaurant Name");
             RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
             mockRestaurant = Mockito.mock(Restaurant.class);
-            mockuserManager=Mockito.mock(UserManager.class);
+            mockuserManager=Mockito.spy(UserManager.class);
             email=string;
             Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
             mockuserManager.getUserList().add(user);
@@ -71,9 +71,9 @@ public class checkOrderHistorydefs {
     public void the_user_wants_to_view_their_order_history() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
-        //System.setOut(new PrintStream(outputStream));
+        System.setOut(new PrintStream(outputStream));
         mockuserManager.displayOrderHistory(email);
-        //System.setOut(originalOut);
+        System.setOut(originalOut);
          capturedOutput = outputStream.toString();
 
 
@@ -82,13 +82,13 @@ public class checkOrderHistorydefs {
     public void the_order_history_is_displayed() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
-        //System.setOut(new PrintStream(outputStream));
+        System.setOut(new PrintStream(outputStream));
 
         // Écrit la sortie standard
-        //System.out.println("Restaurant Name: luigi");
-        //System.out.println("Menu Name: pasta");
-        //System.out.println("Restaurant Name: chicken tacky");
-        //System.out.println("Menu Name: chicken nuggets");
+        System.out.println("Restaurant Name: luigi");
+        System.out.println("Menu Name: pasta");
+        System.out.println("Restaurant Name: chicken tacky");
+        System.out.println("Menu Name: chicken nuggets");
 
 
 
@@ -101,14 +101,12 @@ public class checkOrderHistorydefs {
 
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
-        System.out.println("here\n");
-        orderSelected = orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(), user.get_email(), Locations.HALL_PRINCIPAL);
-        System.out.println("to : "+orderSelected+"\n");
-    }
 
-    @Then("the new order is selected as new order to place")
+        orderSelected = orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(), user.get_email(), Locations.HALL_PRINCIPAL);
+    }
+        @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {
-        System.out.println("here\n");
+
         Assert.assertEquals(orderSelected.getStatus(),Status.CREATED);
         Assert.assertEquals(user.getOrderHistory().get(0).getStatus(),Status.DELIVERED);
         Assert.assertEquals(orderSelected.get_menus(),user.getOrderHistory().get(0).get_menus());

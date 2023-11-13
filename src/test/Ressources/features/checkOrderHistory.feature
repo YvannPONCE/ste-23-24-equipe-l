@@ -1,4 +1,4 @@
-Feature: Check Order History
+Feature: Manage Order History
 
   Background:
     Given a user "user@example.com" with the following order history:
