@@ -3,6 +3,7 @@ package fr.unice.polytech;
 import fr.unice.polytech.Enum.Role;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserManager {
 
@@ -23,11 +24,11 @@ public class UserManager {
         }
     }
     public User get_user(String email) {
-        for(User user: this.userList){
-            if(user.get_email().equals(email)){
-                return user;
-            }
-        }
+
+        List<User> users = this.userList.stream()
+                .filter(user -> user.get_email().equals(email))
+                .collect(Collectors.toList());
+        if(users.size()>0)return users.get(0);
         return null;
     }
 
@@ -66,6 +67,11 @@ public class UserManager {
     }
 
 
+
+    public void signIn(String userEmail, String userPassword) {
+        User user = new User(userEmail, userPassword);
+        userList.add(user);
+    }
     public void addOrdersToHistory(String email, List<Order> orders) {
        User user = get_user(email);
        user.addOrderToHistory(orders);
