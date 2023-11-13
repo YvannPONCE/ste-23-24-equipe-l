@@ -13,14 +13,18 @@ public class UserManager {
     }
 
     public List<Order> get_order_history(String mail) {
-
         return get_user(mail).getOrderHistory();
     }
-
+    public void add_user(User user)
+    {
+        if(user !=null)
+        {
+            userList.add(user);
+        }
+    }
     public User get_user(String email) {
         for(User user: this.userList){
             if(user.get_email().equals(email)){
-                System.out.println("7474");
                 return user;
             }
         }
@@ -62,18 +66,10 @@ public class UserManager {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+    public void addOrdersToHistory(String email, List<Order> orders) {
+       User user = get_user(email);
+       user.addOrderToHistory(orders);
+    }
 }
 
 

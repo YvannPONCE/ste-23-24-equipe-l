@@ -37,7 +37,7 @@ public class ValidateOrderReceipt {
         Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
 
-        orderManager = new OrderManager(mockRestaurantManager);
+        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
         orderManager.userManager =mockuserManager;
 
          order = new Order(string3);
@@ -58,7 +58,7 @@ public class ValidateOrderReceipt {
 
     @When("user {string} confirm the receipt")
     public void user_confirm_the_receipt(String string) {
-        orderManager.validate_order_receipt(email, order.getId());
+        orderManager.validate_order_receipt(order.getId());
     }
 
     @Then("the order is marked as delivered")

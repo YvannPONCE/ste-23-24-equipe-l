@@ -24,7 +24,7 @@ public class ConfirmOrder {
         Restaurant restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager());
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -57,7 +57,7 @@ public class ConfirmOrder {
         Restaurant restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager());
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -90,7 +90,7 @@ public class ConfirmOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant1);
         restaurantManager.add_restaurant(restaurant2);
-        orderManager = new OrderManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager());
 
         Order order_1 = new Order(restaurant_name_1);
         Order order_2 = new Order(restaurant_name_2);
