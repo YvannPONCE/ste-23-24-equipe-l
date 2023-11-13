@@ -23,7 +23,7 @@ public class DeliveryValidation {
     public void the_campus_user_has_confirmed_receipt_of_their_order(String email) {
         Order order = new Order("KFC");
         order.add_menu(new Menu("Bucket",21));
-        orderManager = new OrderManager(new RestaurantManager());
+        orderManager = new OrderManager(new RestaurantManager(), new UserManager());
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
         orderManager.validate_order(order.getId(),email);
     }
@@ -44,7 +44,7 @@ public class DeliveryValidation {
     public void the_order_statue_updates_as_closed(String email) {
         GroupOrder groupOrder = orderManager.get_current_orders(orderID);
          for (Order order : orderManager.get_current_orders(orderID,email)) {
-                assertEquals(order.getStatus(),Status.CLOSED);
+                assertEquals(Status.CLOSED, order.getStatus());
             }
     }
 

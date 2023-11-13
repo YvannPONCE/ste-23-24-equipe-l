@@ -27,7 +27,7 @@ public class RestaurantManager {
     public List<Restaurant> get_restaurants()
     {
         //return restaurants;
-        return new ArrayList<>();
+        return this.restaurants;
     }
 
     public Restaurant get_restaurant(String restaurant_name) {

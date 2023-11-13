@@ -10,14 +10,21 @@ import java.util.stream.Collectors;
 public class GroupOrder {
    UUID uuid;
    Locations delivery_location;
-   HashMap<String, List<Order>> global_orders;
+   Status orderStatus;
+   public  HashMap<String, List<Order>> global_orders;
 
    public GroupOrder(UUID uuid, Locations delivery_location)
    {
        this.uuid = uuid;
        this.delivery_location = delivery_location;
        this.global_orders = new HashMap<>();
+       this.orderStatus = Status.CREATED;
+       setOrdersStatus(Status.CREATED);
    }
+
+    public Status getOrderStatus() {
+        return orderStatus;
+    }
 
     public UUID get_uuid() {
         return uuid;
@@ -33,7 +40,7 @@ public class GroupOrder {
 
     public boolean add_order(String user_email, Order order)
    {
-       if(order.get_menus().size() != 1)
+       if(order.get_menus().size() < 1)
        {
            return false;
        }
@@ -65,34 +72,98 @@ public class GroupOrder {
        return this.global_orders.get(user_email);
    }
 
-    public boolean isPaid() {
-       for (List<Order> orders : this.global_orders.values())
-       {
-            for (Order order : orders)
-            {
-                if(order.status != Status.PAID)return false;
-            }
+   public void setPaid(String userEmail)
+   {
+       List<Order> orders = get_orders(userEmail);
+       for (Order order : orders) {
+           order.setStatus(Status.PAID);
        }
-       return true;
-    }
 
+       for (List<Order> orders2 : this.global_orders.values())
+       {
+           for (Order order : orders2)
+           {
+               if(order.status != Status.PAID) return;
+           }
+       }
+       this.orderStatus = Status.PAID;
+       setOrdersStatus(Status.PAID);
+   }
+
+    public boolean isPaid() {
+       return orderStatus == Status.PAID;
+    }
     public HashMap<String, List<Order>> getOrdersByRestaurants() {
-       HashMap<String, List<Order>> restaurant_orders = new HashMap<>();
-        for (List<Order> orders : this.global_orders.values())
-        {
-            for (Order order: orders)
-            {
-                if(restaurant_orders.containsKey(order.get_restaurant_name()))
-                {
+        HashMap<String, List<Order>> restaurant_orders = new HashMap<>();
+        for (List<Order> orders : this.global_orders.values()) {
+            for (Order order : orders) {
+                if (restaurant_orders.containsKey(order.get_restaurant_name())) {
                     List<Order> orders_2 = restaurant_orders.get(order.get_restaurant_name());
                     orders_2.add(order);
-                }
-                else
-                {
-                    restaurant_orders.put(order.get_restaurant_name(), Arrays.asList(order));
+                } else {
+                    // Use new ArrayList<>(Arrays.asList(order)) to create a mutable list
+                    restaurant_orders.put(order.get_restaurant_name(), new ArrayList<>(Arrays.asList(order)));
                 }
             }
         }
         return restaurant_orders;
     }
+
+
+        public boolean qualifiesForMenuDiscount(int itemCountThreshold) {
+            int totalItemCount = global_orders.values()
+                    .stream()
+                    .flatMap(List::stream)
+                    .mapToInt(Order::getItemCount)
+                    .sum();
+
+            return totalItemCount >= itemCountThreshold;
+        }
+
+    public void validate_order(String restaurantName) {
+       for(List<Order> orders : global_orders.values())
+       {
+           List<Order> matchingOrders = orders.stream()
+                   .filter(order -> order.get_restaurant_name().equals(restaurantName))
+                   .collect(Collectors.toList());
+           for (Order order : matchingOrders) order.setStatus(Status.READY);
+       }
+
+        for (List<Order> orders2 : this.global_orders.values())
+        {
+            for (Order order : orders2)
+            {
+                if(order.status != Status.READY) return;
+            }
+        }
+        this.orderStatus = Status.READY;
+        setOrdersStatus(Status.READY);
+
+
+    }
+
+    public void validate_order_receipt() {
+        orderStatus = Status.DELIVERED;
+        setOrdersStatus(Status.DELIVERED);
+    }
+
+    public void setClose() {
+       this.orderStatus = Status.CLOSED;
+        setOrdersStatus(Status.CLOSED);
+    }
+    private void setOrdersStatus(Status status)
+    {
+        for(List<Order> orders : global_orders.values())
+        {
+            for (Order order : orders)
+            {
+                order.setStatus(status);
+            }
+        }
+    }
+
+    public boolean isReady() {
+       return orderStatus == Status.READY;
+    }
 }
+

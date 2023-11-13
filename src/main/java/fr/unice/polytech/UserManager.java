@@ -7,19 +7,25 @@ import java.util.stream.Collectors;
 
 public class UserManager {
 
-    List<User> users;
+    List<User> userList;
 
     public UserManager() {
-        this.users = new ArrayList<>();
+        this.userList=new ArrayList<>();
     }
 
-    public List<Order> get_order_history(String email) {
-        User user = get_user(email);
-        return user.getOrderHistory();
+    public List<Order> get_order_history(String mail) {
+        return get_user(mail).getOrderHistory();
     }
-
+    public void add_user(User user)
+    {
+        if(user !=null)
+        {
+            userList.add(user);
+        }
+    }
     public User get_user(String email) {
-        List<User> users = this.users.stream()
+
+        List<User> users = this.userList.stream()
                 .filter(user -> user.get_email().equals(email))
                 .collect(Collectors.toList());
         if(users.size()>0)return users.get(0);
@@ -52,11 +58,23 @@ public class UserManager {
         }
         return selectedOrder;
    }
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
 
 
     public void signIn(String userEmail, String userPassword) {
         User user = new User(userEmail, userPassword);
-        users.add(user);
+        userList.add(user);
+    }
+    public void addOrdersToHistory(String email, List<Order> orders) {
+       User user = get_user(email);
+       user.addOrderToHistory(orders);
     }
 }
 

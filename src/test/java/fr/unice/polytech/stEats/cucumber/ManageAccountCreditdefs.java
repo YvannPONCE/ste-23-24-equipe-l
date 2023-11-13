@@ -27,7 +27,7 @@ public class ManageAccountCreditdefs {
     public void user_with_credit(String string, Double double1) {
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
         user.setCredit(double1);
-        System.out.println(user.getCredit());
+
 
     }
     @When("user want to check his credit")

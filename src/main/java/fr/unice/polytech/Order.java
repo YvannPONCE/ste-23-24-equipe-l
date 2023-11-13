@@ -13,13 +13,20 @@ public class Order {
     String restaurant_name;
     Date creation_time;
     List<Menu> menus;
+    private double totalPrice;
 
 
     public  Order(String restaurant_name){
         this.restaurant_name = restaurant_name;
         this.menus = new ArrayList<>();
+        this.totalPrice=0.0;
         this.creation_time=new Date();
     }
+
+    public int getItemCount() {
+        return menus.size(); // Ou utilisez d'autres attributs pour calculer le nombre d'articles
+    }
+
 
     public UUID getId() {
         return id;
@@ -62,4 +69,21 @@ public class Order {
     public void setId(UUID id) {
         this.id = id;
     }
+    public double calculateTotalPrice() {
+        double sum=this.totalPrice;
+
+        for (Menu menu : menus) {
+            sum =sum+ menu.getPrice();
+        }
+        setTotalePrice(sum);
+        return sum;
+    }
+
+    private void setTotalePrice(double sum) {
+        this.totalPrice=sum;
+    }
+
+    public double getTotalPrice(){
+        return this.totalPrice;
+}
 }

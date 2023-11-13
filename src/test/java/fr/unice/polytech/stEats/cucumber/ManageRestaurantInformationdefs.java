@@ -32,8 +32,6 @@ public class ManageRestaurantInformationdefs {
         String openingTime = String.format("%02d:%02d", int1, int2);
         String closingTime = String.format("%02d:%02d", int3, int4);
         restaurant.getHoraires().setOpeningHours(string, openingTime, closingTime);
-        System.out.println(restaurant.getHoraires().getOpeningHours("lundi"));
-
     }
 
     @Then("I should see the Restaurant hours {int}:{int} to {int}:{int} for {string}")
@@ -82,9 +80,7 @@ public class ManageRestaurantInformationdefs {
     }
     @And("I remove the item {string} from the menu")
     public void i_remove_the_item_from_the_menu(String string) {
-        System.out.println(string);
         for (Menu menu : restaurant.getListemenu()){
-            System.out.println(menu.getItemName());
             if(menu.getItemName().equals(string)){
 
 
@@ -99,7 +95,6 @@ public class ManageRestaurantInformationdefs {
     }
     @Then("I should see the updated menu with {string} priced at {int}")
     public void i_should_see_the_updated_menu_with_priced_at(String string2, Integer int1) {
-        System.out.println(restaurant.getListemenu());
         Assertions.assertEquals(restaurant.getListemenu().get(0).getItemName(),string2);
         Assertions.assertEquals(Optional.of(Integer.valueOf((int) restaurant.getListemenu().get(0).getPrice())), Optional.of(int1));
 

@@ -12,10 +12,7 @@ public class User {
 
 
     Double Credit;
-
-
     List<Order> OrderHistory;
-
     Role role;
 
 
@@ -35,6 +32,10 @@ public class User {
     }
     public List<Order> getOrderHistory() {
         return OrderHistory;
+    }
+    public void addOrderToHistory(List<Order> orders)
+    {
+        this.OrderHistory.addAll(orders);
     }
 
     public Role getRole() {

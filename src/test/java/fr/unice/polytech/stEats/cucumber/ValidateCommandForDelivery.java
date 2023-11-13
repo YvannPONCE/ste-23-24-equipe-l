@@ -19,6 +19,7 @@ public class ValidateCommandForDelivery {
 
 
     OrderManager orderManager;
+    DeliveryManager deliveryManager;
     Restaurant mockRestaurant;
     UUID orderId;
 
@@ -31,14 +32,17 @@ public class ValidateCommandForDelivery {
         Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockRestaurant.getName()).thenReturn(restaurant_name);
 
-        orderManager = new OrderManager(mockRestaurantManager);
+        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+        deliveryManager = new DeliveryManager(orderManager);
+        orderManager.addDeliveryManager(deliveryManager);
+
 
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
 
         orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_order(orderId, user_email);
+        orderManager.pay_order(orderId, user_email, "7936 3468 9302 8371");
     }
     @When("the restaurant has finish preprared the order")
     public void the_restaurant_has_finish_preprared_the_order() {
