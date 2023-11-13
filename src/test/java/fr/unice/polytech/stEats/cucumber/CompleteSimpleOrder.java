@@ -17,21 +17,30 @@ public class CompleteSimpleOrder {
     UUID orderId;
     OrderManager orderManager;
     RestaurantManager restaurantManager;
+    UserManager userManager;
     Restaurant restaurant;
     String user_email;
 
     DeliveryManager deliveryManager;
     private User user;
 
+    @Given("a restaurant {string} use stEats and a delivery man {string}")
+    public void a_restaurant_use_st_eats_and_a_delivery_man(String restaurantName, String deliveryManName) {
+        restaurant = new Restaurant(restaurantName);
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        userManager = new UserManager();
+        orderManager = new OrderManager(restaurantManager, userManager);
+        deliveryManager = new DeliveryManager(orderManager);
+        deliveryManager.addDeliveryman(deliveryManName);
+        orderManager.addDeliveryManager(deliveryManager);
+    }
+
     @Given("user {string} order a {string} at {string} for {double} euros")
     public void user_order_a_at_for_euros(String user_email, String menu_name, String restaurant_name, Double menu_price) {
         this.user_email = user_email;
-        restaurant = new Restaurant(restaurant_name);
-        restaurantManager = new RestaurantManager();
-        restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager);
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
-        orderManager.userManager.getUserList().add(user);
+        userManager.add_user(user);
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -50,7 +59,7 @@ public class CompleteSimpleOrder {
 
     @When("The user {string} confirm the delivery")
     public void the_user_confirm_the_delivery(String string) {
-        orderManager.validate_order_receipt(string,orderId);
+        orderManager.validate_order_receipt(orderId);
     }
 
     @When("The delivery man {string} confirm the delivery")
@@ -63,7 +72,7 @@ public class CompleteSimpleOrder {
 
     @Then("The order is marked as closed")
     public void the_order_is_marked_as_delivered() {
-        assertEquals(Status.CLOSED,orderManager.get_current_orders(orderId, user_email).get(0).getStatus());
+        assertEquals(Status.CLOSED,orderManager.get_current_orders(orderId).getOrderStatus());
     }
 
 }

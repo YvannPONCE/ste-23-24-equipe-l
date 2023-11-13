@@ -13,17 +13,18 @@ public class OrderManager {
 
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
+    DeliveryManager deliveryManager;
 //    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
 
 
     public UserManager userManager;
 OrderAmountCalculator orderAmountCalculator;
-    public OrderManager(RestaurantManager restaurantManager) {
+    public OrderManager(RestaurantManager restaurantManager, UserManager userManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
 //        this.restaurantList = restaurantManager.get_restaurants();
-        this.userManager = new UserManager();
+        this.userManager = userManager;
 
     }
 
@@ -87,14 +88,11 @@ OrderAmountCalculator orderAmountCalculator;
 
     public void pay_order(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = get_current_orders(orderId);
-        List<Order> orders = groupOrder.get_orders(email);
-        this.orderAmountCalculator=new OrderAmountCalculator(groupOrder,this.userManager);
+        this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
         orderAmountCalculator.applyMenuDiscount(15);
-
-        for (Order order : orders) {
-            if (paymentSystem.pay(card_number)) {
-                order.setStatus(Status.PAID);
-            }
+        if(paymentSystem.pay(card_number))
+        {
+            groupOrder.setPaid(email);
         }
         if (groupOrder.isPaid()) sendOrders(groupOrder);
     }
@@ -115,38 +113,45 @@ OrderAmountCalculator orderAmountCalculator;
     }
 
     public void validate_order(UUID order_id, String restaurant_name) {
-        for (GroupOrder groupOrder : this.group_orders) {
-            for (List<Order> orders : groupOrder.global_orders.values()) {
-                List<Order> matchingOrders = orders.stream()
-                        .filter(order -> order.getId().equals(order_id))
-                        .collect(Collectors.toList());
-                for (Order order : matchingOrders) order.setStatus(Status.READY);
+        GroupOrder groupOrder;
+        List<GroupOrder> groupOrders = this.group_orders.stream()
+                .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
+                .collect(Collectors.toList());
+        if(groupOrders.size()>0) {
+            groupOrder = groupOrders.get(0);
+            groupOrder.validate_order(restaurant_name);
+
+            if (groupOrder.isReady()) {
+                deliveryManager.addOrder(order_id);
             }
         }
     }
 
-    public void validate_order_receipt(String email, UUID order_id) {
-        for (GroupOrder groupOrder : this.group_orders) {
-            for (List<Order> orders : groupOrder.global_orders.values()) {
-                for (Order order : orders) {
-                    if (order.getId().equals(order_id)) {
-                        order.setStatus(Status.DELIVERED);
-                        userManager.get_order_history(email).add(order);
-                    }
-                }
+    public void validate_order_receipt(UUID order_id) {
+        GroupOrder groupOrder;
+        List<GroupOrder> groupOrders = this.group_orders.stream()
+                .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
+                .collect(Collectors.toList());
+        if(groupOrders.size()>0)
+        {
+            groupOrder = groupOrders.get(0);
+            groupOrder.validate_order_receipt();
+            for(String email : groupOrder.getGlobal_orders().keySet())
+            {
+                userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
             }
         }
     }
 
     public void setOrderAsClosed(UUID order_id) {
-        for (GroupOrder groupOrder : this.group_orders) {
-            for (List<Order> orders : groupOrder.global_orders.values()) {
-                for (Order order : orders) {
-                    if (order.getId().equals(order_id)) {
-                        order.setStatus(Status.CLOSED);
-                    }
-                }
-            }
+        GroupOrder groupOrder;
+        List<GroupOrder> groupOrders = this.group_orders.stream()
+                .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
+                .collect(Collectors.toList());
+        if(groupOrders.size()>0)
+        {
+            groupOrder = groupOrders.get(0);
+            groupOrder.setClose();
         }
     }
 
@@ -168,5 +173,9 @@ OrderAmountCalculator orderAmountCalculator;
         }
 
 
+    }
+
+    public void addDeliveryManager(DeliveryManager deliveryManager) {
+        this.deliveryManager = deliveryManager;
     }
 }

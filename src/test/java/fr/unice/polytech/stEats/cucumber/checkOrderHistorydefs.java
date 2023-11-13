@@ -51,7 +51,7 @@ public class checkOrderHistorydefs {
             Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
             Mockito.when(mockRestaurant.getName()).thenReturn(restaurantName);
 
-            orderManager = new OrderManager(mockRestaurantManager);
+            orderManager = new OrderManager(mockRestaurantManager, new UserManager());
             orderManager.userManager =mockuserManager;
 
             order = new Order(restaurantName);
@@ -64,7 +64,7 @@ public class checkOrderHistorydefs {
             orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
             orderManager.validate_order(orderId,string);
             order.setStatus(Status.DELIVERED);
-            orderManager.validate_order_receipt(string,order.getId());
+            orderManager.validate_order_receipt(order.getId());
         }
     }
     @When("the user wants to view their order history")
