@@ -24,12 +24,6 @@ public class RestaurantManager {
         return false;
     }
 
-    public List<Restaurant> get_restaurants()
-    {
-        //return restaurants;
-        return this.restaurants;
-    }
-
     public Restaurant get_restaurant(String restaurant_name) {
         List<Restaurant> foundRestaurants = this.restaurants.stream()
                 .filter(restaurant -> restaurant.getName().equals(restaurant_name))
@@ -40,5 +34,9 @@ public class RestaurantManager {
             return foundRestaurants.get(0);
         }
         return null;
+    }
+
+    public List<Restaurant> getRestaurants() {
+        return restaurants;
     }
 }
