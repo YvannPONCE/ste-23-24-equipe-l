@@ -7,14 +7,14 @@ import java.util.List;
 public class Restaurant {
 
 
-    String name;
+    private String name;
 
 
-    Schedule horaires;
+    private Schedule horaires;
 
 
-    List<Menu> listemenu;
-    List<Order> orders;
+    private List<Menu> listemenu;
+    private List<Order> orders;
 
 
 

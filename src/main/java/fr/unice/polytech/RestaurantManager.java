@@ -18,12 +18,6 @@ public class RestaurantManager {
         this.restaurants.add(restaurant);
     }
 
-    public Boolean remove_restaurant(String restaurant_name)
-    {
-        //remove restaurant
-        return false;
-    }
-
     public List<Restaurant> get_restaurants()
     {
         //return restaurants;
@@ -40,5 +34,9 @@ public class RestaurantManager {
             return foundRestaurants.get(0);
         }
         return null;
+    }
+
+    public void remove_restaurant(String restaurant_name){
+        this.restaurants.removeIf(restaurant -> restaurant.getName().equals(restaurant_name));
     }
 }
