@@ -26,7 +26,7 @@ public class BusinessIntelligence {
     private void initRestaurantsStatistics()
     {
         HashMap<Restaurant, HashMap<Menu, Integer>> menuStatisticsByRestaurants = new HashMap<>();
-        for (Restaurant restaurant : restaurantManager.getRestaurants())
+        for (Restaurant restaurant : restaurantManager.get_restaurants())
         {
             menuStatisticsByRestaurants.put(restaurant, initMenusStatistics(restaurant.getListemenu()));
         }
