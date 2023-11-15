@@ -22,6 +22,9 @@ public class ValidateCommandForDelivery {
     DeliveryManager deliveryManager;
     Restaurant mockRestaurant;
     UUID orderId;
+    private RestaurantCapacityCalculator restaurantCalculator;
+    private Restaurant restaurant;
+    private RestaurantManager restaurantManager;
 
 
     @Given("user {string} as order a {string} at {double} at {string} and as paid his command.")
@@ -31,8 +34,13 @@ public class ValidateCommandForDelivery {
 
         Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockRestaurant.getName()).thenReturn(restaurant_name);
+        restaurant = new Restaurant("mcdonald" );
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        restaurant.setCapacity(16);
 
-        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+
+        orderManager = new OrderManager(restaurantManager, new UserManager());
         deliveryManager = new DeliveryManager(orderManager);
         orderManager.addDeliveryManager(deliveryManager);
 
@@ -40,6 +48,7 @@ public class ValidateCommandForDelivery {
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
+
 
         orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
         orderManager.pay_order(orderId, user_email, "7936 3468 9302 8371");

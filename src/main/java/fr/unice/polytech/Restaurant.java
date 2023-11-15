@@ -12,11 +12,9 @@ public class Restaurant {
 
     Schedule horaires;
 
-
+     int capacity;
     List<Menu> listemenu;
     List<Order> orders;
-
-
 
 
 
@@ -25,7 +23,15 @@ public class Restaurant {
         this.horaires = new Schedule();
         this.listemenu = new ArrayList<>();
         this.orders = new ArrayList<>();
+        this.capacity=10;
 
+
+    }
+    public void setcapacity(int newC) {
+        this.capacity=newC;
+    }
+    public int getCapacity() {
+        return capacity;
     }
 
     public Schedule getHoraires() {
@@ -57,6 +63,9 @@ public class Restaurant {
         return this.orders;
     }
 
+    public void setCapacity(int i) {
+        this.capacity=i;
+    }
 }
 
 
