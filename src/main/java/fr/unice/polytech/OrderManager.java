@@ -5,21 +5,28 @@ import fr.unice.polytech.Enum.Status;
 import org.mockito.internal.matchers.Or;
 
 import java.rmi.server.UID;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class OrderManager {
+public class OrderManager  implements CapacityObserver{
 
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     DeliveryManager deliveryManager;
 //    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
+    private RestaurantCapacityCalculator capacityCalculator;
 
 
     public UserManager userManager;
 OrderAmountCalculator orderAmountCalculator;
+
+
+
+    private LocalDateTime nextSlot;
+
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager) {
         this.group_orders = new ArrayList<>();
         this.restaurantManager = restaurantManager;
@@ -27,7 +34,6 @@ OrderAmountCalculator orderAmountCalculator;
         this.userManager = userManager;
 
     }
-
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(order_id);
         order.setStatus(Status.CREATED);
@@ -48,8 +54,26 @@ OrderAmountCalculator orderAmountCalculator;
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
         UUID uuid = UUID.randomUUID();
-        place_order(email, order, delivery_location, uuid);
-        return uuid;
+        Restaurant restaurant=restaurantManager.get_restaurant(order.restaurant_name);
+        capacityCalculator=new RestaurantCapacityCalculator(restaurant);
+        OrderObserver orderObserver = new OrderObserver(capacityCalculator);
+
+        if (capacityCalculator.canPlaceOrder(order.get_menus().size())) {
+            System.out.println("1010");
+            capacityCalculator.placeOrder(order.get_menus().size());
+            place_order(email, order, delivery_location, uuid);
+            this.capacityCalculator.addObserver(this);
+
+
+          return uuid;
+        } else {
+            System.out.println("1110");
+            nextSlot=capacityCalculator.getNextSlot();
+            return null;
+        }
+    }
+    public LocalDateTime getNextSlot() {
+        return nextSlot;
     }
 
     public List<Order> get_current_orders(UUID order_id, String user_email) {
@@ -132,14 +156,29 @@ OrderAmountCalculator orderAmountCalculator;
         List<GroupOrder> groupOrders = this.group_orders.stream()
                 .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
                 .collect(Collectors.toList());
+
+        OrderObserver orderObserver = new OrderObserver(capacityCalculator);
         if(groupOrders.size()>0)
         {
+
             groupOrder = groupOrders.get(0);
             groupOrder.validate_order_receipt();
             for(String email : groupOrder.getGlobal_orders().keySet())
             {
                 userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
+                List<Order> orders=get_current_user_orders(email);
+                for(Order order1:orders){
+                    Restaurant restaurant=restaurantManager.get_restaurant(order1.restaurant_name);
+                    capacityCalculator=new RestaurantCapacityCalculator(restaurant);
+                    capacityCalculator.resetCapacityafterDelivery(order1.get_menus().size());
+
+
+
+                }
+
+
             }
+
         }
     }
 
@@ -177,5 +216,25 @@ OrderAmountCalculator orderAmountCalculator;
 
     public void addDeliveryManager(DeliveryManager deliveryManager) {
         this.deliveryManager = deliveryManager;
+    }
+
+
+
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof RestaurantCapacityCalculator) {
+            RestaurantCapacityCalculator restaurantCapacityCalculator = (RestaurantCapacityCalculator) o;
+            int newCapacity = restaurantCapacityCalculator.getCapacity();
+            System.out.println("Capacity changed. New capacity: " + newCapacity);
+        }
+    }
+
+    @Override
+    public void updateCapacity(int newCapacity) {
+
+
+        System.out.println("Capacity changed. New capacity: " + newCapacity);
+        // Ajoutez ici la logique spécifique que vous souhaitez exécuter en réponse au changement de capacité
     }
 }

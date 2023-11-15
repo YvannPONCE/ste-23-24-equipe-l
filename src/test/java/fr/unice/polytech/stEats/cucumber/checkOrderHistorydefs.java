@@ -29,6 +29,8 @@ public class checkOrderHistorydefs {
     private StringWriter expectedOutput;
     private String capturedOutput;
     private Order orderSelected;
+    private Restaurant restaurant;
+    private RestaurantManager restaurantManager;
 
 
     @Given("a user {string} with the following order history:")
@@ -50,13 +52,16 @@ public class checkOrderHistorydefs {
             Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
             Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
             Mockito.when(mockRestaurant.getName()).thenReturn(restaurantName);
-
-            orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+            Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
+            restaurant = new Restaurant(restaurantName );
+            restaurantManager = new RestaurantManager();
+            restaurantManager.add_restaurant(restaurant);
+            restaurant.setCapacity(16);
+            orderManager = new OrderManager(restaurantManager, new UserManager());
             orderManager.userManager =mockuserManager;
 
             order = new Order(restaurantName);
             order.add_menu(new Menu(item,price));
-            Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
 
 
             orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);

@@ -23,6 +23,8 @@ public class ValidateOrderReceipt {
     User user;
     private Order order;
     String email;
+    private Restaurant restaurant;
+    private RestaurantManager restaurantManager;
 
     @Given("user {string} as order a {string} at {double} at {string} and as paid his command")
     public void user_as_order_a_at_at_and_as_paid_his_command(String string, String string2, Double double1, String string3) {
@@ -36,8 +38,12 @@ public class ValidateOrderReceipt {
         Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
-
-        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+        Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
+        restaurant = new Restaurant(string3 );
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        restaurant.setCapacity(18);
+        orderManager = new OrderManager(restaurantManager, new UserManager());
         orderManager.userManager =mockuserManager;
 
          order = new Order(string3);
@@ -45,7 +51,7 @@ public class ValidateOrderReceipt {
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
 
         orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
-
+            System.out.println(orderId+"66");
         orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
         orderManager.validate_order(orderId,string);
 

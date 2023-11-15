@@ -21,16 +21,25 @@ public class AddOrdertoGroupOrder {
     User user1;
     User user2;
     UUID order_id;
+    private RestaurantManager restaurantManager;
+    private Restaurant restaurant;
 
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager());
+
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
+
 
     }
     @When("The first user add a {string} menu at {double} euros from {string} to deliver at {string}")
     public void the_first_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name, String delivery_location) {
+        restaurantManager = new RestaurantManager();
+        restaurant=new Restaurant(restaurant_name);
+        restaurant.setCapacity(15);
+        restaurantManager.add_restaurant(restaurant);
+
+        orderManager = new OrderManager(restaurantManager, new UserManager());
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -96,7 +105,6 @@ public class AddOrdertoGroupOrder {
 
         List<Order> user_1_orders = group_order.get_orders(user1.get_email());
         List<Order> user_2_orders = group_order.get_orders(user2.get_email());
-
         Order user_1_order = user_1_orders.get(0);
         Order user_2_order = user_2_orders.get(0);
 

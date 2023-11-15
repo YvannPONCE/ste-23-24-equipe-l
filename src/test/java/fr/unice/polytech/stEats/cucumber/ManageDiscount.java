@@ -36,16 +36,19 @@ public class ManageDiscount {
     private Order order4;
     private UUID orderId3;
 
+    private Restaurant restaurant;
+    private RestaurantManager restaurantManager;
+
 
     @Given("user {string} with {double} credit and the discount threshold is set to {int}")
     public void user_with_credit_and_the_discount_threshold_is_set_to(String string, Double double1, Integer int1) {
-        RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
-        mockRestaurant = Mockito.mock(Restaurant.class);
+        restaurant = new Restaurant("chickentacky" );
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        restaurant.setCapacity(16);
         user1=new User(string,"john",Role.CUSTOMER_STUDENT);
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
-        Mockito.when(mockRestaurant.getName()).thenReturn("chickentacky");
-        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
-        order = new Order("chickenTacky");
+        orderManager = new OrderManager(restaurantManager, new UserManager());
+        order = new Order("chickentacky");
         orderManager.userManager.getUserList().add(user1);
         nbitem=int1;
     }
@@ -60,6 +63,7 @@ public class ManageDiscount {
 
         orderAmountCalculator =new OrderAmountCalculator(orderManager.get_current_orders(order_id),orderManager.userManager);
         orderAmountCalculator.setItemCountThreshold(nbitem);
+        System.out.println(orderId);
         orderManager.pay_order(orderId,user1.get_email(),CreditCard);
 
         }
@@ -80,16 +84,25 @@ public class ManageDiscount {
     public void one_restaurant_two_menu_two_users_and_waiting_in_with_credit(String string, String string2, String string3, Double double1) {
         user2=new User(string,"elodie",Role.CUSTOMER_STUDENT);
         user3=new User(string2,"james",Role.CUSTOMER_STUDENT);
+
+
+
+        restaurant = new Restaurant("chickentacky" );
+        Restaurant restaurant2 = new Restaurant("Mcdon");
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        restaurantManager.add_restaurant(restaurant2);
+        restaurant.setCapacity(10);
+        orderManager=new OrderManager(restaurantManager,new UserManager());
         orderManager.userManager.getUserList().add(user2);
         orderManager.userManager.getUserList().add(user3);
-
-
         order3=new Order("Mcdon");
 
     }
     @When("The first user add a {int} {string} menu at {double} euros from {string} to deliver at {string}")
     public void the_first_user_add_a_menu_at_euros_from_to_deliver_at(Integer int1, String string, Double double1, String string2, String string3) {
         order2 = new Order(string2);
+        restaurantManager.add_restaurant(new Restaurant(string2));
         Menu menu=new Menu(string,double1);
         for(int i=0;i<int1;i++){
             order2.add_menu(menu);
@@ -99,6 +112,7 @@ public class ManageDiscount {
     @When("The second join {int} a {string} menu at {double} euros from {string} to his friend command")
     public void the_second_join_a_menu_at_euros_from_to_his_friend_command(Integer int1, String string, Double double1, String string2) {
        order3= new Order(string2);
+        restaurantManager.add_restaurant(new Restaurant(string2));
         Menu menu=new Menu(string,double1);
         for(int i=0;i<int1;i++){
             order3.add_menu(menu);
@@ -129,6 +143,10 @@ public class ManageDiscount {
     }
     @When("user add {int} {string} at {double} from {string} to deliver at {string}")
     public void user_add_at_from_to_deliver_at(Integer int1, String string, Double double1, String string2, String string3) {
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(new Restaurant(string2));
+
+        restaurant.setCapacity(10);
         order4=new Order(string2);
        Menu menu=new Menu(string,double1);
        for(int i=0;i<int1;i++){
