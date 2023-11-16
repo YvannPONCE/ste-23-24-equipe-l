@@ -39,6 +39,7 @@ public class ConsultStatistics {
         restaurantManager.add_restaurant(restaurant);
         businessIntelligence = new BusinessIntelligence(restaurantManager);
         userManager = new UserManager();
+
         orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
         orderManager.addDeliveryManager(deliveryManager);
 
@@ -60,6 +61,7 @@ public class ConsultStatistics {
         orderManager.pay_order(orderId1, customer1.get_email(), "7936 3468 9302 8371");
         orderManager.pay_order(orderId2, customer2.get_email(), "7936 3468 9302 8371");
         orderManager.pay_order(orderId3, customer1.get_email(), "7936 3468 9302 8371");
+
     }
     @When("i want to consult the volume of orders")
     public void i_want_to_consult_the_volume_of_orders() {
