@@ -28,8 +28,7 @@ public class RestaurantManager {
         List<Restaurant> foundRestaurants = this.restaurants.stream()
                 .filter(restaurant -> restaurant.getName().equals(restaurant_name))
                 .collect(Collectors.toList());
-
-        if(restaurants.size()>0)
+        if(foundRestaurants.size()>0)
         {
             return foundRestaurants.get(0);
         }

@@ -1,11 +1,8 @@
 package fr.unice.polytech.stEats.cucumber;
 
+import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
-import fr.unice.polytech.Menu;
-import fr.unice.polytech.Order;
-import fr.unice.polytech.OrderManager;
-import fr.unice.polytech.User;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -18,17 +15,27 @@ import java.util.UUID;
 public class AddMenuToCart {
 
     OrderManager orderManager = new OrderManager(null, null, null);
+
     User user;
     UUID order_id;
+    private Restaurant restaurant;
+    private RestaurantManager restaurantManager;
+    private UserManager userManager;
 
     @Given("One restaurant, One menu and one user {string}")
     public void one_restaurant_one_menu_and_one_user(String user_email) {
         this.user = new User(user_email, user_email, Role.CUSTOMER_STUDENT);
+        userManager = new UserManager();
+
+        userManager.add_user(user);
     }
 
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart")
     public void the_user_want_to_add_a_menu_to_his_cart(String menu_name, double menu_price, String restaurant_name){
-        //create local order
+        restaurant = new Restaurant(restaurant_name);
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -56,6 +63,10 @@ public class AddMenuToCart {
 
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart and a {string} menu at {double} euros from {string} to his cart")
     public void the_user_want_to_add_a_menu_at_euros_from_to_his_cart_and_a_menu_at_euros_from_to_his_cart(String menu_name, double menu_price, String restaurant_name, String menu_name_2, double menu_price_2, String restaurant_name_2) {
+        restaurant = new Restaurant(restaurant_name);
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -94,9 +105,16 @@ public class AddMenuToCart {
     @Given("One restaurant, two menus and one user {string}")
     public void one_restaurant_two_menus_and_one_user(String user_email) {
         this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
+        userManager = new UserManager();
+
+        userManager.add_user(user);
     }
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart and a {string} menu at {double} euros to his cart")
     public void the_user_want_to_add_a_menu_at_euros_from_to_his_cart_and_a_menu_at_euros_to_his_cart(String menu_name_1, Double menu_price_1, String restaurant_name, String menu_name_2, Double menu_price_2) {
+        restaurant = new Restaurant(restaurant_name);
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name_1, menu_price_1));
         order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);

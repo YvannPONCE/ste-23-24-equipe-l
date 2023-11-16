@@ -18,13 +18,18 @@ public class DeliveryValidation {
     OrderManager orderManager;
     UUID orderID;
     DeliveryManager deliveryManager;
+    private RestaurantManager restaurantManager;
 
     @Given("The campus user {string} has confirmed receipt of their order")
     public void the_campus_user_has_confirmed_receipt_of_their_order(String email) {
+        Restaurant restaurant = new Restaurant("KFC");
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
         Order order = new Order("KFC");
         order.add_menu(new Menu("Bucket",21));
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
+
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
         orderManager.validate_order(order.getId(),email);
     }
