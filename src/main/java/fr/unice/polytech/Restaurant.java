@@ -57,6 +57,9 @@ public class Restaurant {
         return this.orders;
     }
 
+    public void addMenu(Menu menu) {
+        listemenu.add(menu);
+    }
 }
 
 

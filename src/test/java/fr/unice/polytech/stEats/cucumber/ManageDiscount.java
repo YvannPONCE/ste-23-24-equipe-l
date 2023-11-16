@@ -42,9 +42,10 @@ public class ManageDiscount {
         RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
         mockRestaurant = Mockito.mock(Restaurant.class);
         user1=new User(string,"john",Role.CUSTOMER_STUDENT);
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
+        Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockRestaurant.getName()).thenReturn("chickentacky");
-        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        orderManager = new OrderManager(mockRestaurantManager, new UserManager(), businessIntelligence);
         order = new Order("chickenTacky");
         orderManager.userManager.getUserList().add(user1);
         nbitem=int1;

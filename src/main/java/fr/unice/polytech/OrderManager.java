@@ -5,6 +5,7 @@ import fr.unice.polytech.Enum.Status;
 import org.mockito.internal.matchers.Or;
 
 import java.rmi.server.UID;
+import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,14 +15,16 @@ public class OrderManager {
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     DeliveryManager deliveryManager;
+    BusinessIntelligence businessIntelligence;
 //    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
-
-
     public UserManager userManager;
-OrderAmountCalculator orderAmountCalculator;
-    public OrderManager(RestaurantManager restaurantManager, UserManager userManager) {
+    OrderAmountCalculator orderAmountCalculator;
+
+
+    public OrderManager(RestaurantManager restaurantManager, UserManager userManager, BusinessIntelligence businessIntelligence) {
         this.group_orders = new ArrayList<>();
+        this.businessIntelligence = businessIntelligence;
         this.restaurantManager = restaurantManager;
 //        this.restaurantList = restaurantManager.get_restaurants();
         this.userManager = userManager;
@@ -94,7 +97,11 @@ OrderAmountCalculator orderAmountCalculator;
         {
             groupOrder.setPaid(email);
         }
-        if (groupOrder.isPaid()) sendOrders(groupOrder);
+        if (groupOrder.isPaid())
+        {
+            sendOrders(groupOrder);
+            businessIntelligence.add_order(groupOrder);
+        }
     }
 
     public void pay_user_orders(String email, String card_number){
@@ -107,7 +114,7 @@ OrderAmountCalculator orderAmountCalculator;
     private void sendOrders(GroupOrder groupOrder) {
         HashMap<String, List<Order>> restaurantOrders = groupOrder.getOrdersByRestaurants();
         for (Map.Entry<String, List<Order>> entry : restaurantOrders.entrySet()) {
-            Restaurant restaurant = this.restaurantManager.get_restaurant(entry.getKey());
+            Restaurant restaurant = this.restaurantManager.getRestaurant(entry.getKey());
             restaurant.placeOrder(entry.getValue());
         }
     }

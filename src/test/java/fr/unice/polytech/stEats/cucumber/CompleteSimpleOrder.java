@@ -30,7 +30,8 @@ public class CompleteSimpleOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         userManager = new UserManager();
-        orderManager = new OrderManager(restaurantManager, userManager);
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
         deliveryManager = new DeliveryManager(orderManager);
         deliveryManager.addDeliveryman(deliveryManName);
         orderManager.addDeliveryManager(deliveryManager);

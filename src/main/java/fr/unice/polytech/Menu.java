@@ -1,5 +1,7 @@
 package fr.unice.polytech;
 
+import java.util.Objects;
+
 public class Menu {
     private String itemName;
     private double price;
@@ -27,5 +29,18 @@ public class Menu {
 
     public double get_price() {
         return price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Menu menu = (Menu) o;
+        return Double.compare(price, menu.price) == 0 && Objects.equals(itemName, menu.itemName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemName, price);
     }
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class AddMenuToCart {
 
-    OrderManager orderManager = new OrderManager(null, null);
+    OrderManager orderManager = new OrderManager(null, null, null);
     User user;
     UUID order_id;
 

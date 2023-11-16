@@ -29,10 +29,10 @@ public class ValidateCommandForDelivery {
         RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
         mockRestaurant = Mockito.mock(Restaurant.class);
 
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
+        Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockRestaurant.getName()).thenReturn(restaurant_name);
 
-        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+        orderManager = new OrderManager(mockRestaurantManager, new UserManager(), new BusinessIntelligence(new RestaurantManager()));
         deliveryManager = new DeliveryManager(orderManager);
         orderManager.addDeliveryManager(deliveryManager);
 

@@ -7,8 +7,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.hu.Ha;
+import org.junit.Assert;
 
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ConsultStatistics {
@@ -30,11 +32,14 @@ public class ConsultStatistics {
     @Given("his restaurant {string} has complete multiple orders")
     public void his_restaurant_has_complete_multiple_orders(String restaurantName) {
         restaurant = new Restaurant(restaurantName);
+        restaurant.addMenu(new Menu("bigMac", 7.5));
+        Restaurant restaurant2 = new Restaurant("Second restaurant");
+        restaurant2.addMenu(new Menu("tartare", 15.5));
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         businessIntelligence = new BusinessIntelligence(restaurantManager);
         userManager = new UserManager();
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
         orderManager.addDeliveryManager(deliveryManager);
 
         User customer1 = new User("customer1@gmail.com", "password" ,Role.CUSTOMER_STUDENT);
@@ -58,38 +63,35 @@ public class ConsultStatistics {
     }
     @When("i want to consult the volume of orders")
     public void i_want_to_consult_the_volume_of_orders() {
-        HashMap<Menu, Integer> menuStatistics = businessIntelligence.get_popular_menus(restaurant.getName());
-        System.out.println(menuStatistics);
 
     }
     @Then("i get the number of orders since the begining")
     public void i_get_the_number_of_orders_since_the_begining() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assert.assertEquals(3, businessIntelligence.getOrdersCount());
     }
 
     @When("I want to consult the most popular delivery locations")
     public void i_want_to_consult_the_most_popular_delivery_locations() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
     }
 
-    @Then("I see a list of delivery locations and their popularity in percentage")
-    public void i_see_a_list_of_delivery_locations_and_their_popularity_in_percentage() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    @Then("I see a list of delivery locations and their popularity")
+    public void i_see_a_list_of_delivery_locations_and_their_popularity() {
+        Assert.assertEquals(5, businessIntelligence.get_popular_locations().size());
+        Assert.assertEquals(2, businessIntelligence.get_popular_locations().get(Locations.BATIMENT_E).intValue());
+        Assert.assertEquals(1, businessIntelligence.get_popular_locations().get(Locations.HALL_PRINCIPAL).intValue());
     }
 
     @When("I want to consult the most popular menus")
     public void i_want_to_consult_the_most_popular_menus() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
     }
 
     @Then("The manager get the most populars menus")
     public void the_manager_get_the_most_populars_menus() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        HashMap<Menu, Integer> menuStatistics = businessIntelligence.get_popular_menus(restaurant.getName());
+        Assert.assertEquals(2, menuStatistics.size());
+        Assert.assertEquals(2, menuStatistics.get(new Menu("bigMac", 7.5)).intValue());
+        Assert.assertEquals(1, menuStatistics.get(new Menu("tartare", 15.5)).intValue());
     }
 
 

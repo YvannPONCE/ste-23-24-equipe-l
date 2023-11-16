@@ -31,13 +31,14 @@ public class ValidateOrderReceipt {
         mockRestaurant = Mockito.mock(Restaurant.class);
         mockuserManager=Mockito.mock(UserManager.class);
         email=string;
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
+        Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
+        Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
 
-        orderManager = new OrderManager(mockRestaurantManager, new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        orderManager = new OrderManager(mockRestaurantManager, new UserManager(), businessIntelligence);
         orderManager.userManager =mockuserManager;
 
          order = new Order(string3);

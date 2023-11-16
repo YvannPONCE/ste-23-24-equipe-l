@@ -24,7 +24,8 @@ public class AddOrdertoGroupOrder {
 
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
 
@@ -76,7 +77,8 @@ public class AddOrdertoGroupOrder {
 
     @Given("One restaurant, two menu, two users {string} and {string} waiting in {string}")
     public void one_restaurant_two_menu_two_users_and(String user_email_1, String user_email_2, String delivery_location) {
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
     }

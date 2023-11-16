@@ -30,7 +30,7 @@ public class ManageRestaurant {
 
     @Then("the restaurant {string} should be in the restaurant manager with menu {string} for {double} euros")
     public void the_restaurant_should_be_in_the_restaurant_manager_with_menu_for_euros(String restaurant_name, String menu_name, Double menu_price) {
-        List<Restaurant> restaurants = global_restaurant_manager.get_restaurants();
+        List<Restaurant> restaurants = global_restaurant_manager.getRestaurants();
         Assert.assertEquals(1, restaurants.size());
         Restaurant restaurant = restaurants.get(0);
         Assert.assertEquals(restaurant_name, restaurant.getName());
@@ -55,6 +55,6 @@ public class ManageRestaurant {
     }
     @Then("the restaurant {string} should not be in the restaurant manager")
     public void the_restaurant_should_not_be_in_the_restaurant_manager(String restaurant_name) {
-        Assert.assertNull(this.global_restaurant_manager.get_restaurant(restaurant_name));
+        Assert.assertNull(this.global_restaurant_manager.getRestaurant(restaurant_name));
     }
 }

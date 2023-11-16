@@ -15,6 +15,7 @@ public class BusinessIntelligence {
         menuStatisticsByRestaurants = new HashMap<>();
         locationStatistics = new HashMap<>();
         initLocationsStatistics();
+        initRestaurantsStatistics();
     }
     private void initLocationsStatistics()
     {
@@ -25,8 +26,7 @@ public class BusinessIntelligence {
     }
     private void initRestaurantsStatistics()
     {
-        HashMap<Restaurant, HashMap<Menu, Integer>> menuStatisticsByRestaurants = new HashMap<>();
-        for (Restaurant restaurant : restaurantManager.get_restaurants())
+        for (Restaurant restaurant : restaurantManager.getRestaurants())
         {
             menuStatisticsByRestaurants.put(restaurant, initMenusStatistics(restaurant.getListemenu()));
         }
@@ -62,7 +62,6 @@ public class BusinessIntelligence {
                 .orElse(null);
 
         if(corespondingRestaurant == null)return;
-
        HashMap<Menu, Integer> menusPopularity = menuStatisticsByRestaurants.get(corespondingRestaurant);
         for (Menu menu : menus) {
             menusPopularity.merge(menu, 1, Integer::sum);
@@ -83,8 +82,18 @@ public class BusinessIntelligence {
                 .orElse(null);
 
         if(corespondingRestaurant == null)return null;
-
         return menuStatisticsByRestaurants.get(corespondingRestaurant);
     }
 
+    public int getOrdersCount() {
+        int count = 0;
+
+        for(HashMap<Menu ,Integer> map: menuStatisticsByRestaurants.values())
+        {
+            for (int value : map.values()) {
+                count += value;
+            }
+        }
+        return count;
+    }
 }

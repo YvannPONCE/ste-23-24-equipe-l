@@ -18,13 +18,13 @@ public class RestaurantManager {
         this.restaurants.add(restaurant);
     }
 
-    public List<Restaurant> get_restaurants()
+    public List<Restaurant> getRestaurants()
     {
         //return restaurants;
         return this.restaurants;
     }
 
-    public Restaurant get_restaurant(String restaurant_name) {
+    public Restaurant getRestaurant(String restaurant_name) {
         List<Restaurant> foundRestaurants = this.restaurants.stream()
                 .filter(restaurant -> restaurant.getName().equals(restaurant_name))
                 .collect(Collectors.toList());
