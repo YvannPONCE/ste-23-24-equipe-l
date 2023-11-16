@@ -26,7 +26,8 @@ public class AddOrdertoGroupOrder {
 
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
-
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
 
@@ -39,7 +40,7 @@ public class AddOrdertoGroupOrder {
         restaurant.setCapacity(15);
         restaurantManager.add_restaurant(restaurant);
 
-        orderManager = new OrderManager(restaurantManager, new UserManager());
+        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -85,7 +86,8 @@ public class AddOrdertoGroupOrder {
 
     @Given("One restaurant, two menu, two users {string} and {string} waiting in {string}")
     public void one_restaurant_two_menu_two_users_and(String user_email_1, String user_email_2, String delivery_location) {
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
     }

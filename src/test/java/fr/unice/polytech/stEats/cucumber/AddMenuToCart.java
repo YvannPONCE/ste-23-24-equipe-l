@@ -14,7 +14,8 @@ import java.util.UUID;
 
 public class AddMenuToCart {
 
-    OrderManager orderManager ;
+    OrderManager orderManager = new OrderManager(null, null, null);
+
     User user;
     UUID order_id;
     private Restaurant restaurant;
@@ -34,7 +35,7 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -65,7 +66,7 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
@@ -113,7 +114,7 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name_1, menu_price_1));
         order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);

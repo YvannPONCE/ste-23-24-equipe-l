@@ -15,7 +15,7 @@ import java.util.Observer;
 
         @Override
         public void update(Observable o, Object arg) {
-            System.out.println("Capacity changed. New capacity: " + restaurantCapacityManager.getCapacity());
+            //System.out.println("Capacity changed. New capacity: " + restaurantCapacityManager.getCapacity());
         }
     }
 

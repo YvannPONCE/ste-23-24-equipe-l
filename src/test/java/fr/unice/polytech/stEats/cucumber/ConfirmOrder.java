@@ -24,7 +24,8 @@ public class ConfirmOrder {
         Restaurant restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -39,7 +40,7 @@ public class ConfirmOrder {
     @Then("the order {string} at {double} from {string} will not be transmitted to the restaurant")
     public void the_order_will_not_be_transmitted_to_the_restaurant(String menuName, Double menuPrice, String restaurantName) {
         // change this to do the opposite
-        List<Order> orders = restaurantManager.get_restaurant(restaurantName).getOrders();
+        List<Order> orders = restaurantManager.getRestaurant(restaurantName).getOrders();
         Assert.assertEquals(0, orders.size());
         /*
         Order order = orders.get(0);
@@ -57,7 +58,8 @@ public class ConfirmOrder {
         Restaurant restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -72,7 +74,7 @@ public class ConfirmOrder {
 
     @Then("The order {string} at {double} from {string} has been transmit to the restaurant")
     public void the_order_at_from_has_been_transmit_to_the_restaurant(String menuName, double menuPrice, String restaurantName) {
-        List<Order> orders = restaurantManager.get_restaurant(restaurantName).getOrders();
+        List<Order> orders = restaurantManager.getRestaurant(restaurantName).getOrders();
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
         Assert.assertEquals(restaurantName, order.get_restaurant_name());
@@ -90,7 +92,8 @@ public class ConfirmOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant1);
         restaurantManager.add_restaurant(restaurant2);
-        orderManager = new OrderManager(restaurantManager, new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
 
         Order order_1 = new Order(restaurant_name_1);
         Order order_2 = new Order(restaurant_name_2);
@@ -108,7 +111,7 @@ public class ConfirmOrder {
     }
     @Then("the order {string} at {double} from {string} and the order {string} at {double} from {string} will be transmitted to the restaurants")
     public void the_order_at_from_and_the_order_at_from_will_be_transmitted_to_the_restaurants(String menu_name_1, Double menu_price_1, String restaurant_name_1, String menu_name_2, Double menu_price_2, String restaurant_name_2) {
-        List<Order> orders = restaurantManager.get_restaurant(restaurant_name_1).getOrders();
+        List<Order> orders = restaurantManager.getRestaurant(restaurant_name_1).getOrders();
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
         Assert.assertEquals(restaurant_name_1, order.get_restaurant_name());
@@ -118,7 +121,7 @@ public class ConfirmOrder {
         Assert.assertEquals(menu_name_1, menu.get_name());
         Assert.assertEquals(menu_price_1, menu.get_price(), 0.01);
 
-        List<Order> orders_2 = restaurantManager.get_restaurant(restaurant_name_2).getOrders();
+        List<Order> orders_2 = restaurantManager.getRestaurant(restaurant_name_2).getOrders();
         Assert.assertEquals(1, orders_2.size());
         Order order_2 = orders_2.get(0);
         Assert.assertEquals(restaurant_name_2, order_2.get_restaurant_name());

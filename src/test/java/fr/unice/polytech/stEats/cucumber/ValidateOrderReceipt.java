@@ -33,17 +33,19 @@ public class ValidateOrderReceipt {
         mockRestaurant = Mockito.mock(Restaurant.class);
         mockuserManager=Mockito.mock(UserManager.class);
         email=string;
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
+        Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
+        Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
+
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
         restaurant = new Restaurant(string3 );
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(18);
-        orderManager = new OrderManager(restaurantManager, new UserManager());
+        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
         orderManager.userManager =mockuserManager;
 
          order = new Order(string3);
@@ -51,7 +53,6 @@ public class ValidateOrderReceipt {
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
 
         orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
-            System.out.println(orderId+"66");
         orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
         orderManager.validate_order(orderId,string);
 

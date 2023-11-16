@@ -20,9 +20,8 @@ import java.util.*;
 
 public class checkOrderHistorydefs {
     OrderManager orderManager;
-    Restaurant mockRestaurant;
+    UserManager userManager;
     UUID orderId;
-    UserManager mockuserManager;
     User user;
     private Order order;
     String email;
@@ -37,28 +36,22 @@ public class checkOrderHistorydefs {
     public void a_user_with_the_following_order_history(String string, io.cucumber.datatable.DataTable dataTable) {
         List<Map<String, String>> orderData = dataTable.asMaps(String.class, String.class);
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
+        userManager = new UserManager();
+        userManager.add_user(user);
 
         for (Map<String, String> row : orderData) {
             String item = row.get("Item");
 
             double price = Double.parseDouble(row.get("Price"));
             String restaurantName = row.get("Restaurant Name");
-            RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
-            mockRestaurant = Mockito.mock(Restaurant.class);
-            mockuserManager=Mockito.spy(UserManager.class);
             email=string;
-            Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
-            mockuserManager.getUserList().add(user);
-            Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
-            Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
-            Mockito.when(mockRestaurant.getName()).thenReturn(restaurantName);
-            Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
+
             restaurant = new Restaurant(restaurantName );
+            restaurant.setCapacity(16);
             restaurantManager = new RestaurantManager();
             restaurantManager.add_restaurant(restaurant);
-            restaurant.setCapacity(16);
-            orderManager = new OrderManager(restaurantManager, new UserManager());
-            orderManager.userManager =mockuserManager;
+
+            orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
 
             order = new Order(restaurantName);
             order.add_menu(new Menu(item,price));
@@ -77,7 +70,6 @@ public class checkOrderHistorydefs {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
-        mockuserManager.displayOrderHistory(email);
         System.setOut(originalOut);
          capturedOutput = outputStream.toString();
 

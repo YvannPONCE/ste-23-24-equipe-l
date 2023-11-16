@@ -25,10 +25,11 @@ public class DeliveryValidation {
         Restaurant restaurant = new Restaurant("KFC");
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, new UserManager());
         Order order = new Order("KFC");
         order.add_menu(new Menu("Bucket",21));
-        orderManager = new OrderManager(restaurantManager, new UserManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
+
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
         orderManager.validate_order(order.getId(),email);
     }

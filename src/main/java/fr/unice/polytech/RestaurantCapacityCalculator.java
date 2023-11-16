@@ -37,7 +37,7 @@ public class RestaurantCapacityCalculator extends Observable {
 
 
 
-            System.out.println("Order placed. Remaining capacity: " + (restaurant.capacity - numberOfMenus));
+            //System.out.println("Order placed. Remaining capacity: " + (restaurant.capacity - numberOfMenus));
         }
     }
     public void resetCapacityafterDelivery(int numberOfMenus) {
@@ -46,7 +46,7 @@ public class RestaurantCapacityCalculator extends Observable {
             setChanged();
             notifyObservers();
             clearChanged();
-            System.out.println("Order placed. Remaining capacity: " + (restaurant.capacity - numberOfMenus));
+            //System.out.println("Order placed. Remaining capacity: " + (restaurant.capacity - numberOfMenus));
     }
 
     public LocalDateTime getNextSlot() {
@@ -59,7 +59,6 @@ public class RestaurantCapacityCalculator extends Observable {
     }
 
     public LocalDateTime getNextAvailableSlot() {
-        System.out.println(getCurrentTime() + "777");
 
         LocalDateTime deliveryTime = getCurrentTime().plus(PREPARATION_TIME);
 

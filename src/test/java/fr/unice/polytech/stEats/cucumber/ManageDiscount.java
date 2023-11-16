@@ -22,9 +22,6 @@ public class ManageDiscount {
     String CreditCard="7936 3468 9302 8371";
  OrderAmountCalculator orderAmountCalculator;
     private Order order;
-    private GroupOrder groupOrder;
-    private Restaurant mockRestaurant;
-    private Integer nbitem;
     private UUID orderId;
     private double expected=0.0;
     private User user3;
@@ -38,19 +35,22 @@ public class ManageDiscount {
 
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
+    private UserManager userManager;
 
 
     @Given("user {string} with {double} credit and the discount threshold is set to {int}")
     public void user_with_credit_and_the_discount_threshold_is_set_to(String string, Double double1, Integer int1) {
-        restaurant = new Restaurant("chickentacky" );
+        restaurant = new Restaurant("chickenTacky" );
         restaurantManager = new RestaurantManager();
+        userManager = new UserManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(16);
         user1=new User(string,"john",Role.CUSTOMER_STUDENT);
-        orderManager = new OrderManager(restaurantManager, new UserManager());
-        order = new Order("chickentacky");
-        orderManager.userManager.getUserList().add(user1);
-        nbitem=int1;
+        userManager.add_user(user1);
+
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
+        order = new Order("chickenTacky");
     }
     @When("the user selects {string} and adds {int} items ton his  order")
     public void the_user_selects_and_adds_items_ton_his_order(String string, Integer int1) {
@@ -62,8 +62,7 @@ public class ManageDiscount {
         orderId=orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
 
         orderAmountCalculator =new OrderAmountCalculator(orderManager.get_current_orders(order_id),orderManager.userManager);
-        orderAmountCalculator.setItemCountThreshold(nbitem);
-        System.out.println(orderId);
+        orderAmountCalculator.setItemCountThreshold(16);
         orderManager.pay_order(orderId,user1.get_email(),CreditCard);
 
         }
@@ -93,7 +92,7 @@ public class ManageDiscount {
         restaurantManager.add_restaurant(restaurant);
         restaurantManager.add_restaurant(restaurant2);
         restaurant.setCapacity(10);
-        orderManager=new OrderManager(restaurantManager,new UserManager());
+        orderManager=new OrderManager(restaurantManager,new UserManager(), new BusinessIntelligence(restaurantManager));
         orderManager.userManager.getUserList().add(user2);
         orderManager.userManager.getUserList().add(user3);
         order3=new Order("Mcdon");

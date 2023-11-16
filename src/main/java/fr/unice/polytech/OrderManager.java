@@ -2,9 +2,6 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
-import org.mockito.internal.matchers.Or;
-
-import java.rmi.server.UID;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,20 +12,17 @@ public class OrderManager  implements CapacityObserver{
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     DeliveryManager deliveryManager;
+    BusinessIntelligence businessIntelligence;
 //    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
-    private RestaurantCapacityCalculator capacityCalculator;
-
-
     public UserManager userManager;
-OrderAmountCalculator orderAmountCalculator;
-
-
-
+    OrderAmountCalculator orderAmountCalculator;
+    private RestaurantCapacityCalculator capacityCalculator;
     private LocalDateTime nextSlot;
 
-    public OrderManager(RestaurantManager restaurantManager, UserManager userManager) {
+    public OrderManager(RestaurantManager restaurantManager, UserManager userManager, BusinessIntelligence businessIntelligence) {
         this.group_orders = new ArrayList<>();
+        this.businessIntelligence = businessIntelligence;
         this.restaurantManager = restaurantManager;
 //        this.restaurantList = restaurantManager.get_restaurants();
         this.userManager = userManager;
@@ -54,12 +48,11 @@ OrderAmountCalculator orderAmountCalculator;
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
         UUID uuid = UUID.randomUUID();
-        Restaurant restaurant=restaurantManager.get_restaurant(order.restaurant_name);
+        Restaurant restaurant=restaurantManager.getRestaurant(order.get_restaurant_name());
         capacityCalculator=new RestaurantCapacityCalculator(restaurant);
         OrderObserver orderObserver = new OrderObserver(capacityCalculator);
 
         if (capacityCalculator.canPlaceOrder(order.get_menus().size())) {
-            System.out.println("1010");
             capacityCalculator.placeOrder(order.get_menus().size());
             place_order(email, order, delivery_location, uuid);
             this.capacityCalculator.addObserver(this);
@@ -67,7 +60,6 @@ OrderAmountCalculator orderAmountCalculator;
 
           return uuid;
         } else {
-            System.out.println("1110");
             nextSlot=capacityCalculator.getNextSlot();
             return null;
         }
@@ -118,7 +110,11 @@ OrderAmountCalculator orderAmountCalculator;
         {
             groupOrder.setPaid(email);
         }
-        if (groupOrder.isPaid()) sendOrders(groupOrder);
+        if (groupOrder.isPaid())
+        {
+            sendOrders(groupOrder);
+            businessIntelligence.add_order(groupOrder);
+        }
     }
 
     public void pay_user_orders(String email, String card_number){
@@ -131,7 +127,7 @@ OrderAmountCalculator orderAmountCalculator;
     private void sendOrders(GroupOrder groupOrder) {
         HashMap<String, List<Order>> restaurantOrders = groupOrder.getOrdersByRestaurants();
         for (Map.Entry<String, List<Order>> entry : restaurantOrders.entrySet()) {
-            Restaurant restaurant = this.restaurantManager.get_restaurant(entry.getKey());
+            Restaurant restaurant = this.restaurantManager.getRestaurant(entry.getKey());
             restaurant.placeOrder(entry.getValue());
         }
     }
@@ -168,7 +164,7 @@ OrderAmountCalculator orderAmountCalculator;
                 userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
                 List<Order> orders=get_current_user_orders(email);
                 for(Order order1:orders){
-                    Restaurant restaurant=restaurantManager.get_restaurant(order1.restaurant_name);
+                    Restaurant restaurant=restaurantManager.getRestaurant(order1.restaurant_name);
                     capacityCalculator=new RestaurantCapacityCalculator(restaurant);
                     capacityCalculator.resetCapacityafterDelivery(order1.get_menus().size());
 
@@ -226,7 +222,7 @@ OrderAmountCalculator orderAmountCalculator;
         if (o instanceof RestaurantCapacityCalculator) {
             RestaurantCapacityCalculator restaurantCapacityCalculator = (RestaurantCapacityCalculator) o;
             int newCapacity = restaurantCapacityCalculator.getCapacity();
-            System.out.println("Capacity changed. New capacity: " + newCapacity);
+            //System.out.println("Capacity changed. New capacity: " + newCapacity);
         }
     }
 
@@ -234,7 +230,7 @@ OrderAmountCalculator orderAmountCalculator;
     public void updateCapacity(int newCapacity) {
 
 
-        System.out.println("Capacity changed. New capacity: " + newCapacity);
+        //System.out.println("Capacity changed. New capacity: " + newCapacity);
         // Ajoutez ici la logique spécifique que vous souhaitez exécuter en réponse au changement de capacité
     }
 }

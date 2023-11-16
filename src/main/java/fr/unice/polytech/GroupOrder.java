@@ -89,6 +89,27 @@ public class GroupOrder {
        this.orderStatus = Status.PAID;
        setOrdersStatus(Status.PAID);
    }
+   public HashMap<String, List<Menu>> getMenusByRestaurants()
+   {
+       HashMap<String, List<Menu>> menusByRestaurant = new HashMap<>();
+       for(List<Order> orders : global_orders.values())
+       {
+           for(Order order : orders)
+           {
+               Map<String , List<Menu>> orderByRestaurant = menusByRestaurant.entrySet().stream()
+                       .filter(entry -> entry.getKey().equals(order.get_restaurant_name()))
+                       .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+               if(orderByRestaurant.isEmpty())
+               {
+                   menusByRestaurant.put(order.get_restaurant_name(), order.get_menus());
+               } else {
+                   menusByRestaurant.get(order.get_restaurant_name()).addAll(order.get_menus());
+               }
+           }
+       }
+       return menusByRestaurant;
+   }
+
 
     public boolean isPaid() {
        return orderStatus == Status.PAID;

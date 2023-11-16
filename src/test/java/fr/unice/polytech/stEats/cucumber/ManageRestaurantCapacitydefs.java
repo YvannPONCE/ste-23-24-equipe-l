@@ -43,7 +43,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(1);
 
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
     }
 
 
@@ -76,7 +76,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant2);
 
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
     }
     @When("user order a {string} in the restaurant")
     public void user_order_a_in_the_restaurant(String string) {
@@ -108,7 +108,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant2);
 
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
     }
     @When("user order a {string} in the restaurant ans")
     public void user_order_a_in_the_restaurant_ans(String string) {
@@ -143,7 +143,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);;
 
-        orderManager = new OrderManager(restaurantManager, userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
     }
     @When("user order a {string} and validate order receipt")
     public void user_order_a_and_validate_order_receipt(String string) {
