@@ -21,14 +21,13 @@ public class ValidateCommandForDelivery {
     OrderManager orderManager;
     DeliveryManager deliveryManager;
     UUID orderId;
-    private RestaurantCapacityCalculator restaurantCalculator;
+
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
 
 
     @Given("user {string} as order a {string} at {double} at {string} and as paid his command.")
     public void user_as_order_a_at_at_and_as_paid_his_command(String user_email, String menu_name, Double menu_price, String restaurant_name) {
-        RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
 
         restaurant = new Restaurant(restaurant_name );
         restaurantManager = new RestaurantManager();

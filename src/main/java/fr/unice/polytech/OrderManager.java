@@ -20,14 +20,22 @@ public class OrderManager  implements CapacityObserver{
     private RestaurantCapacityCalculator capacityCalculator;
     private LocalDateTime nextSlot;
 
+
+    private NotificationCenter notificationCenter;
+
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager, BusinessIntelligence businessIntelligence) {
         this.group_orders = new ArrayList<>();
         this.businessIntelligence = businessIntelligence;
         this.restaurantManager = restaurantManager;
 //        this.restaurantList = restaurantManager.get_restaurants();
+        this.notificationCenter=new NotificationCenter();
         this.userManager = userManager;
 
     }
+    public NotificationCenter getNotificationCenter() {
+        return notificationCenter;
+    }
+
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(order_id);
         order.setStatus(Status.CREATED);
@@ -140,9 +148,14 @@ public class OrderManager  implements CapacityObserver{
         if(groupOrders.size()>0) {
             groupOrder = groupOrders.get(0);
             groupOrder.validate_order(restaurant_name);
+            LocalDateTime localDateTime=LocalDateTime.now();
+
 
             if (groupOrder.isReady()) {
                 deliveryManager.addOrder(order_id);
+                notificationCenter.order_ready(order_id, "DeliveryPersonName", "DeliveryPersonPhone", groupOrder.get_delivery_location(), "customer@example.com");
+
+
             }
         }
     }
@@ -167,7 +180,7 @@ public class OrderManager  implements CapacityObserver{
                     Restaurant restaurant=restaurantManager.getRestaurant(order1.restaurant_name);
                     capacityCalculator=new RestaurantCapacityCalculator(restaurant);
                     capacityCalculator.resetCapacityafterDelivery(order1.get_menus().size());
-
+                    notificationCenter.order_delivered(order_id, groupOrder.get_delivery_location(), LocalDateTime.now(), email);
 
 
                 }
