@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -26,7 +27,7 @@ public class ConfirmOrder {
         restaurantManager.add_restaurant(restaurant);
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
         orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
-
+        orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
@@ -60,7 +61,7 @@ public class ConfirmOrder {
         restaurantManager.add_restaurant(restaurant);
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
         orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
-
+        orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
@@ -94,7 +95,7 @@ public class ConfirmOrder {
         restaurantManager.add_restaurant(restaurant2);
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
         orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
-
+        orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order_1 = new Order(restaurant_name_1);
         Order order_2 = new Order(restaurant_name_2);
         Menu menu_1 = new Menu(menu_name_1, menu_price_1);

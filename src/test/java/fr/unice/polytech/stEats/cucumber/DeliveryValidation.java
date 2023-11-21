@@ -2,12 +2,12 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -29,15 +29,15 @@ public class DeliveryValidation {
         order.add_menu(new Menu("Bucket",21));
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
         orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
-
+            orderManager.userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
         orderManager.validate_order(order.getId(),email);
     }
 
     @Given("The delivery man {string} is assigned to this order")
     public void the_delivery_man_is_assigned_to_this_order(String email) {
-        deliveryManager = new DeliveryManager(orderManager);
-        deliveryManager.addDeliveryman(email);
+        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
+        deliveryManager.addDeliveryman(email,"deliveryMan");
         deliveryManager.addOrder(orderID);
     }
 
@@ -56,6 +56,7 @@ public class DeliveryValidation {
 
     @Then("The delivery man {string} become available for an new delivery")
     public void the_delivery_man_become_available_for_an_new_delivery(String email) {
+
         assertEquals(deliveryManager.isAvailable(email),true);
     }
 

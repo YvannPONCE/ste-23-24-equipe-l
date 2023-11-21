@@ -59,6 +59,9 @@ public class AddMenuToCart {
     @Given("Two restaurants, two menus and one user {string}")
     public void two_restaurants_two_menus_and_one_user(String user_email) {
         this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
+        userManager = new UserManager();
+
+        userManager.add_user(user);
     }
 
     @When("The user want to add a {string} menu at {double} euros from {string} to his cart and a {string} menu at {double} euros from {string} to his cart")

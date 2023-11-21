@@ -1,22 +1,35 @@
 package fr.unice.polytech;
-import fr.unice.polytech.Enum.Status;
+
+import fr.unice.polytech.Enum.Role;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class DeliveryManager {
 
 
+    private final UserManager usermanager;
     OrderManager orderManager;
+
+
+
+    User user;
     private Map<String, Boolean> deliveryMenAvailability;
     private Map<String, UUID> deliveryMenOrders;
 
-    public DeliveryManager(OrderManager orderManager) {
+    public DeliveryManager(OrderManager orderManager, UserManager userManager) {
         this.orderManager = orderManager;
         this.deliveryMenAvailability = new HashMap<>();
+        this.usermanager=userManager;
         this.deliveryMenOrders = new HashMap<>();
+    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Map<String, Boolean> getDeliveryMenAvailability() {
@@ -57,8 +70,10 @@ public class DeliveryManager {
         return null;
     }
 
-    public void addDeliveryman(String deliveryman){
-        deliveryMenAvailability.put(deliveryman,true);
+    public void addDeliveryman(String delivermanmail,String deliveryman) {
+        deliveryMenAvailability.put(deliveryman, true);
+        setUser(new User(delivermanmail,deliveryman,"ggg", Role.DELIVER_MAN));
+        usermanager.add_user(user);
     }
 
     public void deleteDeliveryman(String deliveryman){

@@ -53,7 +53,8 @@ public class ConsultStatistics {
         order1.add_menu(new Menu("bigMac", 7.5));
         order2.add_menu(new Menu("bigMac", 7.5));
         order3.add_menu(new Menu("tartare", 15.5));
-
+            orderManager.userManager.add_user(customer1);
+            orderManager.userManager.add_user(customer2);
         UUID orderId1 = orderManager.place_order(customer1.get_email() ,order1, Locations.HALL_PRINCIPAL);
         UUID orderId2 = orderManager.place_order(customer2.get_email() ,order2, Locations.BATIMENT_E);
         UUID orderId3 = orderManager.place_order(customer1.get_email() ,order3, Locations.BATIMENT_E);

@@ -24,7 +24,7 @@ public class Order {
     }
 
     public int getItemCount() {
-        return menus.size(); // Ou utilisez d'autres attributs pour calculer le nombre d'articles
+        return menus.size();
     }
 
 

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+
+    List<Notification> notifications;
     String email;
     String username;
 
@@ -23,6 +25,7 @@ public class User {
         this.OrderHistory =new ArrayList<>();
         this.role=role;
         this.Credit=0.00;
+        this.notifications=new ArrayList<>();
     }
     public User(String email, String password, Role role){
         this(email, email, password, role);
@@ -60,4 +63,12 @@ public class User {
     public double addCredit(Double sum){
         return this.Credit=this.Credit+sum;
     }
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
 }

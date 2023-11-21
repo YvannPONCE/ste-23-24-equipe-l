@@ -10,7 +10,9 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -37,6 +39,9 @@ public class ValidateOrderReceipt {
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
         Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
+        List<User> users=new ArrayList<>();
+        users.add(user);
+        Mockito.when(mockuserManager.getUserList()).thenReturn(users);
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
 
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
@@ -47,7 +52,6 @@ public class ValidateOrderReceipt {
         restaurant.setCapacity(18);
         orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
         orderManager.userManager =mockuserManager;
-
          order = new Order(string3);
         order.add_menu(new Menu(string,double1));
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
