@@ -23,11 +23,13 @@ public class AddOrdertoGroupOrder {
     UUID order_id;
     private RestaurantManager restaurantManager;
     private Restaurant restaurant;
+    private UserManager usermanager;
+    private UserManager usermanager2;
 
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
+
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
 
@@ -35,14 +37,19 @@ public class AddOrdertoGroupOrder {
     }
     @When("The first user add a {string} menu at {double} euros from {string} to deliver at {string}")
     public void the_first_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name, String delivery_location) {
+        usermanager=new UserManager();
+        usermanager.add_user(user2);
+        usermanager.add_user(user1);
         restaurantManager = new RestaurantManager();
         restaurant=new Restaurant(restaurant_name);
         restaurant.setCapacity(15);
         restaurantManager.add_restaurant(restaurant);
-
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
+        System.out.println(usermanager.getUserList()+"rrrruuu");
+        orderManager = new OrderManager(restaurantManager, usermanager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
+
+
         order_id = orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
     }
     @When("The second user add a {string} menu at {double} euros from {string}")
@@ -87,9 +94,15 @@ public class AddOrdertoGroupOrder {
     @Given("One restaurant, two menu, two users {string} and {string} waiting in {string}")
     public void one_restaurant_two_menu_two_users_and(String user_email_1, String user_email_2, String delivery_location) {
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
-        orderManager = new OrderManager(new RestaurantManager(), new UserManager(), businessIntelligence);
+        usermanager2=new UserManager();
+        orderManager = new OrderManager(new RestaurantManager(), usermanager2, businessIntelligence);
+
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
+        usermanager2.add_user(user1);
+        usermanager2.add_user(user2);
+        System.out.println(usermanager2.getUserList()+"rrrr");
+        System.out.println(orderManager.userManager.getUserList()+"rrr8");
     }
 
     @When("The second join a {string} menu at {double} euros from {string} to his friend command")

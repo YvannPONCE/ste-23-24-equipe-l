@@ -32,8 +32,8 @@ public class CompleteSimpleOrder {
         userManager = new UserManager();
         BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
         orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
-        deliveryManager = new DeliveryManager(orderManager);
-        deliveryManager.addDeliveryman(deliveryManName);
+        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager);
+        deliveryManager.addDeliveryman(deliveryManName,"delivery@gmail.com");
         orderManager.addDeliveryManager(deliveryManager);
     }
 
@@ -65,8 +65,8 @@ public class CompleteSimpleOrder {
 
     @When("The delivery man {string} confirm the delivery")
     public void the_delivery_man_confirm_the_delivery(String string) {
-        deliveryManager = new DeliveryManager(orderManager);
-        deliveryManager.addDeliveryman(string);
+        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
+        deliveryManager.addDeliveryman(string,"delivery");
         deliveryManager.addOrder(orderId);
         deliveryManager.validateOrder(string,orderId);
     }

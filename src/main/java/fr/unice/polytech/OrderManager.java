@@ -21,6 +21,9 @@ public class OrderManager  implements CapacityObserver{
     private LocalDateTime nextSlot;
 
 
+
+    String email;
+
     private NotificationCenter notificationCenter;
 
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager, BusinessIntelligence businessIntelligence) {
@@ -28,16 +31,19 @@ public class OrderManager  implements CapacityObserver{
         this.businessIntelligence = businessIntelligence;
         this.restaurantManager = restaurantManager;
 //        this.restaurantList = restaurantManager.get_restaurants();
-        this.notificationCenter=new NotificationCenter();
         this.userManager = userManager;
 
     }
-    public NotificationCenter getNotificationCenter() {
-        return notificationCenter;
+    public String getEmail() {
+        return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(order_id);
+
         order.setStatus(Status.CREATED);
         List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
@@ -45,6 +51,8 @@ public class OrderManager  implements CapacityObserver{
             GroupOrder group_order = filtered_group_orders.get(0);
             if (group_order.get_delivery_location() != delivery_location) return false;
             group_order.add_order(email, order);
+
+
             return true;
         } else {
             GroupOrder group_order = new GroupOrder(order_id, delivery_location);
@@ -55,6 +63,8 @@ public class OrderManager  implements CapacityObserver{
     }
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
+        NotificationCenter notificationCenter1;
+            setEmail(email);
         UUID uuid = UUID.randomUUID();
         Restaurant restaurant=restaurantManager.getRestaurant(order.get_restaurant_name());
         capacityCalculator=new RestaurantCapacityCalculator(restaurant);
@@ -63,6 +73,9 @@ public class OrderManager  implements CapacityObserver{
         if (capacityCalculator.canPlaceOrder(order.get_menus().size())) {
             capacityCalculator.placeOrder(order.get_menus().size());
             place_order(email, order, delivery_location, uuid);
+            notificationCenter1=new NotificationCenter(this.userManager);
+            notificationCenter1.order_confirmed(uuid,delivery_location,order.creation_time,email);
+
             this.capacityCalculator.addObserver(this);
 
 
@@ -150,10 +163,11 @@ public class OrderManager  implements CapacityObserver{
             groupOrder.validate_order(restaurant_name);
             LocalDateTime localDateTime=LocalDateTime.now();
 
-
+               this.notificationCenter=new NotificationCenter(userManager);
             if (groupOrder.isReady()) {
                 deliveryManager.addOrder(order_id);
-                notificationCenter.order_ready(order_id, "DeliveryPersonName", "DeliveryPersonPhone", groupOrder.get_delivery_location(), "customer@example.com");
+                User user=deliveryManager.getUser();
+                notificationCenter.order_ready(order_id, user.username, user.email, groupOrder.get_delivery_location(),getEmail());
 
 
             }
@@ -162,6 +176,7 @@ public class OrderManager  implements CapacityObserver{
 
     public void validate_order_receipt(UUID order_id) {
         GroupOrder groupOrder;
+        NotificationCenter notificationCenter1;
         List<GroupOrder> groupOrders = this.group_orders.stream()
                 .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
                 .collect(Collectors.toList());
@@ -180,7 +195,9 @@ public class OrderManager  implements CapacityObserver{
                     Restaurant restaurant=restaurantManager.getRestaurant(order1.restaurant_name);
                     capacityCalculator=new RestaurantCapacityCalculator(restaurant);
                     capacityCalculator.resetCapacityafterDelivery(order1.get_menus().size());
-                    notificationCenter.order_delivered(order_id, groupOrder.get_delivery_location(), LocalDateTime.now(), email);
+
+                    notificationCenter1=new NotificationCenter(this.userManager);
+                    notificationCenter1.order_delivered(order_id, groupOrder.get_delivery_location(), LocalDateTime.now(), email);
 
 
                 }

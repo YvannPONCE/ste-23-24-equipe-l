@@ -33,8 +33,8 @@ public class CompleteMultiOrder {
         restaurantManager.add_restaurant(restaurant2);
         userManager = new UserManager();
         orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
-        deliveryManager = new DeliveryManager(orderManager);
-        deliveryManager.addDeliveryman(deliveryManName);
+        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
+        deliveryManager.addDeliveryman(deliveryManName,"albert");
         orderManager.addDeliveryManager(deliveryManager);
 
     }

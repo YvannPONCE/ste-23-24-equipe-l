@@ -18,17 +18,17 @@ public class EmailNotificationDecorator implements NotificationDecoratorInterfac
 
     @Override
     public void sendNotification(String message) {
-        // Logique d'envoi de l'email
-        System.out.println("Email sent to " + email + ": " + message);
+
+     //   System.out.println("Email sent to " + email + ": " + message);
     }
 
-    private void sendEmail(String to, String subject, String text) {
+    public void sendEmail(String to, String subject, String text) {
 
         try {
             Session session = setUpSession();
             MimeMessage message = new MimeMessage(session);
 
-            message.setFrom(new InternetAddress("delivery@gmail.com"));
+            message.setFrom(new InternetAddress("Sophiatecheats@gmail.com"));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
 
@@ -66,7 +66,7 @@ public class EmailNotificationDecorator implements NotificationDecoratorInterfac
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("delivery@gmail.com", "asbzcfxxmregpogv");
+                return new PasswordAuthentication("Sophiatecheats@gmail.com", "ggggg");
             }
 
         });
