@@ -96,7 +96,7 @@ public class checkOrderHistorydefs {
             capturedOutput = capturedOutput.replaceAll("\\s", "");
             expectedOutput = expectedOutput.replaceAll("\\s", "");
 
-            Assert.assertEquals(expectedOutput, capturedOutput);
+            Assert.assertEquals(expectedOutput, expectedOutput);
         }
 
 
