@@ -30,6 +30,7 @@ public class checkOrderHistorydefs {
     private Order orderSelected;
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
+    private UUID orderSelected_id;
 
 
     @Given("a user {string} with the following order history:")
@@ -71,30 +72,29 @@ public class checkOrderHistorydefs {
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
         System.setOut(originalOut);
-         capturedOutput = outputStream.toString();
+        capturedOutput = outputStream.toString();
 
 
     }
-    @Then("the order history is displayed")
-    public void the_order_history_is_displayed() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outputStream));
-
-        // Écrit la sortie standard
-        System.out.println("Restaurant Name: luigi");
-        System.out.println("Menu Name: pasta");
-        System.out.println("Restaurant Name: chicken tacky");
-        System.out.println("Menu Name: chicken nuggets");
+        @Then("the order history is displayed")
+        public void the_order_history_is_displayed() {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PrintStream originalOut = System.out;
+            System.setOut(new PrintStream(outputStream));
 
 
+            userManager.displayOrderHistory("user@example.com");
+            String capturedOutput = outputStream.toString();
+            StringBuilder expectedOutputBuilder = new StringBuilder();
+            expectedOutputBuilder.append("Restaurant Name: chicken tacky\nMenu Name: chicken nuggets\n");
+            expectedOutputBuilder.append("Restaurant Name: luigi\nMenu Name: pasta\n");
+            String expectedOutput = expectedOutputBuilder.toString();
+            capturedOutput = capturedOutput.replaceAll("\\s", "");
+            expectedOutput = expectedOutput.replaceAll("\\s", "");
 
-        // Obtient la sortie standard capturée
-        String capturedOutput = outputStream.toString();
-
-
-        Assert.assertEquals(capturedOutput,capturedOutput);
+            Assert.assertEquals(expectedOutput, capturedOutput);
         }
+
 
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
@@ -110,6 +110,31 @@ public class checkOrderHistorydefs {
         Assert.assertFalse(orderSelected.getCreationTime().equals(user.getOrderHistory().get(0)));
 
 
+    }
+
+    @When("the user select order in {string}")
+    public void the_user_select_order_in(String string) {
+       orderSelected_id=orderId;
+
+    }
+    @Then("the order history is displayed with all informations")
+    public void the_order_history_is_displayed_with_all_informations() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outputStream));
+
+
+        userManager.displaySelectedOrderDetails(orderSelected_id,user.get_email());
+        String capturedOutput = outputStream.toString();
+        StringBuilder expectedOutputBuilder = new StringBuilder();
+        expectedOutputBuilder.append("Selected Order Details:\n");
+        expectedOutputBuilder.append("Order Items:\n");
+        expectedOutputBuilder.append("  - pasta,Price: 9.5\n"); // Ajoutez d'autres détails de la commande si nécessaire
+        String expectedOutput = expectedOutputBuilder.toString();
+        capturedOutput = capturedOutput.replaceAll("\\s", "");
+        expectedOutput = expectedOutput.replaceAll("\\s", "");
+
+        Assert.assertEquals(expectedOutput, capturedOutput);
     }
 }
 

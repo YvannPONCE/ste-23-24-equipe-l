@@ -41,6 +41,7 @@ public class User {
         this.OrderHistory.addAll(orders);
     }
 
+
     public Role getRole() {
         return role;
     }

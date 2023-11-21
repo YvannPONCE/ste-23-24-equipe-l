@@ -12,3 +12,7 @@ Feature: Manage Order History
   Scenario: Choose order from history
     When user choose a order from history
     Then the new order is selected as new order to place
+Scenario: Select order From history
+  When the user select order in "chicken tacky"
+  Then the order history is displayed with all informations
+
