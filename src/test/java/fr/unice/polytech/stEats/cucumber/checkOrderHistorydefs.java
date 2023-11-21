@@ -31,23 +31,25 @@ public class checkOrderHistorydefs {
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private UUID orderSelected_id;
+    private LinkedHashMap<Object, Object> orderHistoryMap;
 
 
     @Given("a user {string} with the following order history:")
     public void a_user_with_the_following_order_history(String string, io.cucumber.datatable.DataTable dataTable) {
+
         List<Map<String, String>> orderData = dataTable.asMaps(String.class, String.class);
-        user=new User(string,"james", Role.CUSTOMER_STUDENT);
+        user = new User(string, "james", Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
         userManager.add_user(user);
 
+        orderHistoryMap = new LinkedHashMap<>();  // Utiliser une LinkedHashMap pour préserver l'ordre
+
         for (Map<String, String> row : orderData) {
             String item = row.get("Item");
-
             double price = Double.parseDouble(row.get("Price"));
             String restaurantName = row.get("Restaurant Name");
-            email=string;
 
-            restaurant = new Restaurant(restaurantName );
+            restaurant = new Restaurant(restaurantName);
             restaurant.setCapacity(16);
             restaurantManager = new RestaurantManager();
             restaurantManager.add_restaurant(restaurant);
@@ -55,17 +57,19 @@ public class checkOrderHistorydefs {
             orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
 
             order = new Order(restaurantName);
-            order.add_menu(new Menu(item,price));
-
+            order.add_menu(new Menu(item, price));
 
             orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
 
             orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
-            orderManager.validate_order(orderId,string);
+            orderManager.validate_order(orderId, string);
             order.setStatus(Status.DELIVERED);
             orderManager.validate_order_receipt(order.getId());
+
+            orderHistoryMap.put(orderId, order);
         }
     }
+
     @When("the user wants to view their order history")
     public void the_user_wants_to_view_their_order_history() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -76,7 +80,7 @@ public class checkOrderHistorydefs {
 
 
     }
-        @Then("the order history is displayed")
+     @Then("the order history is displayed")
         public void the_order_history_is_displayed() {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PrintStream originalOut = System.out;
