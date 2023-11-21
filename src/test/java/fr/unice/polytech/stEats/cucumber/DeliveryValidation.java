@@ -56,7 +56,6 @@ public class DeliveryValidation {
 
     @Then("The delivery man {string} become available for an new delivery")
     public void the_delivery_man_become_available_for_an_new_delivery(String email) {
-
         assertEquals(deliveryManager.isAvailable(email),true);
     }
 

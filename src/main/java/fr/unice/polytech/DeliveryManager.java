@@ -71,7 +71,7 @@ public class DeliveryManager {
     }
 
     public void addDeliveryman(String delivermanmail,String deliveryman) {
-        deliveryMenAvailability.put(deliveryman, true);
+        deliveryMenAvailability.put(delivermanmail, true);
         setUser(new User(delivermanmail,deliveryman,"ggg", Role.DELIVER_MAN));
         usermanager.add_user(user);
     }
