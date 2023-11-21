@@ -45,18 +45,17 @@ public class UserManager {
         for(Order order:orderHistory){
         order.displayOrderSummary();
         }
-
-
     }
+
    public Order  find_selectedOrder(UUID orderId,String mail){
         List<Order> orderHistory=get_order_history(mail);
-        Order selectedOrder = null;
+
         for(Order order:orderHistory){
             if(order.id.equals(orderId)){
-                selectedOrder=order;
+                return order;
             }
         }
-        return selectedOrder;
+        return null;
    }
     public List<User> getUserList() {
         return userList;
@@ -75,6 +74,21 @@ public class UserManager {
     public void addOrdersToHistory(String email, List<Order> orders) {
        User user = get_user(email);
        user.addOrderToHistory(orders);
+    }
+    public void displaySelectedOrderDetails(UUID orderId, String mail) {
+        Order selectedOrder = find_selectedOrder(orderId, mail);
+
+        if (selectedOrder != null) {
+            System.out.println("Selected Order Details:");
+            List<Menu> orderItems = selectedOrder.get_menus();
+            System.out.println("Order Items:");
+            for (Menu orderItem : orderItems) {
+                System.out.println("  - " + orderItem.getItemName() +
+                        ", Price: " + orderItem.get_price());
+            }
+        } else {
+            System.out.println("Selected Order not found.");
+        }
     }
 }
 

@@ -59,9 +59,9 @@ public class Order {
         return creation_time;
     }
     public void displayOrderSummary() {
-        System.out.println("Restaurant Name: " + restaurant_name);
+        System.out.println(" Restaurant Name: " + restaurant_name);
         for (Menu menu : menus) {
-            System.out.println("Menu Name: " +menu.getItemName());
+            System.out.println(" Menu Name: " +menu.getItemName());
         }
     }
 

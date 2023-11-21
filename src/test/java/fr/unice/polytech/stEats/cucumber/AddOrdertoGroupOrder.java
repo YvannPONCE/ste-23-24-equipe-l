@@ -44,7 +44,6 @@ public class AddOrdertoGroupOrder {
         restaurant=new Restaurant(restaurant_name);
         restaurant.setCapacity(15);
         restaurantManager.add_restaurant(restaurant);
-        System.out.println(usermanager.getUserList()+"rrrruuu");
         orderManager = new OrderManager(restaurantManager, usermanager, new BusinessIntelligence(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
@@ -101,8 +100,7 @@ public class AddOrdertoGroupOrder {
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
         usermanager2.add_user(user1);
         usermanager2.add_user(user2);
-        System.out.println(usermanager2.getUserList()+"rrrr");
-        System.out.println(orderManager.userManager.getUserList()+"rrr8");
+
     }
 
     @When("The second join a {string} menu at {double} euros from {string} to his friend command")
