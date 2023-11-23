@@ -1,7 +1,4 @@
 package fr.unice.polytech;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Observable;
@@ -21,28 +18,48 @@ public class RestaurantCapacityCalculator extends Observable {
 
 
     public boolean canPlaceOrder(int numberOfMenus) {
-        return this.restaurant.capacity - numberOfMenus > 0;
+        return restaurant.getHourlyCapacity(getCurrentTime().getHour()) - numberOfMenus > 0;
     }
 
     public LocalDateTime getCurrentTime() {
-        return this.currentTime;
+        return currentTime;
+    }
+    public boolean canPlaceOrder(int numberOfMenus, LocalDateTime chosenSlot) {
+        int chosenHour = chosenSlot.getHour();
+        int chosenCapacity = restaurant.getHourlyCapacity(chosenHour);
+
+        // Check if the chosen time slot has enough capacity for the order
+        return chosenCapacity - numberOfMenus > 0;
     }
 
     public void placeOrder(int numberOfMenus) {
         if (canPlaceOrder(numberOfMenus)) {
-            restaurant.setCapacity(this.restaurant.capacity-=numberOfMenus);
+            restaurant.setHourlyCapacity(getCurrentTime().getHour(),
+                    restaurant.getHourlyCapacity(getCurrentTime().getHour()) - numberOfMenus);
+
             setChanged();
             notifyObservers();
             clearChanged();
-
-
-
-            //System.out.println("Order placed. Remaining capacity: " + (restaurant.capacity - numberOfMenus));
         }
     }
+    public void placeOrder_slot(int numberOfMenus, LocalDateTime chosenSlot) {
+        int chosenHour = chosenSlot.getHour();
+
+        updateHourlyCapacity(chosenHour, restaurant.getHourlyCapacity(chosenHour) - numberOfMenus);
+
+        setChanged();
+        notifyObservers();
+        clearChanged();
+    }
+
+    // Assuming you have a method to update the capacity for the chosen hour
+    private void updateHourlyCapacity(int hour, int newCapacity) {
+        restaurant.setHourlyCapacity(hour,newCapacity);
+    }
+
     public void resetCapacityafterDelivery(int numberOfMenus) {
 
-            restaurant.setCapacity(this.restaurant.capacity+=numberOfMenus);
+            updateHourlyCapacity(currentTime.getHour(),this.restaurant.getHourlyCapacity(currentTime.getHour())+numberOfMenus);
             setChanged();
             notifyObservers();
             clearChanged();
@@ -53,11 +70,14 @@ public class RestaurantCapacityCalculator extends Observable {
         this.nextSlot = getNextAvailableSlot();
         return nextSlot;
     }
+    public LocalDateTime getNextSlot_chosen(LocalDateTime chosenSlot){
+        this.nextSlot=getNextSlotAfterChosen(chosenSlot);
+        return nextSlot;
+    }
 
     public int getCapacity() {
         return this.restaurant.capacity;
     }
-
     public LocalDateTime getNextAvailableSlot() {
 
         LocalDateTime deliveryTime = getCurrentTime().plus(PREPARATION_TIME);
@@ -70,4 +90,20 @@ public class RestaurantCapacityCalculator extends Observable {
             return getCurrentTime().plusHours(slotsAvailable);
         }
     }
+
+    public LocalDateTime getNextSlotAfterChosen(LocalDateTime chosenSlot) {
+        int chosenHour = chosenSlot.getHour();
+        int chosenCapacity = restaurant.getHourlyCapacity(chosenHour);
+
+        LocalDateTime nextSlot = chosenSlot.plusHours(1);
+        int nextCapacity = restaurant.getHourlyCapacity(nextSlot.getHour());
+
+        while (nextCapacity <= 0) {
+            nextSlot = nextSlot.plusHours(1);
+            nextCapacity = restaurant.getHourlyCapacity(nextSlot.getHour());
+        }
+
+        return nextSlot;
+    }
+
 }
