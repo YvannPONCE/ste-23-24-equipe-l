@@ -61,6 +61,27 @@ public class OrderManager  implements CapacityObserver{
             return true;
         }
     }
+    public UUID place_order_slot(String email, Order order, Locations delivery_location, LocalDateTime chosenSlot) {
+        setEmail(email);
+        UUID uuid = UUID.randomUUID();
+        Restaurant restaurant = restaurantManager.getRestaurant(order.get_restaurant_name());
+        capacityCalculator = new RestaurantCapacityCalculator(restaurant);
+        OrderObserver orderObserver = new OrderObserver(capacityCalculator);
+
+        if (capacityCalculator.canPlaceOrder(order.get_menus().size(), chosenSlot)) {
+            capacityCalculator.placeOrder_slot(order.get_menus().size(), chosenSlot);
+            place_order(email, order, delivery_location);
+            NotificationCenter notificationCenter1 = new NotificationCenter(this.userManager);
+            notificationCenter1.order_confirmed(uuid, delivery_location, order.creation_time, email);
+
+            this.capacityCalculator.addObserver(this);
+
+            return uuid;
+        } else {
+            nextSlot = capacityCalculator.getNextSlot_chosen(chosenSlot);
+            return null;
+        }
+    }
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
         NotificationCenter notificationCenter1;

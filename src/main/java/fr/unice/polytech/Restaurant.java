@@ -1,17 +1,21 @@
 package fr.unice.polytech;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Restaurant {
+
 
 
     private String name;
 
 
     private Schedule horaires;
-
+    private Map<Integer, Integer> hourlyCapacities;
 
     private List<Menu> listemenu;
     private List<Order> orders;
@@ -28,9 +32,27 @@ public class Restaurant {
         this.listemenu = new ArrayList<>();
         this.orders = new ArrayList<>();
         this.capacity=10;
-
+        this.hourlyCapacities = new HashMap<>();
+        initializeHourlyCapacities();
 
     }
+
+    public void setHourlyCapacity(int hour, int capacity) {
+        hourlyCapacities.put(hour, capacity);
+    }
+
+    // Méthode pour obtenir la capacité à une heure spécifique
+    public int getHourlyCapacity(int hour) {
+        return (int) hourlyCapacities.getOrDefault(hour, capacity);
+
+    }
+    private void initializeHourlyCapacities() {
+        List<Integer> openingHoursList = horaires.getOpeningHours();
+        for (int hour : openingHoursList) {
+            setHourlyCapacity(hour, capacity);
+        }
+    }
+
     public void setcapacity(int newC) {
         this.capacity=newC;
     }
@@ -74,6 +96,8 @@ public class Restaurant {
     public void setCapacity(int i) {
         this.capacity=i;
     }
+
+    
 }
 
 
