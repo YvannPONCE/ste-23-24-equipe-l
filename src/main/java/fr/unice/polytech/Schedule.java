@@ -73,4 +73,32 @@ public class Schedule {
             return "Horaires non disponibles pour ce jour.";
         }
     }
+
+    public boolean isOpenAt(int targetHour, int targetMinute, String day) {
+        String lowercaseDay = day.toLowerCase();
+        if (schedule.containsKey(lowercaseDay)) {
+            String[] hours = schedule.get(lowercaseDay);
+
+            int openingHour = Integer.parseInt(hours[0].split(":")[0]);
+            int openingMinute = Integer.parseInt(hours[0].split(":")[1]);
+
+            int closingHour = Integer.parseInt(hours[1].split(":")[0]);
+            int closingMinute = Integer.parseInt(hours[1].split(":")[1]);
+
+            // Check if the target time is within the opening and closing hours
+            if (targetHour > openingHour && targetHour < closingHour) {
+                return true;
+            } else if (targetHour == openingHour && targetMinute >= openingMinute) {
+                return true;
+            } else if (targetHour == closingHour && targetMinute <= closingMinute) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isClosedAt(int targetHour, int targetMinute, String day) {
+        return !isOpenAt(targetHour, targetMinute, day);
+    }
+
+
 }

@@ -38,4 +38,14 @@ public class RestaurantManager {
     public void remove_restaurant(String restaurant_name){
         this.restaurants.removeIf(restaurant -> restaurant.getName().equals(restaurant_name));
     }
+    public List<Restaurant> getRestaurantsByTimeAndDay(int hour, int minute, String day) {
+        return this.restaurants.stream()
+                .filter(restaurant -> restaurant.getHoraires().isOpenAt(hour, minute, day))
+                .collect(Collectors.toList());
+    }
+    public List<Restaurant> getClosedRestaurantsByTimeAndDay(int hour, int minute, String day) {
+        return this.restaurants.stream()
+                .filter(restaurant -> restaurant.getHoraires().isClosedAt(hour, minute, day))
+                .collect(Collectors.toList());
+    }
 }
