@@ -17,4 +17,4 @@ Feature: Consult statistics
     Given "manager@gmail.com" is a restaurant manager
     Given his restaurant "kfc" has complete multiple orders
     When I want to consult the most popular menus
-   Then The manager get the most populars menus
+    Then The manager get the most populars menus
