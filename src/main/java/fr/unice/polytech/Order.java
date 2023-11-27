@@ -92,4 +92,9 @@ public class Order {
     public double getTotalPrice(){
         return this.totalPrice;
 }
+
+    public Date getCreation_time() {
+        return creation_time;
+    }
+
 }

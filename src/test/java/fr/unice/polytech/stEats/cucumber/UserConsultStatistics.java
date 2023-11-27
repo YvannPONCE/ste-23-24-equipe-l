@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerStudent;
 import io.cucumber.java.en.Given;

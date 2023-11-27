@@ -16,7 +16,7 @@ public class User {
     Double Credit;
     List<Order> OrderHistory;
     Role role;
-
+    private String password;
 
 
     public User(String email, String username, String password, Role role){
@@ -70,6 +70,19 @@ public class User {
 
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail()
+    {
+        return this.email;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
 }
