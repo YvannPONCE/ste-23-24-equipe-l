@@ -1,4 +1,6 @@
 package fr.unice.polytech;
+import fr.unice.polytech.Restaurant.Restaurant;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Observable;
@@ -76,8 +78,9 @@ public class RestaurantCapacityCalculator extends Observable {
     }
 
     public int getCapacity() {
-        return this.restaurant.capacity;
+        return this.restaurant.getCapacity();
     }
+
     public LocalDateTime getNextAvailableSlot() {
 
         LocalDateTime deliveryTime = getCurrentTime().plus(PREPARATION_TIME);
@@ -86,7 +89,7 @@ public class RestaurantCapacityCalculator extends Observable {
             return deliveryTime;
         } else {
             long slotsNeeded = Duration.between(getCurrentTime(), deliveryTime).toMinutes();
-            long slotsAvailable = (slotsNeeded / this.restaurant.capacity) + 1;
+            long slotsAvailable = (slotsNeeded / this.restaurant.getCapacity()) + 1;
             return getCurrentTime().plusHours(slotsAvailable);
         }
     }

@@ -1,7 +1,8 @@
 package fr.unice.polytech.stEats.cucumber;
 
-import fr.unice.polytech.Restaurant;
-import fr.unice.polytech.RestaurantManager;
+import fr.unice.polytech.Restaurant.Restaurant;
+import fr.unice.polytech.Restaurant.RestaurantUser;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,11 +21,11 @@ public class ManageRestaurantOpeningdefs {
     private Restaurant restaurant4;
     private String day;
     private String time;
-    private List<Restaurant> openRestaurants;
+    private List<RestaurantUser> openRestaurants;
     private String currentTime;
     private Integer hour;
     private Integer minutes;
-    private List<Restaurant> closedRestaurants;
+    private List<RestaurantUser> closedRestaurants;
 
     @Given("the current day is {string} and the time is {int}:{int} PM")
     public void the_current_day_is_and_the_time_is_pm(String string, Integer int1, Integer int2) {
@@ -52,8 +53,8 @@ public class ManageRestaurantOpeningdefs {
     @When("a user {string} wants to choose a restaurant to order")
     public void a_user_wants_to_choose_a_restaurant_to_order(String string) {
 
-       openRestaurants=restaurantmanager.getRestaurantsByTimeAndDay(hour,minutes,day);
-       closedRestaurants=restaurantmanager.getClosedRestaurantsByTimeAndDay(hour,minutes,day);
+        openRestaurants=restaurantmanager.getRestaurantsByTimeAndDay(hour,minutes,day);
+        closedRestaurants=restaurantmanager.getClosedRestaurantsByTimeAndDay(hour,minutes,day);
     }
     @Then("we returned a list of opened restaurant and closed restaurant")
     public void we_returned_a_list_of_opened_restaurant_and_closed_restaurant() {

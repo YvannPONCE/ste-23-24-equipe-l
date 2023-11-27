@@ -1,4 +1,8 @@
-package fr.unice.polytech;
+package fr.unice.polytech.Restaurant;
+
+import fr.unice.polytech.Menu;
+import fr.unice.polytech.Order;
+import fr.unice.polytech.Schedule;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Restaurant {
+public class Restaurant implements RestaurantUser, RestaurantManager, RestaurantOrderManager {
 
 
 
