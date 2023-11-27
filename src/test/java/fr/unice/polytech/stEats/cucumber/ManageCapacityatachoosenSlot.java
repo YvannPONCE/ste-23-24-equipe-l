@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -41,7 +42,7 @@ public class ManageCapacityatachoosenSlot {
 
        localDateTime = LocalDateTime.of(LocalDate.now(), time);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
     }
     @When("user choose a  {int} nuggets menu")
     public void user_choose_a_nuggets_menu(Integer int1) {
@@ -72,7 +73,7 @@ public class ManageCapacityatachoosenSlot {
 
         localDateTime = LocalDateTime.of(LocalDate.now(), time);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
     }
     @When("user order his demand is rejected")
     public void user_order_his_demand_is_rejected() {

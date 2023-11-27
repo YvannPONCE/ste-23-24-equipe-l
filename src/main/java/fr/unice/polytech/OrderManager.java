@@ -2,6 +2,8 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 
 public class OrderManager  implements CapacityObserver{
 
+    private final StatisticManagerOrderManager statisticsManager;
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     DeliveryManager deliveryManager;
@@ -26,13 +29,16 @@ public class OrderManager  implements CapacityObserver{
 
     private NotificationCenter notificationCenter;
 
-    public OrderManager(RestaurantManager restaurantManager, UserManager userManager, BusinessIntelligence businessIntelligence) {
+    public OrderManager(RestaurantManager restaurantManager, UserManager userManager, StatisticManagerOrderManager statisticsManager, DeliveryManager deliveryManager) {
         this.group_orders = new ArrayList<>();
-        this.businessIntelligence = businessIntelligence;
+        this.statisticsManager = statisticsManager;
         this.restaurantManager = restaurantManager;
-//        this.restaurantList = restaurantManager.get_restaurants();
         this.userManager = userManager;
+        this.deliveryManager = deliveryManager;
 
+    }
+    public OrderManager(RestaurantManager restaurantManager, UserManager userManager, StatisticManagerOrderManager statisticsManager){
+        this(restaurantManager, userManager, statisticsManager, null);
     }
     public String getEmail() {
         return email;
@@ -85,7 +91,7 @@ public class OrderManager  implements CapacityObserver{
 
     public UUID place_order(String email, Order order, Locations delivery_location) {
         NotificationCenter notificationCenter1;
-            setEmail(email);
+        setEmail(email);
         UUID uuid = UUID.randomUUID();
         Restaurant restaurant=restaurantManager.getRestaurant(order.get_restaurant_name());
         capacityCalculator=new RestaurantCapacityCalculator(restaurant);
@@ -100,7 +106,7 @@ public class OrderManager  implements CapacityObserver{
             this.capacityCalculator.addObserver(this);
 
 
-          return uuid;
+            return uuid;
         } else {
             nextSlot=capacityCalculator.getNextSlot();
             return null;
@@ -155,14 +161,17 @@ public class OrderManager  implements CapacityObserver{
         if (groupOrder.isPaid())
         {
             sendOrders(groupOrder);
-            businessIntelligence.add_order(groupOrder);
+            statisticsManager.add_order(groupOrder);
         }
     }
 
     public void pay_user_orders(String email, String card_number){
         List<Order> orders = get_current_user_orders(email);
         for (Order order : orders) {
+            if(order.getStatus()==Status.CREATED)
+            {
                 this.pay_order(order.getId(), email, card_number);
+            }
         }
     }
 
