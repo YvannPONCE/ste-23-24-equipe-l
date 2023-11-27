@@ -1,21 +1,20 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Restaurant.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BusinessIntelligence {
     HashMap<Restaurant, HashMap<Menu, Integer>> menuStatisticsByRestaurants;
     HashMap<Locations,Integer> locationStatistics;
     RestaurantManager restaurantManager;
-    public BusinessIntelligence(RestaurantManager restaurantManager)
+    public BusinessIntelligence()
     {
-        this.restaurantManager = restaurantManager;
         menuStatisticsByRestaurants = new HashMap<>();
         locationStatistics = new HashMap<>();
         initLocationsStatistics();
-        initRestaurantsStatistics();
     }
     private void initLocationsStatistics()
     {

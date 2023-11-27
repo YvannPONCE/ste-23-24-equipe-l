@@ -1,4 +1,6 @@
-package fr.unice.polytech;
+package fr.unice.polytech.RestaurantManager;
+
+import fr.unice.polytech.Restaurant.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,4 +50,10 @@ public class RestaurantManager {
                 .filter(restaurant -> restaurant.getHoraires().isClosedAt(hour, minute, day))
                 .collect(Collectors.toList());
     }
+
+    public void addRestaurant(Restaurant restaurant)
+    {
+        this.restaurants.add(restaurant);
+    }
+
 }

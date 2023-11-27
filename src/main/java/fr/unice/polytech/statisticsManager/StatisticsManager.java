@@ -2,6 +2,8 @@ package fr.unice.polytech.statisticsManager;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Restaurant.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 
 import java.util.HashMap;
 import java.util.List;
