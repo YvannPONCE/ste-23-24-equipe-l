@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -32,7 +33,7 @@ public class CompleteMultiOrder {
         restaurantManager.add_restaurant(restaurant1);
         restaurantManager.add_restaurant(restaurant2);
         userManager = new UserManager();
-        orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
         deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
         deliveryManager.addDeliveryman(deliveryManName,"albert");
         orderManager.addDeliveryManager(deliveryManager);

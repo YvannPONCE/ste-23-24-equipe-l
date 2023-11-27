@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -30,8 +31,8 @@ public class CompleteSimpleOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         userManager = new UserManager();
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
+        StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager);
         deliveryManager.addDeliveryman(deliveryManName,"delivery@gmail.com");
         orderManager.addDeliveryManager(deliveryManager);

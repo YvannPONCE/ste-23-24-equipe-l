@@ -22,6 +22,7 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
         String message= String.format("Dear %s,\n\nThank you for placing an order with order ID %s. Your order for delivery to %s on %s has been confirmed.\n\nBest regards,\nThe Order Confirmation Team",
                 customer_email, order_id.toString(), locations.toString(), delivery_date.toString());
         User user=findUser(customer_email);
+        if(user==null)return false;
         user.getNotifications().add(new Notification(message));
         sendNotification(customer_email, message);
         return true;

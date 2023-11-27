@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -31,7 +32,7 @@ public class DeliveryManNotificationdefs {
         restaurant.setCapacity(16);
 
 
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
 
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
         deliveryManager.addDeliveryman("Albert@gmail.com","Albert");

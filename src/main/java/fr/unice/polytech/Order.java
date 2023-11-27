@@ -15,6 +15,12 @@ public class Order {
     List<Menu> menus;
     private double totalPrice;
 
+    public  Order(String restaurant_name, List<Menu> menus){
+        this.restaurant_name = restaurant_name;
+        this.menus = menus;
+        this.totalPrice=0.0;
+        this.creation_time=new Date();
+    }
 
     public  Order(String restaurant_name){
         this.restaurant_name = restaurant_name;

@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -22,6 +23,7 @@ public class ConsultStatistics {
     OrderManager orderManager;
     DeliveryManager deliveryManager;
     User manager;
+    private StatisticsManager statisticsManager;
 
     @Given("{string} is a restaurant manager")
     public void is_a_restaurant_manager(String restaurantManagerEmail) {
@@ -37,10 +39,10 @@ public class ConsultStatistics {
         restaurant2.addMenu(new Menu("tartare", 15.5));
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        businessIntelligence = new BusinessIntelligence(restaurantManager);
+        statisticsManager = new StatisticsManager(restaurantManager);
         userManager = new UserManager();
 
-        orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
         orderManager.addDeliveryManager(deliveryManager);
 
         User customer1 = new User("customer1@gmail.com", "password" ,Role.CUSTOMER_STUDENT);

@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -27,8 +28,8 @@ public class DeliveryValidation {
         restaurantManager.add_restaurant(restaurant);
         Order order = new Order("KFC");
         order.add_menu(new Menu("Bucket",21));
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
+        StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
             orderManager.userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
         orderManager.validate_order(order.getId(),email);

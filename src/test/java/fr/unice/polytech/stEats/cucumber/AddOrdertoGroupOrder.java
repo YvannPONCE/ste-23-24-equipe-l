@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.bs.A;
 import io.cucumber.java.da.Men;
 import io.cucumber.java.en.Given;
@@ -44,7 +45,7 @@ public class AddOrdertoGroupOrder {
         restaurant=new Restaurant(restaurant_name);
         restaurant.setCapacity(15);
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, usermanager, new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, usermanager, new StatisticsManager(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
 
@@ -92,9 +93,9 @@ public class AddOrdertoGroupOrder {
 
     @Given("One restaurant, two menu, two users {string} and {string} waiting in {string}")
     public void one_restaurant_two_menu_two_users_and(String user_email_1, String user_email_2, String delivery_location) {
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        StatisticsManager statisticsManager = new StatisticsManager(new RestaurantManager());
         usermanager2=new UserManager();
-        orderManager = new OrderManager(new RestaurantManager(), usermanager2, businessIntelligence);
+        orderManager = new OrderManager(new RestaurantManager(), usermanager2, statisticsManager);
 
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);
