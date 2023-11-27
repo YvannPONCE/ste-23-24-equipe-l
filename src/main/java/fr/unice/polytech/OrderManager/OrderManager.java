@@ -18,7 +18,6 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     DeliveryManager deliveryManager;
-    BusinessIntelligence businessIntelligence;
 //    List<Restaurant> restaurantList;
     List<GroupOrder> group_orders;
     public UserManager userManager;

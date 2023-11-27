@@ -17,7 +17,6 @@ import java.util.UUID;
 
 public class ConsultStatistics {
 
-    BusinessIntelligence businessIntelligence;
     UserManager userManager;
     Restaurant restaurant;
     RestaurantManager restaurantManager;
