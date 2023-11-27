@@ -5,6 +5,7 @@ import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -27,7 +28,7 @@ public class AddOrdertoGroupOrder {
 
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        BusinessIntelligence businessIntelligence = new BusinessIntelligence();
 
         user1 = new User(user_email_1, user_email_1, Role.CUSTOMER_STUDENT);
         user2 = new User(user_email_2, user_email_2, Role.CUSTOMER_STUDENT);

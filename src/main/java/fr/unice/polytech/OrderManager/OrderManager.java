@@ -1,5 +1,6 @@
-package fr.unice.polytech;
+package fr.unice.polytech.OrderManager;
 
+import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -11,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class OrderManager  implements CapacityObserver{
+public class OrderManager  implements CapacityObserver, OrderManagerConnectedUser, OrderManagerDeliveryManager {
 
     private final StatisticManagerOrderManager statisticsManager;
     PaymentSystem paymentSystem = new PaymentSystem();
@@ -80,7 +81,7 @@ public class OrderManager  implements CapacityObserver{
             capacityCalculator.placeOrder_slot(order.get_menus().size(), chosenSlot);
             place_order(email, order, delivery_location);
             NotificationCenter notificationCenter1 = new NotificationCenter(this.userManager);
-            notificationCenter1.order_confirmed(uuid, delivery_location, order.creation_time, email);
+            notificationCenter1.order_confirmed(uuid, delivery_location, order.getCreation_time(), email);
 
             this.capacityCalculator.addObserver(this);
 
@@ -103,7 +104,7 @@ public class OrderManager  implements CapacityObserver{
             capacityCalculator.placeOrder(order.get_menus().size());
             place_order(email, order, delivery_location, uuid);
             notificationCenter1=new NotificationCenter(this.userManager);
-            notificationCenter1.order_confirmed(uuid,delivery_location,order.creation_time,email);
+            notificationCenter1.order_confirmed(uuid,delivery_location,order.getCreation_time(),email);
 
             this.capacityCalculator.addObserver(this);
 
@@ -195,13 +196,11 @@ public class OrderManager  implements CapacityObserver{
             groupOrder.validate_order(restaurant_name);
             LocalDateTime localDateTime=LocalDateTime.now();
 
-               this.notificationCenter=new NotificationCenter(userManager);
+            this.notificationCenter=new NotificationCenter(userManager);
             if (groupOrder.isReady()) {
                 deliveryManager.addOrder(order_id);
                 User user=deliveryManager.getUser();
-                notificationCenter.order_ready(order_id, user.username, user.email, groupOrder.get_delivery_location(),getEmail());
-
-
+                notificationCenter.order_ready(order_id, user.getUsername(), user.getEmail(), groupOrder.get_delivery_location(),getEmail());
             }
         }
     }
@@ -224,7 +223,7 @@ public class OrderManager  implements CapacityObserver{
                 userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
                 List<Order> orders=get_current_user_orders(email);
                 for(Order order1:orders){
-                    Restaurant restaurant=restaurantManager.getRestaurant(order1.restaurant_name);
+                    Restaurant restaurant=restaurantManager.getRestaurant(order1.get_restaurant_name());
                     capacityCalculator=new RestaurantCapacityCalculator(restaurant);
                     capacityCalculator.resetCapacityafterDelivery(order1.get_menus().size());
 
@@ -257,8 +256,8 @@ public class OrderManager  implements CapacityObserver{
 
         if (selectedOrder != null) {
             UUID newOrderId = UUID.randomUUID();
-            Order newOrder = new Order(selectedOrder.restaurant_name);
-            for(Menu menu:selectedOrder.menus){
+            Order newOrder = new Order(selectedOrder.get_restaurant_name());
+            for(Menu menu:selectedOrder.get_menus()){
                 newOrder.add_menu(menu);
             }
             place_order(userMail, newOrder, deliveryLocation, newOrderId);
