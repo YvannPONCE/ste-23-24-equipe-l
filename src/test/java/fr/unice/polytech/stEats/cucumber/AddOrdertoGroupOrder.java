@@ -58,8 +58,8 @@ public class AddOrdertoGroupOrder {
     }
     @Then("Two {string} menu from {string} are stored in the current order and cost {double} euros each.")
     public void two_menu_from_are_stored_in_the_current_order_and_cost_euros_each(String menu_name, String restaurant_name, double menu_price) {
-        List<Order> user_1_orders = orderManager.get_current_orders(order_id, user1.get_email());
-        List<Order> user_2_orders = orderManager.get_current_orders(order_id, user2.get_email());
+        List<Order> user_1_orders = orderManager.getCurrentOrders(order_id, user1.get_email());
+        List<Order> user_2_orders = orderManager.getCurrentOrders(order_id, user2.get_email());
 
         Assert.assertEquals(1, user_1_orders.size());
         Assert.assertEquals(1, user_2_orders.size());
@@ -111,7 +111,7 @@ public class AddOrdertoGroupOrder {
 
     @Then("Both users can see {string} and {string} menus in the cart at {double} and {double} delivered to {string}.")
     public void both_users_can_see_and_menus_in_the_cart(String menu_user_1, String menu_user_2, double user_1_menu_price, double user_2_menu_price, String delivery_location) {
-        GroupOrder group_order = orderManager.get_current_orders(order_id);
+        GroupOrder group_order = orderManager.getCurrentOrders(order_id);
 
         Assert.assertEquals(Locations.HALL_PRINCIPAL, group_order.get_delivery_location());
 

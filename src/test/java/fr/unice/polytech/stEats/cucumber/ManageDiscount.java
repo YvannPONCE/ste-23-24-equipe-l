@@ -64,7 +64,7 @@ public class ManageDiscount {
 
         orderId=orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
 
-        orderAmountCalculator =new OrderAmountCalculator(orderManager.get_current_orders(order_id),orderManager.userManager);
+        orderAmountCalculator =new OrderAmountCalculator(orderManager.getCurrentOrders(order_id),orderManager.userManager);
         orderAmountCalculator.setItemCountThreshold(16);
         orderManager.pay_order(orderId,user1.get_email(),CreditCard);
 

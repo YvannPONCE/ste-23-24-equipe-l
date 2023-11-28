@@ -52,8 +52,8 @@ public class DeliveryValidation {
 
     @Then("The order statue of {string} updates as closed")
     public void the_order_statue_updates_as_closed(String email) {
-        GroupOrder groupOrder = orderManager.get_current_orders(orderID);
-         for (Order order : orderManager.get_current_orders(orderID,email)) {
+        GroupOrder groupOrder = orderManager.getCurrentOrders(orderID);
+         for (Order order : orderManager.getCurrentOrders(orderID,email)) {
                 assertEquals(Status.CLOSED, order.getStatus());
             }
     }

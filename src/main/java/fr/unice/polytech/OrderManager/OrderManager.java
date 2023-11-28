@@ -122,7 +122,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         return nextSlot;
     }
 
-    public List<Order> get_current_orders(UUID order_id, String user_email) {
+    public List<Order> getCurrentOrders(UUID order_id, String user_email) {
         List<GroupOrder> group_orders = this.group_orders.stream()
                 .filter(group_order -> group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
@@ -145,7 +145,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         return new ArrayList<>();
     }
 
-    public GroupOrder get_current_orders(UUID order_id) {
+    public GroupOrder getCurrentOrders(UUID order_id) {
         List<GroupOrder> group_orders = this.group_orders.stream()
                 .filter(group_order -> group_order.get_uuid().equals(order_id))
                 .collect(Collectors.toList());
@@ -157,7 +157,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
 
     public void pay_order(UUID orderId, String email, String card_number) {
-        GroupOrder groupOrder = get_current_orders(orderId);
+        GroupOrder groupOrder = getCurrentOrders(orderId);
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
         orderAmountCalculator.applyMenuDiscount(15);
         if(paymentSystem.pay(card_number))
@@ -203,7 +203,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             if (groupOrder.isReady()) {
                 deliveryManager.addOrder(order_id);
                 User user=deliveryManager.getUser();
-                notificationCenter.order_ready(order_id, user.getUsername(), user.getEmail(), groupOrder.get_delivery_location(),getEmail());
+                notificationCenter.orderReady(order_id, user.getUsername(), user.getEmail(), groupOrder.get_delivery_location(),getEmail());
             }
         }
     }
@@ -296,5 +296,28 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
         //System.out.println("Capacity changed. New capacity: " + newCapacity);
         // Ajoutez ici la logique spécifique que vous souhaitez exécuter en réponse au changement de capacité
+    }
+
+    public boolean cancelOrder(UUID orderId, String email) {
+        List<Order> orders = getCurrentOrders(orderId, email);
+        User user = userManager.get_user(email);
+        for(Order order : orders){
+            if(order.getStatus().ordinal()>Status.PROCESSING.ordinal()){
+                return false;
+            }
+        }
+        for(Order order : orders){
+            List<Menu> menus = order.get_menus();
+            for(Menu menu : menus){
+                user.addCredit(menu.get_price());
+            }
+            order.setStatus(Status.CANCELED);
+        }
+        return true;
+    }
+
+    public void processingOrder(UUID orderId, String restaurantName) {
+        GroupOrder groupOrder = getCurrentOrders(orderId);
+        groupOrder.setOrderProcessing(restaurantName);
     }
 }

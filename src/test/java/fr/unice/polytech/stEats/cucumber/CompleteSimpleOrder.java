@@ -77,7 +77,7 @@ public class CompleteSimpleOrder {
 
     @Then("The order is marked as closed")
     public void the_order_is_marked_as_delivered() {
-        assertEquals(Status.CLOSED,orderManager.get_current_orders(orderId).getOrderStatus());
+        assertEquals(Status.CLOSED,orderManager.getCurrentOrders(orderId).getOrderStatus());
     }
 
 }
