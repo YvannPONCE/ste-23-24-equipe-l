@@ -1,6 +1,7 @@
 package fr.unice.polytech.OrderManager;
 
 import fr.unice.polytech.*;
+import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -201,8 +202,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
             this.notificationCenter=new NotificationCenter(userManager);
             if (groupOrder.isReady()) {
-                deliveryManager.addOrder(order_id);
-                User user=deliveryManager.getUser();
+                User user = deliveryManager.addOrder(order_id);
                 notificationCenter.orderReady(order_id, user.getUsername(), user.getEmail(), groupOrder.get_delivery_location(),getEmail());
             }
         }

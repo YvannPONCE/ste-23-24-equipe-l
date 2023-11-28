@@ -1,6 +1,6 @@
 package fr.unice.polytech.stEats.cucumber;
 
-import fr.unice.polytech.DeliveryManager;
+import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Order;
