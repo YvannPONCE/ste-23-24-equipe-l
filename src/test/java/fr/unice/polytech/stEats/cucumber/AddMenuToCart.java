@@ -47,7 +47,7 @@ public class AddMenuToCart {
 
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros.")
     public void the_selected_menus_are_stored_in_the_current_order(String menu_name, String restaurant_name, double menu_price) {
-        List<Order>  orders = orderManager.get_current_orders(order_id, user.get_email());
+        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.get_email());
         Order order = orders.get(0);
         List<Menu> menus = order.get_menus();
         Menu menu = menus.get(0);
@@ -86,7 +86,7 @@ public class AddMenuToCart {
 
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros as well as the {string} menu at {double} euros from {string}.")
     public void the_menu_from_is_stored_in_the_current_order_and_cost_euros_as_well_as_the_menu_at_euros_from(String menu_name, String restaurant_name, double menu_price, String menu_name_2, double menu_price_2, String restaurant_name_2) {
-        List<Order>  orders = orderManager.get_current_orders(order_id, user.get_email());
+        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.get_email());
 
         Order order = orders.get(0);
         List<Menu> menus_1 = order.get_menus();
@@ -133,7 +133,7 @@ public class AddMenuToCart {
     }
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros as well as the {string} menu at {double} euros.")
     public void the_menu_from_is_stored_in_the_current_order_and_cost_euros_as_well_as_the_menu_at_euros(String menu_name_1, String restaurant_name, Double menu_price_1, String menu_name_2, Double menu_price_2) {
-        List<Order>  orders = orderManager.get_current_orders(order_id, user.get_email());
+        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.get_email());
 
         Order order = orders.get(0);
         List<Menu> menus = order.get_menus();

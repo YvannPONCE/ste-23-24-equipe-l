@@ -65,27 +65,27 @@ public class CompleteMultiOrder {
     @Given("the user {string} pay his order")
     public void the_user_pay_his_order(String userEmail) {
         orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
-        Assert.assertNotEquals(Status.PAID, orderManager.get_current_orders(this.orderId));
+        Assert.assertNotEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId));
     }
     @Given("the user {string} pay his order in second")
     public void the_user_pay_his_order_in_second(String userEmail) {
         orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
-        Assert.assertEquals(Status.PAID, orderManager.get_current_orders(this.orderId).getOrderStatus());
+        Assert.assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string}")
     public void the_simple_order_is_marked_ready_by_the_restaurant(String restaurantName) {
         orderManager.validate_order(orderId, restaurantName);
-        Assert.assertNotEquals(Status.READY, orderManager.get_current_orders(this.orderId).getOrderStatus());
+        Assert.assertNotEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string} in second")
     public void the_simple_order_is_marked_ready_by_the_restaurant_in_second(String restaurantName) {
         orderManager.validate_order(orderId, restaurantName);
-        Assert.assertEquals(Status.READY, orderManager.get_current_orders(this.orderId).getOrderStatus());
+        Assert.assertEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
     }
     @When("user {string} confirm the delivery")
     public void user_confirm_the_delivery(String userEmail) {
         orderManager.validate_order_receipt(orderId);
-        Assert.assertEquals(Status.DELIVERED, orderManager.get_current_orders(this.orderId).getOrderStatus());
+        Assert.assertEquals(Status.DELIVERED, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
     }
     @When("delivery man {string} confirm the delivery")
     public void delivery_man_confirm_the_delivery(String deliveryManName) {
@@ -93,6 +93,6 @@ public class CompleteMultiOrder {
     }
     @Then("The group order is marked as closed")
     public void the_group_order_is_marked_as_closed() {
-        assertEquals(Status.CLOSED,orderManager.get_current_orders(orderId).getOrderStatus());
+        assertEquals(Status.CLOSED,orderManager.getCurrentOrders(orderId).getOrderStatus());
     }
 }

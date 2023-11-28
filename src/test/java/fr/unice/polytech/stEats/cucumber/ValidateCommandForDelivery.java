@@ -57,7 +57,7 @@ public class ValidateCommandForDelivery {
     }
     @Then("The status of the order of {string} has change to READY.")
     public void the_status_of_the_order_of_has_change_to_ready(String user_email) {
-        List<Order> orders = orderManager.get_current_orders(orderId, user_email);
+        List<Order> orders = orderManager.getCurrentOrders(orderId, user_email);
 
         Assert.assertEquals(Status.READY, orders.get(0).getStatus());
     }

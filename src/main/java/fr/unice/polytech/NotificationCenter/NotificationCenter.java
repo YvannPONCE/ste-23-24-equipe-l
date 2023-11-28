@@ -33,7 +33,7 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
     }
 
     @Override
-    public boolean order_ready(UUID order_id, String delivery_manName, String deliveryman_mail, Locations locations,String customer_email) {
+    public boolean orderReady(UUID order_id, String delivery_manName, String deliveryman_mail, Locations locations, String customer_email) {
         
         String message = String.format("Dear %s,\n\n"
                 + "You have a new delivery request for order ID %s.\n"

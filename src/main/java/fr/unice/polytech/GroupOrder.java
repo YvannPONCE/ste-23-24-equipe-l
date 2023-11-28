@@ -141,6 +141,26 @@ public class GroupOrder {
             return totalItemCount >= itemCountThreshold;
         }
 
+    public void setOrderProcessing(String restaurantName) {
+        for(List<Order> orders : global_orders.values())
+        {
+            List<Order> matchingOrders = orders.stream()
+                    .filter(order -> order.get_restaurant_name().equals(restaurantName))
+                    .collect(Collectors.toList());
+            for (Order order : matchingOrders) order.setStatus(Status.PROCESSING);
+        }
+
+        for (List<Order> orders2 : this.global_orders.values())
+        {
+            for (Order order : orders2)
+            {
+                if(order.status != Status.PROCESSING) return;
+            }
+        }
+        this.orderStatus = Status.PROCESSING;
+        setOrdersStatus(Status.PROCESSING);
+    }
+
     public void validate_order(String restaurantName) {
        for(List<Order> orders : global_orders.values())
        {
@@ -159,8 +179,6 @@ public class GroupOrder {
         }
         this.orderStatus = Status.READY;
         setOrdersStatus(Status.READY);
-
-
     }
 
     public void validate_order_receipt() {
