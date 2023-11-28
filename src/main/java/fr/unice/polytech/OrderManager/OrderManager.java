@@ -3,7 +3,11 @@ package fr.unice.polytech.OrderManager;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
+
+import fr.unice.polytech.RestaurantManager.CapacityObserver;
+import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
 

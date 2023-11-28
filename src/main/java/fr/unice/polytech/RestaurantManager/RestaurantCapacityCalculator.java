@@ -1,4 +1,5 @@
-package fr.unice.polytech;
+package fr.unice.polytech.RestaurantManager;
+
 import fr.unice.polytech.Restaurant.Restaurant;
 
 import java.time.Duration;
