@@ -1,6 +1,7 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
+import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -97,7 +98,7 @@ public class UserNotificationdefs {
                 + "Our delivery team is on the way to your location at %s, and your assigned delivery person is %s.\n"
                 + "You can expect your delivery soon.\n\n"
                 + "Thank you for choosing our services!\n\n"
-                + "Best regards,\nThe Delivery Team", orderId, Locations.HALL_PRINCIPAL, "Albert");
+                + "Best regards,\nThe Delivery Team", orderId, Locations.HALL_PRINCIPAL, "Albert@gmail.com");
       Assert.assertEquals(user.getNotifications().get(1).getMessage(),userMessage);
     }
 
