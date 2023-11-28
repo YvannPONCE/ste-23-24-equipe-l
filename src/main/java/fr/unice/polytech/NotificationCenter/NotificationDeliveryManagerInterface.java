@@ -1,8 +1,7 @@
-package fr.unice.polytech.NotificationCenter;
+package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
-import fr.unice.polytech.RestaurantManager.Restaurant;
-
+import fr.unice.polytech.Restaurant.Restaurant;
 
 import java.time.LocalDateTime;
 import java.util.List;

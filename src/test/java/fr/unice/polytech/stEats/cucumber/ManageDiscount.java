@@ -3,8 +3,10 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -49,8 +51,8 @@ public class ManageDiscount {
         user1=new User(string,"john",Role.CUSTOMER_STUDENT);
         userManager.add_user(user1);
 
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, userManager, businessIntelligence);
+        StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
         order = new Order("chickenTacky");
     }
     @When("the user selects {string} and adds {int} items ton his  order")
@@ -93,7 +95,7 @@ public class ManageDiscount {
         restaurantManager.add_restaurant(restaurant);
         restaurantManager.add_restaurant(restaurant2);
         restaurant.setCapacity(10);
-        orderManager=new OrderManager(restaurantManager,new UserManager(), new BusinessIntelligence(restaurantManager));
+        orderManager=new OrderManager(restaurantManager,new UserManager(), new StatisticsManager(restaurantManager));
         orderManager.userManager.getUserList().add(user2);
         orderManager.userManager.getUserList().add(user3);
         order3=new Order("Mcdon");

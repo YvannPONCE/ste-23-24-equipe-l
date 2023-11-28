@@ -4,8 +4,10 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -45,13 +47,13 @@ public class ValidateOrderReceipt {
         Mockito.when(mockuserManager.getUserList()).thenReturn(users);
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
 
-        BusinessIntelligence businessIntelligence = new BusinessIntelligence(new RestaurantManager());
+        StatisticsManager statisticsManager = new StatisticsManager(new RestaurantManager());
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
         restaurant = new Restaurant(string3 );
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(18);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), businessIntelligence);
+        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
         orderManager.userManager =mockuserManager;
          order = new Order(string3);
         order.add_menu(new Menu(string,double1));

@@ -1,16 +1,22 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.OrderManager.OrderManagerConnectedUser;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserManager {
 
+    private final OrderManagerConnectedUser orderManager;
     List<User> userList;
 
-    public UserManager() {
+    public UserManager(OrderManagerConnectedUser orderManager) {
         this.userList=new ArrayList<>();
+        this.orderManager = orderManager;
+    }
+    public UserManager() {
+        this(null);
     }
 
     public List<Order> get_order_history(String mail) {
@@ -89,6 +95,28 @@ public class UserManager {
         } else {
             System.out.println("Selected Order not found.");
         }
+    }
+
+    public void addUser(User user)
+    {
+        if(user !=null)
+        {
+            userList.add(user);
+        }
+    }
+
+    public OrderManagerConnectedUser logIn(String userEmail, String userPassword) {
+        User user = getUser(userEmail);
+        if(user != null && user.getPassword() == userPassword)return orderManager;
+        return null;
+    }
+
+    public User getUser(String email) {
+        List<User> users = this.userList.stream()
+                .filter(user -> user.getEmail().equals(email))
+                .collect(Collectors.toList());
+        if(users.size()>0)return users.get(0);
+        return null;
     }
 }
 

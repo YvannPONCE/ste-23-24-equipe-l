@@ -4,8 +4,10 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -34,7 +36,7 @@ public class UserNotificationdefs {
         user=new User(string,"ggg",Role.CUSTOMER_STAFF);
         email=string;
         order = new Order(string2);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
 
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );orderManager.userManager.add_user(user);
         deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
@@ -69,7 +71,7 @@ public class UserNotificationdefs {
         user=new User(string,"ggg",Role.CUSTOMER_STAFF);
         email=string;
         order = new Order(string2);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
 
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );orderManager.userManager.add_user(user);
         deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
@@ -109,8 +111,7 @@ public class UserNotificationdefs {
         user=new User(string,"ggg",Role.CUSTOMER_STAFF);
         email=string;
         order = new Order(string2);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
-
+        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );orderManager.userManager.add_user(user);
         deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
         orderManager.addDeliveryManager(deliveryManager);

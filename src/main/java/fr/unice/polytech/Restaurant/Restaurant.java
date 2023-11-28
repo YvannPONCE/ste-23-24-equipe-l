@@ -1,4 +1,4 @@
-package fr.unice.polytech.RestaurantManager;
+package fr.unice.polytech.Restaurant;
 
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Order;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Restaurant {
+public class Restaurant implements RestaurantUser, RestaurantManager, RestaurantOrderManager {
 
 
 

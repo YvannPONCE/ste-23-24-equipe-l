@@ -4,8 +4,10 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -52,7 +54,7 @@ public class checkOrderHistorydefs {
             restaurantManager = new RestaurantManager();
             restaurantManager.add_restaurant(restaurant);
 
-            orderManager = new OrderManager(restaurantManager, userManager, new BusinessIntelligence(restaurantManager));
+            orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
 
             order = new Order(restaurantName);
             order.add_menu(new Menu(item, price));

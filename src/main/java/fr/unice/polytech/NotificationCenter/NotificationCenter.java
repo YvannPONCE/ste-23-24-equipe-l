@@ -1,8 +1,10 @@
 package fr.unice.polytech.NotificationCenter;
 
-import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.NotificationDeliveryManagerInterface;
+import fr.unice.polytech.Restaurant.Restaurant;
+import fr.unice.polytech.User;
+import fr.unice.polytech.UserManager;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
         String message= String.format("Dear %s,\n\nThank you for placing an order with order ID %s. Your order for delivery to %s on %s has been confirmed.\n\nBest regards,\nThe Order Confirmation Team",
                 customer_email, order_id.toString(), locations.toString(), delivery_date.toString());
         User user=findUser(customer_email);
+        if(user==null)return false;
         user.getNotifications().add(new Notification(message));
         sendNotification(customer_email, message);
         return true;
@@ -90,7 +93,7 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
 
     // Generic method to send notifications
     public void sendNotification(String recipient, String message) {
-        NotificationDecoratorInterface emailDecorator =  new EmailNotificationDecorator(recipient);
+        NotificationDecoratorInterface emailDecorator = new EmailNotificationDecorator(recipient);
         emailDecorator.sendNotification(message);
 
     }

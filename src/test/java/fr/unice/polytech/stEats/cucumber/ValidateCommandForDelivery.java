@@ -4,8 +4,10 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -35,7 +37,7 @@ public class ValidateCommandForDelivery {
 
 
 
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new BusinessIntelligence(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
         orderManager.addDeliveryManager(deliveryManager);

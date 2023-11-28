@@ -1,19 +1,25 @@
-package fr.unice.polytech;
+package fr.unice.polytech.statisticsManager;
 
+import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
-import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class BusinessIntelligence {
+public class StatisticsManager implements StatisticManagerStudent, StatisticManagerRestaurant, StaticticsManagerCampus, StatisticManagerOrderManager {
+
     HashMap<Restaurant, HashMap<Menu, Integer>> menuStatisticsByRestaurants;
+    HashMap<String, List<Order>> userStatistics;
     HashMap<Locations,Integer> locationStatistics;
     RestaurantManager restaurantManager;
-    public BusinessIntelligence(RestaurantManager restaurantManager)
+    public StatisticsManager(RestaurantManager restaurantManager)
     {
         this.restaurantManager = restaurantManager;
         menuStatisticsByRestaurants = new HashMap<>();
+        userStatistics = new HashMap<>();
         locationStatistics = new HashMap<>();
         initLocationsStatistics();
         initRestaurantsStatistics();
@@ -45,14 +51,22 @@ public class BusinessIntelligence {
 
     public void add_order(GroupOrder groupOrder)
     {
-        HashMap<String, List<Menu>> menusByRestaurants = groupOrder.getMenusByRestaurants();
         Locations location = groupOrder.get_delivery_location();
         locationStatistics.put(location, locationStatistics.get(location)+1);
 
+        HashMap<String, List<Menu>> menusByRestaurants = groupOrder.getMenusByRestaurants();
         for(Map.Entry<String, List<Menu>> entry : menusByRestaurants.entrySet())
         {
             addMenuToRestaurant(entry.getKey(), entry.getValue());
         }
+
+        HashMap<String , List<Order>> globalOrders = groupOrder.getGlobal_orders();
+        for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet())
+        {
+            addOrderToUser(entry.getKey(), entry.getValue());
+        }
+
+
     }
     private void addMenuToRestaurant(String restaurantName, List<Menu> menus)
     {
@@ -63,10 +77,20 @@ public class BusinessIntelligence {
                 .orElse(null);
 
         if(corespondingRestaurant == null)return;
-       HashMap<Menu, Integer> menusPopularity = menuStatisticsByRestaurants.get(corespondingRestaurant);
+        HashMap<Menu, Integer> menusPopularity = menuStatisticsByRestaurants.get(corespondingRestaurant);
         for (Menu menu : menus) {
             menusPopularity.merge(menu, 1, Integer::sum);
         }
+    }
+    private void addOrderToUser(String userEmail, List<Order> orders)
+    {
+        List<Order> userOrders = userStatistics.get(userEmail);
+        if(userOrders == null)
+        {
+            userStatistics.put(userEmail, orders);
+            return;
+        }
+        userOrders.addAll(orders);
     }
 
     public HashMap<Locations, Integer> get_popular_locations()
@@ -96,5 +120,23 @@ public class BusinessIntelligence {
             }
         }
         return count;
+    }
+
+    public int getUserOrderCount(String userEmail)
+    {
+        List<Order> userOrders = userStatistics.get(userEmail);
+        if(userOrders == null)return 0;
+        return userOrders.size();
+    }
+
+    public HashMap<String, Integer> getFavoriteRestaurant(String userEmail){
+        HashMap<String, Integer> restaurantCount = new HashMap<>();
+        List<Order> userOrders = userStatistics.get(userEmail);
+        if(userOrders == null)return new HashMap<>();
+        for(Order order : userOrders)
+        {
+            restaurantCount.put(order.get_restaurant_name(), restaurantCount.getOrDefault(order.get_restaurant_name(), 0)+1);
+        }
+        return restaurantCount;
     }
 }

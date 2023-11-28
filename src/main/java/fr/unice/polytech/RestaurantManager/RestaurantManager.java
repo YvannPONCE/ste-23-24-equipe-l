@@ -1,10 +1,14 @@
 package fr.unice.polytech.RestaurantManager;
 
+import fr.unice.polytech.Order;
+import fr.unice.polytech.Restaurant.Restaurant;
+import fr.unice.polytech.Restaurant.RestaurantUser;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RestaurantManager {
+public class RestaurantManager implements RestaurantManagerUser, RestaurantManagerAdmin, RestaurantManagerOrderManager, RestaurantManagerStaff {
 
     List<Restaurant> restaurants;
 
@@ -24,6 +28,11 @@ public class RestaurantManager {
         return this.restaurants;
     }
 
+    @Override
+    public List<Order> getCurrentOrders(String restaurantName){
+        return getRestaurant(restaurantName).getOrders();
+    }
+
     public Restaurant getRestaurant(String restaurant_name) {
         List<Restaurant> foundRestaurants = this.restaurants.stream()
                 .filter(restaurant -> restaurant.getName().equals(restaurant_name))
@@ -38,14 +47,20 @@ public class RestaurantManager {
     public void remove_restaurant(String restaurant_name){
         this.restaurants.removeIf(restaurant -> restaurant.getName().equals(restaurant_name));
     }
-    public List<Restaurant> getRestaurantsByTimeAndDay(int hour, int minute, String day) {
+    public List<RestaurantUser> getRestaurantsByTimeAndDay(int hour, int minute, String day) {
         return this.restaurants.stream()
                 .filter(restaurant -> restaurant.getHoraires().isOpenAt(hour, minute, day))
                 .collect(Collectors.toList());
     }
-    public List<Restaurant> getClosedRestaurantsByTimeAndDay(int hour, int minute, String day) {
+    public List<RestaurantUser> getClosedRestaurantsByTimeAndDay(int hour, int minute, String day) {
         return this.restaurants.stream()
                 .filter(restaurant -> restaurant.getHoraires().isClosedAt(hour, minute, day))
                 .collect(Collectors.toList());
     }
+
+    public void addRestaurant(Restaurant restaurant)
+    {
+        this.restaurants.add(restaurant);
+    }
+
 }
