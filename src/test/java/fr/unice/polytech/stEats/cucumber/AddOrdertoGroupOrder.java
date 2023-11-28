@@ -25,6 +25,7 @@ public class AddOrdertoGroupOrder {
     private Restaurant restaurant;
     private UserManager usermanager;
     private UserManager usermanager2;
+    private Boolean returnStatus;
 
     @Given("One restaurant, One menu, two users {string} and {string}")
     public void one_restaurant_one_menu_two_users_and(String user_email_1, String user_email_2) {
@@ -109,6 +110,13 @@ public class AddOrdertoGroupOrder {
         orderManager.place_order(user2.get_email(), order, Locations.HALL_PRINCIPAL, order_id);
     }
 
+    @When("The second join a {string} menu at {double} euros from {string} to deliver at another location {string}")
+    public void the_second_join_a_menu_at_euros_from_to_deliver_at_another_location(String menuName, Double menuPrice, String restaurantName, String Location) {
+        Order order = new Order(restaurantName);
+        order.add_menu(new Menu(menuName, menuPrice));
+        returnStatus = orderManager.place_order(user2.get_email(), order, Locations.BATIMENT_C, order_id);
+    }
+
     @Then("Both users can see {string} and {string} menus in the cart at {double} and {double} delivered to {string}.")
     public void both_users_can_see_and_menus_in_the_cart(String menu_user_1, String menu_user_2, double user_1_menu_price, double user_2_menu_price, String delivery_location) {
         GroupOrder group_order = orderManager.getCurrentOrders(order_id);
@@ -134,6 +142,11 @@ public class AddOrdertoGroupOrder {
 
         Assert.assertEquals(user_1_menu_price, user_1_menu.get_price(), 0.01);
         Assert.assertEquals(user_2_menu_price, user_2_menu.get_price(), 0.01);
+    }
+
+    @Then("The order can not be taken by the system")
+    public void the_order_can_not_be_taken_by_the_system() {
+        Assert.assertFalse(returnStatus);
     }
 
 }
