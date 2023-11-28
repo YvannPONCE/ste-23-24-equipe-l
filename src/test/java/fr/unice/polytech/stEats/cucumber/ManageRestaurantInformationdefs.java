@@ -2,7 +2,8 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
-import fr.unice.polytech.Restaurant;
+;
+import fr.unice.polytech.RestaurantManager.Restaurant;
 import fr.unice.polytech.User;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;

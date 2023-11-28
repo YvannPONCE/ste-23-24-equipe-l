@@ -1,6 +1,8 @@
-package fr.unice.polytech;
+package fr.unice.polytech.NotificationCenter;
 
+import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.RestaurantManager.Restaurant;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -88,7 +90,7 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
 
     // Generic method to send notifications
     public void sendNotification(String recipient, String message) {
-        NotificationDecoratorInterface emailDecorator = new EmailNotificationDecorator(recipient);
+        NotificationDecoratorInterface emailDecorator =  new EmailNotificationDecorator(recipient);
         emailDecorator.sendNotification(message);
 
     }

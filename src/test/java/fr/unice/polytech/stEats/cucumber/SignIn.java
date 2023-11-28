@@ -1,5 +1,6 @@
 package fr.unice.polytech.stEats.cucumber;
 
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.User;
 import fr.unice.polytech.UserManager;
 import io.cucumber.java.en.Given;
@@ -22,10 +23,11 @@ public class SignIn {
     }
     @When("the user signin")
     public void the_user_signin() {
-        userManager.signIn(user_email, user_password);
+        userManager.signIn(user_email, user_password, Role.CUSTOMER_STUDENT);
     }
     @Then("the user is present in the user base")
     public void the_user_is_present_in_the_user_base() {
         Assert.assertNotEquals(null, userManager.get_user(user_email));
+        Assert.assertEquals(userManager.get_user(user_email).getRole(),Role.CUSTOMER_STUDENT);
     }
 }

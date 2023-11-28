@@ -2,12 +2,18 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
+import fr.unice.polytech.RestaurantManager.CapacityObserver;
+import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class OrderManager  implements CapacityObserver{
+public class OrderManager  implements CapacityObserver {
 
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;

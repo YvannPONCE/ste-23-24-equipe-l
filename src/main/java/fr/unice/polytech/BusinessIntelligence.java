@@ -1,9 +1,10 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BusinessIntelligence {
     HashMap<Restaurant, HashMap<Menu, Integer>> menuStatisticsByRestaurants;

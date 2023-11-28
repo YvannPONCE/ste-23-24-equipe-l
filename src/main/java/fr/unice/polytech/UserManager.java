@@ -67,8 +67,8 @@ public class UserManager {
 
 
 
-    public void signIn(String userEmail, String userPassword) {
-        User user = new User(userEmail, userPassword);
+    public void signIn(String userEmail, String userPassword,Role role) {
+        User user = new User(userEmail, userPassword,role);
         userList.add(user);
     }
     public void addOrdersToHistory(String email, List<Order> orders) {

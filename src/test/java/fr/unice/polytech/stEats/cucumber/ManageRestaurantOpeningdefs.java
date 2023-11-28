@@ -1,7 +1,8 @@
 package fr.unice.polytech.stEats.cucumber;
 
-import fr.unice.polytech.Restaurant;
-import fr.unice.polytech.RestaurantManager;
+
+import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

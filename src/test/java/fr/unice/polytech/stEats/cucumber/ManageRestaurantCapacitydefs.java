@@ -4,11 +4,13 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

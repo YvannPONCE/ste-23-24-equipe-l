@@ -3,13 +3,13 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.java.en.And;
 import org.junit.Assert;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class ConfirmOrder {

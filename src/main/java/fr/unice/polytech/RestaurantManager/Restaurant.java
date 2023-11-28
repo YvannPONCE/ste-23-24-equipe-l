@@ -1,4 +1,8 @@
-package fr.unice.polytech;
+package fr.unice.polytech.RestaurantManager;
+
+import fr.unice.polytech.Menu;
+import fr.unice.polytech.Order;
+import fr.unice.polytech.Schedule;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

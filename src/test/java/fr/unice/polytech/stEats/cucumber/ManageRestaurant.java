@@ -1,13 +1,12 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.Menu;
-import fr.unice.polytech.Restaurant;
-import fr.unice.polytech.RestaurantManager;
+import fr.unice.polytech.RestaurantManager.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import org.junit.Assert;
-import org.mockito.internal.matchers.Null;
 
 import java.util.List;
 

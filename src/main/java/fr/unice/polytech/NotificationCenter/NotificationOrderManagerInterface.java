@@ -1,4 +1,4 @@
-package fr.unice.polytech;
+package fr.unice.polytech.NotificationCenter;
 
 import fr.unice.polytech.Enum.Locations;
 

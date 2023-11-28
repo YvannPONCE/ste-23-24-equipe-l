@@ -1,5 +1,7 @@
 package fr.unice.polytech;
 
+import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
+
 import java.util.Observable;
 import java.util.Observer;
 

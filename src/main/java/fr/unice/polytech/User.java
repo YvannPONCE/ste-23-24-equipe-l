@@ -1,6 +1,7 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.Notification;
 
 import java.util.ArrayList;
 import java.util.List;

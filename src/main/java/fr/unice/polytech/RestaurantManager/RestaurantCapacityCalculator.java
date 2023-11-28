@@ -1,4 +1,4 @@
-package fr.unice.polytech;
+package fr.unice.polytech.RestaurantManager;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Observable;
