@@ -103,7 +103,11 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         Restaurant restaurant=restaurantManager.getRestaurant(order.get_restaurant_name());
         capacityCalculator=new RestaurantCapacityCalculator(restaurant);
         OrderObserver orderObserver = new OrderObserver(capacityCalculator);
-
+        User user = userManager.get_user(email);
+        Integer numOrders = user.getNumOfOrdersFromRestaurant(order.get_restaurant_name());
+        if (numOrders != null && numOrders%restaurant.getDiscountThreshold() ==0) {
+            restaurant.addDiscountedUser(email);
+        }
         if (capacityCalculator.canPlaceOrder(order.get_menus().size())) {
             capacityCalculator.placeOrder(order.get_menus().size());
             place_order(email, order, delivery_location, uuid);

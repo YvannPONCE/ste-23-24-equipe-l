@@ -3,9 +3,7 @@ package fr.unice.polytech;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.Notification;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class User {
 
@@ -19,6 +17,7 @@ public class User {
 
     Double Credit;
     List<Order> OrderHistory;
+    HashMap<String, Order[]> orderHistory;
     Role role;
     private String password;
 
@@ -27,6 +26,7 @@ public class User {
         this.email=email;
         this.username=username;
         this.OrderHistory =new ArrayList<>();
+        this.orderHistory=new HashMap<>();
         this.role=role;
         this.Credit=0.00;
         this.NumOrdersTilDiscount=10;
@@ -44,6 +44,9 @@ public class User {
     public void addOrderToHistory(List<Order> orders)
     {
         this.OrderHistory.addAll(orders);
+        for(Order order:orders){
+            pushOntoArray(this.orderHistory, order.get_restaurant_name(), order);
+        }
     }
 
 
@@ -69,6 +72,15 @@ public class User {
     public double addCredit(Double sum){
         return this.Credit=this.Credit+sum;
     }
+
+    public Integer getNumOfOrdersFromRestaurant(String restaurantName) {
+        Order[] orders = this.orderHistory.get(restaurantName);
+        if (orders != null) {
+            return orders.length;
+        }
+        return 0;
+    }
+
     public Date getLastAppliedDiscount() {
         return this.LastAppliedDiscount;
     }
@@ -112,6 +124,23 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    private static void pushOntoArray(HashMap<String, Order[]> hashMap, String key, Order newValue) {
+        // Get the array associated with the key
+        Order[] array = hashMap.get(key);
+
+        // Check if the array is not null
+        if (array != null) {
+            // Create a new array with increased size
+            Order[] newArray = Arrays.copyOf(array, array.length + 1);
+
+            // Add the new value to the end of the array
+            newArray[array.length] = newValue;
+
+            // Update the hashmap with the new array
+            hashMap.put(key, newArray);
+        }
     }
 
 }
