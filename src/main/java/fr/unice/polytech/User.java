@@ -1,12 +1,15 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.Notification;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class User {
+
+    List<Notification> notifications;
     String email;
     String username;
 
@@ -15,25 +18,34 @@ public class User {
     Date LastAppliedDiscount;
 
     Double Credit;
-
-
     List<Order> OrderHistory;
-
     Role role;
+    private String password;
 
 
-
-    public User(String email, String username, Role role){
+    public User(String email, String username, String password, Role role){
         this.email=email;
         this.username=username;
         this.OrderHistory =new ArrayList<>();
         this.role=role;
         this.Credit=0.00;
         this.NumOrdersTilDiscount=10;
+        this.notifications=new ArrayList<>();
+    }
+    public User(String email, String password, Role role){
+        this(email, email, password, role);
+    }
+    public User(String email, String password){
+        this(email, email, password, Role.CUSTOMER_STUDENT);
     }
     public List<Order> getOrderHistory() {
         return OrderHistory;
     }
+    public void addOrderToHistory(List<Order> orders)
+    {
+        this.OrderHistory.addAll(orders);
+    }
+
 
     public Role getRole() {
         return role;
@@ -81,4 +93,25 @@ public class User {
         long diff = now.getTime() - this.LastAppliedDiscount.getTime();
         return (int) (diff / (1000 * 60 * 60 * 24));
     }
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail()
+    {
+        return this.email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
 }

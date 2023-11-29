@@ -2,9 +2,10 @@ package fr.unice.polytech.Enum;
 
 public enum Status {
     CREATED,
-    PROCESSING,
     PAID,
+    PROCESSING,
     READY,
     DELIVERED,
-    CLOSED;
+    CLOSED,
+    CANCELED
 }

@@ -1,12 +1,13 @@
 package fr.unice.polytech;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Schedule {
 
-
-    public  Map<String, String[]> schedule;
+    private Map<String, String[]> schedule;
 
     public Schedule() {
         schedule = new HashMap<>();
@@ -14,8 +15,8 @@ public class Schedule {
     }
 
     private void initializeSchedule() {
-        // Initialisez le planning avec tous les jours de la semaine.
-        String[] defaultHours = {"Fermé", "Fermé"}; // Par défaut, tous les jours sont fermés.
+        // Initialize the schedule with default opening hours from 9:00 to 00:00.
+        String[] defaultHours = {"9:00", "00:00"};
         schedule.put("lundi", defaultHours);
         schedule.put("mardi", defaultHours);
         schedule.put("mercredi", defaultHours);
@@ -44,18 +45,16 @@ public class Schedule {
         this.schedule = schedule;
     }
 
-
-    public String getOpeningHours(String day) {
-        if (schedule.containsKey(day.toLowerCase())) {
-            String[] hours = schedule.get(day.toLowerCase());
-            if (hours[0].equals("Fermé") && hours[1].equals("Fermé")) {
-                return "Le " + day + " est fermé ce jour-là.";
-            } else {
-                return "Le " + day + " est ouvert de " + hours[0] + " à " + hours[1] + ".";
+    public List<Integer> getOpeningHours() {
+        List<Integer> openingHoursList = new ArrayList<>();
+        for (Map.Entry<String, String[]> entry : schedule.entrySet()) {
+            String[] hours = entry.getValue();
+            if (!(hours[0].equals("Fermé") && hours[1].equals("Fermé"))) {
+                openingHoursList.add(Integer.parseInt(hours[0].replace(":", ""))); // Convert "9:00" to 900
+                openingHoursList.add(Integer.parseInt(hours[1].replace(":", ""))); // Convert "00:00" to 0
             }
-        } else {
-            return "Jour invalide. Veuillez spécifier un jour de la semaine valide.";
         }
+        return openingHoursList;
     }
 
     public void displaySchedule() {
@@ -66,7 +65,6 @@ public class Schedule {
         }
     }
 
-
     public String getStoreHours(String day) {
         if (schedule.containsKey(day)) {
             String[] hours = schedule.get(day);
@@ -75,4 +73,32 @@ public class Schedule {
             return "Horaires non disponibles pour ce jour.";
         }
     }
+
+    public boolean isOpenAt(int targetHour, int targetMinute, String day) {
+        String lowercaseDay = day.toLowerCase();
+        if (schedule.containsKey(lowercaseDay)) {
+            String[] hours = schedule.get(lowercaseDay);
+
+            int openingHour = Integer.parseInt(hours[0].split(":")[0]);
+            int openingMinute = Integer.parseInt(hours[0].split(":")[1]);
+
+            int closingHour = Integer.parseInt(hours[1].split(":")[0]);
+            int closingMinute = Integer.parseInt(hours[1].split(":")[1]);
+
+            // Check if the target time is within the opening and closing hours
+            if (targetHour > openingHour && targetHour < closingHour) {
+                return true;
+            } else if (targetHour == openingHour && targetMinute >= openingMinute) {
+                return true;
+            } else if (targetHour == closingHour && targetMinute <= closingMinute) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isClosedAt(int targetHour, int targetMinute, String day) {
+        return !isOpenAt(targetHour, targetMinute, day);
+    }
+
+
 }

@@ -1,29 +1,40 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.OrderManager.OrderManagerConnectedUser;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserManager {
 
+    private final OrderManagerConnectedUser orderManager;
     List<User> userList;
 
-    public UserManager() {
+    public UserManager(OrderManagerConnectedUser orderManager) {
         this.userList=new ArrayList<>();
+        this.orderManager = orderManager;
+    }
+    public UserManager() {
+        this(null);
     }
 
     public List<Order> get_order_history(String mail) {
-
         return get_user(mail).getOrderHistory();
     }
-
-    public User get_user(String email) {
-        for(User user: this.userList){
-            if(user.get_email().equals(email)){
-                System.out.println("7474");
-                return user;
-            }
+    public void add_user(User user)
+    {
+        if(user !=null)
+        {
+            userList.add(user);
         }
+    }
+    public User get_user(String email) {
+
+        List<User> users = this.userList.stream()
+                .filter(user -> user.get_email().equals(email))
+                .collect(Collectors.toList());
+        if(users.size()>0)return users.get(0);
         return null;
     }
 
@@ -40,18 +51,17 @@ public class UserManager {
         for(Order order:orderHistory){
         order.displayOrderSummary();
         }
-
-
     }
+
    public Order  find_selectedOrder(UUID orderId,String mail){
         List<Order> orderHistory=get_order_history(mail);
-        Order selectedOrder = null;
+
         for(Order order:orderHistory){
             if(order.id.equals(orderId)){
-                selectedOrder=order;
+                return order;
             }
         }
-        return selectedOrder;
+        return null;
    }
     public List<User> getUserList() {
         return userList;
@@ -61,6 +71,53 @@ public class UserManager {
         this.userList = userList;
     }
 
+
+
+    public void signIn(String userEmail, String userPassword,Role role) {
+        User user = new User(userEmail, userPassword,role);
+        userList.add(user);
+    }
+    public void addOrdersToHistory(String email, List<Order> orders) {
+       User user = get_user(email);
+       user.addOrderToHistory(orders);
+    }
+    public void displaySelectedOrderDetails(UUID orderId, String mail) {
+        Order selectedOrder = find_selectedOrder(orderId, mail);
+
+        if (selectedOrder != null) {
+            System.out.println("Selected Order Details:");
+            List<Menu> orderItems = selectedOrder.get_menus();
+            System.out.println("Order Items:");
+            for (Menu orderItem : orderItems) {
+                System.out.println("  - " + orderItem.getItemName() +
+                        ", Price: " + orderItem.get_price());
+            }
+        } else {
+            System.out.println("Selected Order not found.");
+        }
+    }
+
+    public void addUser(User user)
+    {
+        if(user !=null)
+        {
+            userList.add(user);
+        }
+    }
+
+    public OrderManagerConnectedUser logIn(String userEmail, String userPassword) {
+        User user = getUser(userEmail);
+        if(user != null && user.getPassword() == userPassword)return orderManager;
+        return null;
+    }
+
+    public User getUser(String email) {
+        List<User> users = this.userList.stream()
+                .filter(user -> user.getEmail().equals(email))
+                .collect(Collectors.toList());
+        if(users.size()>0)return users.get(0);
+        return null;
+    }
 }
 
 

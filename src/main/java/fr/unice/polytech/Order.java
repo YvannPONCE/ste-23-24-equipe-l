@@ -15,6 +15,12 @@ public class Order {
     List<Menu> menus;
     private double totalPrice;
 
+    public  Order(String restaurant_name, List<Menu> menus){
+        this.restaurant_name = restaurant_name;
+        this.menus = menus;
+        this.totalPrice=0.0;
+        this.creation_time=new Date();
+    }
 
     public  Order(String restaurant_name){
         this.restaurant_name = restaurant_name;
@@ -24,7 +30,7 @@ public class Order {
     }
 
     public int getItemCount() {
-        return menus.size(); // Ou utilisez d'autres attributs pour calculer le nombre d'articles
+        return menus.size();
     }
 
 
@@ -59,9 +65,9 @@ public class Order {
         return creation_time;
     }
     public void displayOrderSummary() {
-        System.out.println("Restaurant Name: " + restaurant_name);
+        System.out.println(" Restaurant Name: " + restaurant_name);
         for (Menu menu : menus) {
-            System.out.println("Menu Name: " +menu.getItemName());
+            System.out.println(" Menu Name: " +menu.getItemName());
         }
     }
 
@@ -86,4 +92,9 @@ public class Order {
     public double getTotalPrice(){
         return this.totalPrice;
 }
+
+    public Date getCreation_time() {
+        return creation_time;
+    }
+
 }

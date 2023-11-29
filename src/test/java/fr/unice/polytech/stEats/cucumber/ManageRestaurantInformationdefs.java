@@ -2,7 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
-import fr.unice.polytech.Restaurant;
+import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.User;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class ManageRestaurantInformationdefs {
-    private User restaurantManager;
+    private User user;
     private Restaurant restaurant;
 
     @Given("I am a Restaurant manager")
     public void i_am_a_restaurant_manager() {
-        restaurantManager = new User("userManager@gmail.com", "james", Role.CUSTOMER_STAFF);
+        user = new User("userManager@gmail.com", "james", Role.CUSTOMER_STAFF);
     }
 
     @And("I want to manage Restaurant {string} scheduler")

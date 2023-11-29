@@ -3,11 +3,14 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.Restaurant.Restaurant;
+import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.mockito.Mockito;
 
 import java.util.UUID;
 
@@ -22,9 +25,6 @@ public class ManageDiscount {
     String CreditCard="7936 3468 9302 8371";
  OrderAmountCalculator orderAmountCalculator;
     private Order order;
-    private GroupOrder groupOrder;
-    private Restaurant mockRestaurant;
-    private Integer nbitem;
     private UUID orderId;
     private double expected=0.0;
     private User user3;
@@ -36,18 +36,24 @@ public class ManageDiscount {
     private Order order4;
     private UUID orderId3;
 
+    private Restaurant restaurant;
+    private RestaurantManager restaurantManager;
+    private UserManager userManager;
+
 
     @Given("user {string} with {double} credit and the discount threshold is set to {int}")
     public void user_with_credit_and_the_discount_threshold_is_set_to(String string, Double double1, Integer int1) {
-        RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
-        mockRestaurant = Mockito.mock(Restaurant.class);
+        restaurant = new Restaurant("chickenTacky" );
+        restaurantManager = new RestaurantManager();
+        userManager = new UserManager();
+        restaurantManager.add_restaurant(restaurant);
+        restaurant.setCapacity(16);
         user1=new User(string,"john",Role.CUSTOMER_STUDENT);
-        Mockito.when(mockRestaurantManager.get_restaurant(Mockito.anyString())).thenReturn(mockRestaurant);
-        Mockito.when(mockRestaurant.getName()).thenReturn("chickentacky");
-        orderManager = new OrderManager(mockRestaurantManager);
+        userManager.add_user(user1);
+
+        StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
         order = new Order("chickenTacky");
-        orderManager.userManager.getUserList().add(user1);
-        nbitem=int1;
     }
     @When("the user selects {string} and adds {int} items ton his  order")
     public void the_user_selects_and_adds_items_ton_his_order(String string, Integer int1) {
@@ -58,8 +64,8 @@ public class ManageDiscount {
 
         orderId=orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
 
-        orderAmountCalculator =new OrderAmountCalculator(orderManager.get_current_orders(order_id),orderManager.userManager);
-        orderAmountCalculator.setItemCountThreshold(nbitem);
+        orderAmountCalculator =new OrderAmountCalculator(orderManager.getCurrentOrders(order_id),orderManager.userManager);
+        orderAmountCalculator.setItemCountThreshold(16);
         orderManager.pay_order(orderId,user1.get_email(),CreditCard);
 
         }
@@ -80,16 +86,25 @@ public class ManageDiscount {
     public void one_restaurant_two_menu_two_users_and_waiting_in_with_credit(String string, String string2, String string3, Double double1) {
         user2=new User(string,"elodie",Role.CUSTOMER_STUDENT);
         user3=new User(string2,"james",Role.CUSTOMER_STUDENT);
+
+
+
+        restaurant = new Restaurant("chickentacky" );
+        Restaurant restaurant2 = new Restaurant("Mcdon");
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(restaurant);
+        restaurantManager.add_restaurant(restaurant2);
+        restaurant.setCapacity(10);
+        orderManager=new OrderManager(restaurantManager,new UserManager(), new StatisticsManager(restaurantManager));
         orderManager.userManager.getUserList().add(user2);
         orderManager.userManager.getUserList().add(user3);
-
-
         order3=new Order("Mcdon");
 
     }
     @When("The first user add a {int} {string} menu at {double} euros from {string} to deliver at {string}")
     public void the_first_user_add_a_menu_at_euros_from_to_deliver_at(Integer int1, String string, Double double1, String string2, String string3) {
         order2 = new Order(string2);
+        restaurantManager.add_restaurant(new Restaurant(string2));
         Menu menu=new Menu(string,double1);
         for(int i=0;i<int1;i++){
             order2.add_menu(menu);
@@ -99,6 +114,7 @@ public class ManageDiscount {
     @When("The second join {int} a {string} menu at {double} euros from {string} to his friend command")
     public void the_second_join_a_menu_at_euros_from_to_his_friend_command(Integer int1, String string, Double double1, String string2) {
        order3= new Order(string2);
+        restaurantManager.add_restaurant(new Restaurant(string2));
         Menu menu=new Menu(string,double1);
         for(int i=0;i<int1;i++){
             order3.add_menu(menu);
@@ -129,6 +145,10 @@ public class ManageDiscount {
     }
     @When("user add {int} {string} at {double} from {string} to deliver at {string}")
     public void user_add_at_from_to_deliver_at(Integer int1, String string, Double double1, String string2, String string3) {
+        restaurantManager = new RestaurantManager();
+        restaurantManager.add_restaurant(new Restaurant(string2));
+
+        restaurant.setCapacity(10);
         order4=new Order(string2);
        Menu menu=new Menu(string,double1);
        for(int i=0;i<int1;i++){

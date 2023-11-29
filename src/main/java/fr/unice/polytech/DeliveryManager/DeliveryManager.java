@@ -1,43 +1,61 @@
-package fr.unice.polytech;
-import fr.unice.polytech.Enum.Status;
+package fr.unice.polytech.DeliveryManager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.OrderManager.OrderManager;
+import fr.unice.polytech.User;
+import fr.unice.polytech.UserManager;
 
-public class DeliveryManager {
+import java.util.*;
+
+public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryManagerConnectedUser{
 
 
+    private final UserManager usermanager;
     OrderManager orderManager;
     private Map<String, Boolean> deliveryMenAvailability;
     private Map<String, UUID> deliveryMenOrders;
+    private List<String> deliveryLocations;
 
-    public DeliveryManager(OrderManager orderManager) {
+    public DeliveryManager(OrderManager orderManager, UserManager userManager) {
         this.orderManager = orderManager;
         this.deliveryMenAvailability = new HashMap<>();
+        this.usermanager=userManager;
         this.deliveryMenOrders = new HashMap<>();
+        deliveryLocations = new ArrayList<>();
     }
-
     public Map<String, Boolean> getDeliveryMenAvailability() {
         return deliveryMenAvailability;
+    }
+
+    @Override
+    public void addDeliveryLocation(String deliveryLocation) {
+        deliveryLocations.add(deliveryLocation);
+    }
+
+    @Override
+    public void deleteDeliveryLocation(String deliveryLocation) {
+        for (String deliveryLocation2 : deliveryLocations){
+            if(deliveryLocation2.equals(deliveryLocation)){
+                deliveryLocations.remove(deliveryLocation2);
+            }
+        }
     }
 
     public Map<String, UUID> getDeliveryMenOrders() {
         return deliveryMenOrders;
     }
 
-    public boolean addOrder(UUID orderID){
+    public User addOrder(UUID orderID){
         for (Map.Entry<String, Boolean> entry : deliveryMenAvailability.entrySet()) {
             String key = entry.getKey();
             Boolean value = entry.getValue();
             if(value){
                 deliveryMenOrders.put(key,orderID);
                 deliveryMenAvailability.replace(key,false);
-                return true;
+                return usermanager.getUser(key);
             }
         }
-        return false;
+        return null;
     }
 
     public void validateOrder(String deliveryman, UUID order_id){
@@ -57,8 +75,10 @@ public class DeliveryManager {
         return null;
     }
 
-    public void addDeliveryman(String deliveryman){
-        deliveryMenAvailability.put(deliveryman,true);
+    public void addDeliveryman(String deliverManMail,String deliveryManPassword) {
+        deliveryMenAvailability.put(deliverManMail, true);
+        User user = new User(deliverManMail,deliveryManPassword, Role.DELIVER_MAN);
+        usermanager.add_user(user);
     }
 
     public void deleteDeliveryman(String deliveryman){
@@ -69,5 +89,10 @@ public class DeliveryManager {
 
     public boolean isAvailable(String deliveryman){
         return deliveryMenAvailability.get(deliveryman);
+    }
+
+    @Override
+    public List<String> getLocations() {
+        return deliveryLocations;
     }
 }
