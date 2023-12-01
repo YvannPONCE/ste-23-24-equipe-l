@@ -1,6 +1,7 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
+import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
@@ -30,9 +31,17 @@ public class ValidateOrderReceipt {
     String email;
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
+    private DeliveryManager deliveryManager;
+    private UserManager userMnager;
 
     @Given("user {string} as order a {string} at {double} at {string} and as paid his command")
     public void user_as_order_a_at_at_and_as_paid_his_command(String string, String string2, Double double1, String string3) {
+
+
+    }
+
+    @Given("user {string} as order a {string} at {double} at {string} and as paid his command and delivered")
+    public void user_as_order_a_at_at_and_as_paid_his_command_and_delivered(String string, String string2, Double double1, String string3) {
 
         RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
         mockRestaurant = Mockito.mock(Restaurant.class);
@@ -44,6 +53,7 @@ public class ValidateOrderReceipt {
         Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
         List<User> users=new ArrayList<>();
         users.add(user);
+        users.add(new User("Albert@gmail.com","Albert"));
         Mockito.when(mockuserManager.getUserList()).thenReturn(users);
         Mockito.when(mockRestaurant.getName()).thenReturn(string3);
 
@@ -53,30 +63,41 @@ public class ValidateOrderReceipt {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(18);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
+        userMnager=new UserManager();
+        this.userMnager.add_user(new User("Albert@gmail.com","Albert"));
+
+        deliveryManager=new DeliveryManager(orderManager,userMnager);
+        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
+
+        orderManager = new OrderManager(restaurantManager,userMnager, statisticsManager,deliveryManager);
+        deliveryManager=new DeliveryManager(orderManager,userMnager);
         orderManager.userManager =mockuserManager;
-         order = new Order(string3);
+        order = new Order(string3);
         order.add_menu(new Menu(string,double1));
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
 
-        orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
-        orderManager.validate_order(orderId,string);
 
-    }
-    @Given("the order was delivered")
-    public void the_order_was_delivered() {
-        order.setStatus(Status.DELIVERED);
+        orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
+
+        orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
+
+        orderManager.processingOrder(orderId,restaurant.getName());
+
+        
+        orderManager.validate_order(orderId,restaurant.getName());
 
     }
 
     @When("user {string} confirm the receipt")
     public void user_confirm_the_receipt(String string) {
+
+
         orderManager.validate_order_receipt(order.getId());
+
     }
 
     @Then("the order is marked as delivered")
     public void the_order_is_marked_as_delivered() {
-        assertEquals(order.getStatus(),Status.DELIVERED);
+        assertEquals(order.getOrderState().getStatus(),Status.DELIVERED);
     }
 }

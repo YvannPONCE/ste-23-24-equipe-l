@@ -42,21 +42,21 @@ public class AddMenuToCart {
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
 
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros.")
     public void the_selected_menus_are_stored_in_the_current_order(String menu_name, String restaurant_name, double menu_price) {
-        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.get_email());
+        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.getEmail());
         Order order = orders.get(0);
-        List<Menu> menus = order.get_menus();
+        List<Menu> menus = order.getMenus();
         Menu menu = menus.get(0);
 
         Assert.assertEquals(1, orders.size());
         Assert.assertEquals(1, menus.size());
-        Assert.assertEquals(order.get_restaurant_name(), restaurant_name);
-        Assert.assertEquals(menu_name, menu.get_name());
-        Assert.assertEquals(menu_price, menu.get_price(), 0.01);
+        Assert.assertEquals(order.getRestaurant_name(), restaurant_name);
+        Assert.assertEquals(menu_name, menu.getItemName());
+        Assert.assertEquals(menu_price, menu.getPrice(), 0.01);
     }
 
 
@@ -76,35 +76,35 @@ public class AddMenuToCart {
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         Order order_2 = new Order(restaurant_name_2);
         order_2.add_menu(new Menu(menu_name_2, menu_price_2));
-        orderManager.place_order(user.get_email(), order_2, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.place_order(user.getEmail(), order_2, Locations.HALL_PRINCIPAL, order_id);
 
     }
 
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros as well as the {string} menu at {double} euros from {string}.")
     public void the_menu_from_is_stored_in_the_current_order_and_cost_euros_as_well_as_the_menu_at_euros_from(String menu_name, String restaurant_name, double menu_price, String menu_name_2, double menu_price_2, String restaurant_name_2) {
-        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.get_email());
+        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.getEmail());
 
         Order order = orders.get(0);
-        List<Menu> menus_1 = order.get_menus();
+        List<Menu> menus_1 = order.getMenus();
         Menu menu_1 = menus_1.get(0);
 
         Order order_2 = orders.get(1);
-        List<Menu> menus_2 = order_2.get_menus();
+        List<Menu> menus_2 = order_2.getMenus();
         Menu menu_2 = menus_2.get(0);
 
         Assert.assertEquals(2, orders.size());
         Assert.assertEquals(1, menus_1.size());
-        Assert.assertEquals(restaurant_name, order.get_restaurant_name());
-        Assert.assertEquals(menu_name, menu_1.get_name());
-        Assert.assertEquals(menu_price, menu_1.get_price(), 0.01);
+        Assert.assertEquals(restaurant_name, order.getRestaurant_name());
+        Assert.assertEquals(menu_name, menu_1.getItemName());
+        Assert.assertEquals(menu_price, menu_1.getPrice(), 0.01);
 
-        Assert.assertEquals(restaurant_name_2, order_2.get_restaurant_name());
-        Assert.assertEquals(menu_name_2, menu_2.get_name());
-        Assert.assertEquals(menu_price_2, menu_2.get_price(), 0.01);
+        Assert.assertEquals(restaurant_name_2, order_2.getRestaurant_name());
+        Assert.assertEquals(menu_name_2, menu_2.getItemName());
+        Assert.assertEquals(menu_price_2, menu_2.getPrice(), 0.01);
     }
 
 
@@ -125,31 +125,31 @@ public class AddMenuToCart {
         });
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name_1, menu_price_1));
-        order_id = orderManager.place_order(user.get_email(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         Order order_2 = new Order(restaurant_name);
         order_2.add_menu(new Menu(menu_name_2, menu_price_2));
-        orderManager.place_order(user.get_email(), order_2, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.place_order(user.getEmail(), order_2, Locations.HALL_PRINCIPAL, order_id);
     }
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros as well as the {string} menu at {double} euros.")
     public void the_menu_from_is_stored_in_the_current_order_and_cost_euros_as_well_as_the_menu_at_euros(String menu_name_1, String restaurant_name, Double menu_price_1, String menu_name_2, Double menu_price_2) {
-        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.get_email());
+        List<Order>  orders = orderManager.getCurrentOrders(order_id, user.getEmail());
 
         Order order = orders.get(0);
-        List<Menu> menus = order.get_menus();
+        List<Menu> menus = order.getMenus();
         Menu menu_1 = menus.get(0);
         Menu menu_2 = menus.get(1);
 
 
         Assert.assertEquals(1, orders.size());
         Assert.assertEquals(2, menus.size());
-        Assert.assertEquals(order.get_restaurant_name(), restaurant_name);
+        Assert.assertEquals(order.getRestaurant_name(), restaurant_name);
 
-        Assert.assertEquals(menu_name_1, menu_1.get_name());
-        Assert.assertEquals(menu_price_1, menu_1.get_price(), 0.01);
+        Assert.assertEquals(menu_name_1, menu_1.getItemName());
+        Assert.assertEquals(menu_price_1, menu_1.getPrice(), 0.01);
 
-        Assert.assertEquals(menu_name_2, menu_2.get_name());
-        Assert.assertEquals(menu_price_2, menu_2.get_price(), 0.01);
+        Assert.assertEquals(menu_name_2, menu_2.getItemName());
+        Assert.assertEquals(menu_price_2, menu_2.getPrice(), 0.01);
     }
 
 

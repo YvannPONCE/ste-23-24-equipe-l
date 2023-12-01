@@ -96,7 +96,7 @@ public class ManageRestaurantCapacitydefs {
     @Then("user have a created order status")
     public void user_have_a_created_order_status() {
         Assert.assertFalse(orderId.equals(null));
-        Assert.assertEquals(order.getStatus(), Status.CREATED);
+        Assert.assertEquals(order.getOrderState().getStatus(), Status.CREATED);
         Assert.assertEquals(restaurant2.getHourlyCapacity(LocalDateTime.now().getHour()),9);
     }
 
@@ -124,7 +124,7 @@ public class ManageRestaurantCapacitydefs {
 
             order2.add_menu(menu);
         order.add_menu(menu);
-        orderId2=orderManager.place_order(user3.get_email(),order2,Locations.HALL_PRINCIPAL);
+        orderId2=orderManager.place_order(user3.getEmail(),order2,Locations.HALL_PRINCIPAL);
 
 
         orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
@@ -133,8 +133,8 @@ public class ManageRestaurantCapacitydefs {
     public void user_have_a_created_order_status_and_restaurant_capacity_become(Integer int1) {
         Assert.assertFalse(orderId.equals(null));
         Assert.assertFalse(orderId2.equals(null));
-        Assert.assertEquals(order.getStatus(), Status.CREATED);
-        Assert.assertEquals(order2.getStatus(), Status.CREATED);
+        Assert.assertEquals(order.getOrderState().getStatus(), Status.CREATED);
+        Assert.assertEquals(order2.getOrderState().getStatus(), Status.CREATED);
         Assert.assertEquals(Optional.of(restaurant2.getHourlyCapacity(LocalDateTime.now().getHour())),Optional.of(int1));
     }
 

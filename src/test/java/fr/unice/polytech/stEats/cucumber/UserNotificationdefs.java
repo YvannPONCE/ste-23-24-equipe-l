@@ -57,7 +57,7 @@ public class UserNotificationdefs {
     @Then("user receives a notification with the order information")
     public void user_receives_a_notification_with_the_order_information() {
         String message= String.format("Dear %s,\n\nThank you for placing an order with order ID %s. Your order for delivery to %s on %s has been confirmed.\n\nBest regards,\nThe Order Confirmation Team",
-                user.get_email(),orderId.toString(), Locations.HALL_PRINCIPAL, order.getCreationTime());
+                user.getEmail(),orderId.toString(), Locations.HALL_PRINCIPAL, order.getCreation_time());
         Assert.assertEquals(user.getNotifications().get(0).getMessage(),message);
 
 
@@ -82,6 +82,7 @@ public class UserNotificationdefs {
 
         order.add_menu(new Menu("chickennuggets", 5.50));
         orderId = orderManager.place_order((String) email, order, Locations.HALL_PRINCIPAL);
+        orderManager.pay_order(orderId,(String) email,"7936 3468 9302 8371");
 
 
     }
@@ -89,7 +90,9 @@ public class UserNotificationdefs {
 
     @When("the order is ready for delivery")
     public void the_order_is_ready_for_delivery() {
+        orderManager.processingOrder(orderId,"chickenTacky");
         orderManager.validate_order(orderId, "chickenTacky");
+
     }
     @Then("user receives a notification with delivery information")
     public void user_receives_a_notification_with_delivery_information() {
@@ -121,9 +124,9 @@ public class UserNotificationdefs {
 
         order.add_menu(new Menu("chickennuggets", 5.50));
         orderId = orderManager.place_order((String) email, order, Locations.HALL_PRINCIPAL);
-
-        orderManager.validate_order(orderId, "chickenTacky");
         orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
+        orderManager.processingOrder(orderId,"chickenTacky");
+        orderManager.validate_order(orderId,"chickenTacky");
 
     }
     @When("user validate  order  receipt")

@@ -35,14 +35,14 @@ public class DeliveryManNotificationdefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(16);
-
-
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
+        userManager=new UserManager();
+        userManager.add_user(new User("Albert@gmail.com","Albert"));
+        userManager.add_user(new User(string,"user", Role.CUSTOMER_STAFF));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
 
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
         deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
         orderManager.addDeliveryManager(deliveryManager);
-        orderManager.userManager.add_user(new User(string,"user", Role.CUSTOMER_STAFF));
     this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
     order = new Order(string2);
@@ -51,6 +51,8 @@ public class DeliveryManNotificationdefs {
 
         orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
         orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
+        orderManager.processingOrder(orderId,restaurant.getName());
+
     }
     @When("the order is ready and restaurant validate the order for delivery")
     public void the_order_is_ready_and_restaurant_validate_the_order_for_delivery() {

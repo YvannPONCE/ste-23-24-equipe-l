@@ -80,12 +80,12 @@ public class ConfirmOrder {
         List<Order> orders = restaurantManager.getRestaurant(restaurantName).getOrders();
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
-        Assert.assertEquals(restaurantName, order.get_restaurant_name());
-        List<Menu> menus = order.get_menus();
+        Assert.assertEquals(restaurantName, order.getRestaurant_name());
+        List<Menu> menus = order.getMenus();
         Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
-        Assert.assertEquals(menuName, menu.get_name());
-        Assert.assertEquals(menuPrice, menu.get_price(), 0.01);
+        Assert.assertEquals(menuName, menu.getItemName());
+        Assert.assertEquals(menuPrice, menu.getPrice(), 0.01);
     }
 
     @Given("a user {string} added to his cart a {string} at {double} from {string} and {string} at {double} from {string}")
@@ -117,22 +117,22 @@ public class ConfirmOrder {
         List<Order> orders = restaurantManager.getRestaurant(restaurant_name_1).getOrders();
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
-        Assert.assertEquals(restaurant_name_1, order.get_restaurant_name());
-        List<Menu> menus = order.get_menus();
+        Assert.assertEquals(restaurant_name_1, order.getRestaurant_name());
+        List<Menu> menus = order.getMenus();
         Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
-        Assert.assertEquals(menu_name_1, menu.get_name());
-        Assert.assertEquals(menu_price_1, menu.get_price(), 0.01);
+        Assert.assertEquals(menu_name_1, menu.getItemName());
+        Assert.assertEquals(menu_price_1, menu.getPrice(), 0.01);
 
         List<Order> orders_2 = restaurantManager.getRestaurant(restaurant_name_2).getOrders();
         Assert.assertEquals(1, orders_2.size());
         Order order_2 = orders_2.get(0);
-        Assert.assertEquals(restaurant_name_2, order_2.get_restaurant_name());
-        List<Menu> menus_2 = order_2.get_menus();
+        Assert.assertEquals(restaurant_name_2, order_2.getRestaurant_name());
+        List<Menu> menus_2 = order_2.getMenus();
         Assert.assertEquals(1, menus_2.size());
         Menu menu_2 = menus_2.get(0);
-        Assert.assertEquals(menu_name_2, menu_2.get_name());
-        Assert.assertEquals(menu_price_2, menu_2.get_price(), 0.01);
+        Assert.assertEquals(menu_name_2, menu_2.getItemName());
+        Assert.assertEquals(menu_price_2, menu_2.getPrice(), 0.01);
     }
 
 }

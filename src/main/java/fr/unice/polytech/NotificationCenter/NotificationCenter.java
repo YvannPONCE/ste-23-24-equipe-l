@@ -79,9 +79,10 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
     }
 
     public User findUser(String email){
+
         List<User> users=this.userManager.getUserList();
         for(User user: users){
-            if(user.get_email()==email){
+            if(user.getEmail()==email){
                 return user;
             }
         }

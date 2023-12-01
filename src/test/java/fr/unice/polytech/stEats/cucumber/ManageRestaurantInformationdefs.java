@@ -98,5 +98,6 @@ public class ManageRestaurantInformationdefs {
         Assertions.assertEquals(restaurant.getListemenu().get(0).getItemName(),string2);
         Assertions.assertEquals(Optional.of(Integer.valueOf((int) restaurant.getListemenu().get(0).getPrice())), Optional.of(int1));
 
+
     }
 }

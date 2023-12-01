@@ -54,12 +54,13 @@ public class ValidateCommandForDelivery {
     }
     @When("the restaurant has finish preprared the order")
     public void the_restaurant_has_finish_preprared_the_order() {
+        orderManager.processingOrder(orderId, restaurant.getName());
         orderManager.validate_order(orderId, restaurant.getName());
     }
     @Then("The status of the order of {string} has change to READY.")
     public void the_status_of_the_order_of_has_change_to_ready(String user_email) {
         List<Order> orders = orderManager.getCurrentOrders(orderId, user_email);
 
-        Assert.assertEquals(Status.READY, orders.get(0).getStatus());
+        Assert.assertEquals(Status.READY, orders.get(0).getOrderState().getStatus());
     }
 }
