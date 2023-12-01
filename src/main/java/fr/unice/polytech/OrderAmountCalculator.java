@@ -1,12 +1,15 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Status;
+import lombok.Getter;
+import lombok.Setter;
 import org.mockito.internal.matchers.Or;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+@Getter
+@Setter
 public class OrderAmountCalculator {
     GroupOrder order ;
     UserManager userManager;
@@ -19,13 +22,8 @@ public class OrderAmountCalculator {
         this.order = order;
 
     }
-    public int getItemCountThreshold() {
-        return itemCountThreshold;
-    }
 
-    public void setItemCountThreshold(int itemCountThreshold) {
-        this.itemCountThreshold = itemCountThreshold;
-    }
+
 
 
     public void applyMenuDiscount( double discountPercentage) {

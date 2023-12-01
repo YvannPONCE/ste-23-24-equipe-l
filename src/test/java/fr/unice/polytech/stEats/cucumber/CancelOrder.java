@@ -46,37 +46,39 @@ public class CancelOrder {
         order.add_menu(menu);
 
         orderId = orderManager.place_order(userEmail, order, Locations.HALL_PRINCIPAL);
+       order.getOrderState().next();
+
     }
     @When("I request to cancel my order")
     public void i_request_to_cancel_my_order() {
-        orderManager.cancelOrder(orderId, user.get_email());
+        orderManager.cancelOrder(orderId, user.getEmail());
     }
     @Then("my order is successfully cancelled")
     public void my_order_is_successfully_cancelled() {
-        List<Order> orders = orderManager.getCurrentOrders(orderId, user.get_email());
+        List<Order> orders = orderManager.getCurrentOrders(orderId, user.getEmail());
         Assert.assertFalse(orders.isEmpty());
         for(Order order : orders){
-            Assert.assertEquals(Status.CANCELED, order.getStatus());
+            Assert.assertEquals(Status.CANCELED, order.getOrderState().getStatus());
         }
 
     }
     @Then("I am refunded for my cancelled order")
     public void i_am_refunded_for_my_cancelled_order() {
-        User finalUser = userManager.get_user(user.get_email());
+        User finalUser = userManager.get_user(user.getEmail());
         Assert.assertEquals(menuPrice ,user.getCredit());
     }
 
     @Then("the cancellation is denied")
     public void the_cancellation_is_denied() {
-        orderManager.processingOrder(orderId, restaurant.getName());
+        orderManager.reprocessingOrder(orderId, restaurant.getName());
     }
 
     @Then("my order remains unchanged")
     public void my_order_remains_unchanged() {
-        List<Order> orders = orderManager.getCurrentOrders(orderId, user.get_email());
+        List<Order> orders = orderManager.getCurrentOrders(orderId, user.getEmail());
         Assert.assertFalse(orders.isEmpty());
         for(Order order : orders){
-            Assert.assertEquals(Status.PROCESSING, order.getStatus());
+            Assert.assertEquals(Status.PROCESSING, order.getOrderState().getStatus());
         }
     }
 

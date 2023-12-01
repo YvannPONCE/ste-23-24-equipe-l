@@ -49,18 +49,18 @@ public class AddOrdertoGroupOrder {
         order.add_menu(new Menu(menu_name, menu_price));
 
 
-        order_id = orderManager.place_order(user1.get_email(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.place_order(user1.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
     @When("The second user add a {string} menu at {double} euros from {string}")
     public void the_second_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name) {
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        orderManager.place_order(user2.get_email(), order, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.place_order(user2.getEmail(), order, Locations.HALL_PRINCIPAL, order_id);
     }
     @Then("Two {string} menu from {string} are stored in the current order and cost {double} euros each.")
     public void two_menu_from_are_stored_in_the_current_order_and_cost_euros_each(String menu_name, String restaurant_name, double menu_price) {
-        List<Order> user_1_orders = orderManager.getCurrentOrders(order_id, user1.get_email());
-        List<Order> user_2_orders = orderManager.getCurrentOrders(order_id, user2.get_email());
+        List<Order> user_1_orders = orderManager.getCurrentOrders(order_id, user1.getEmail());
+        List<Order> user_2_orders = orderManager.getCurrentOrders(order_id, user2.getEmail());
 
         Assert.assertEquals(1, user_1_orders.size());
         Assert.assertEquals(1, user_2_orders.size());
@@ -68,11 +68,11 @@ public class AddOrdertoGroupOrder {
         Order user_1_order = user_1_orders.get(0);
         Order user_2_order = user_2_orders.get(0);
 
-        Assert.assertEquals(restaurant_name, user_1_order.get_restaurant_name());
-        Assert.assertEquals(restaurant_name, user_2_order.get_restaurant_name());
+        Assert.assertEquals(restaurant_name, user_1_order.getRestaurant_name());
+        Assert.assertEquals(restaurant_name, user_2_order.getRestaurant_name());
 
-        List<Menu> user_1_menus = user_1_order.get_menus();
-        List<Menu> user_2_menus = user_2_order.get_menus();
+        List<Menu> user_1_menus = user_1_order.getMenus();
+        List<Menu> user_2_menus = user_2_order.getMenus();
 
         Menu user_1_menu = user_1_menus.get(0);
         Menu user_2_menu = user_2_menus.get(0);
@@ -80,11 +80,11 @@ public class AddOrdertoGroupOrder {
         Assert.assertEquals(1, user_1_menus.size());
         Assert.assertEquals(1, user_2_menus.size());
 
-        Assert.assertEquals(menu_name, user_1_menu.get_name());
-        Assert.assertEquals(menu_name, user_2_menu.get_name());
+        Assert.assertEquals(menu_name, user_1_menu.getItemName());
+        Assert.assertEquals(menu_name, user_2_menu.getItemName());
 
-        Assert.assertEquals(menu_price, user_1_menu.get_price(), 0.01);
-        Assert.assertEquals(menu_price, user_2_menu.get_price(), 0.01);
+        Assert.assertEquals(menu_price, user_1_menu.getPrice(), 0.01);
+        Assert.assertEquals(menu_price, user_2_menu.getPrice(), 0.01);
 
     }
 
@@ -107,29 +107,29 @@ public class AddOrdertoGroupOrder {
     public void the_second_join_a_menu_at_euros_from(String menu_name, Double menu_price, String restaurant_name) {
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        orderManager.place_order(user2.get_email(), order, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.place_order(user2.getEmail(), order, Locations.HALL_PRINCIPAL, order_id);
     }
 
     @When("The second join a {string} menu at {double} euros from {string} to deliver at another location {string}")
     public void the_second_join_a_menu_at_euros_from_to_deliver_at_another_location(String menuName, Double menuPrice, String restaurantName, String Location) {
         Order order = new Order(restaurantName);
         order.add_menu(new Menu(menuName, menuPrice));
-        returnStatus = orderManager.place_order(user2.get_email(), order, Locations.BATIMENT_C, order_id);
+        returnStatus = orderManager.place_order(user2.getEmail(), order, Locations.BATIMENT_C, order_id);
     }
 
     @Then("Both users can see {string} and {string} menus in the cart at {double} and {double} delivered to {string}.")
     public void both_users_can_see_and_menus_in_the_cart(String menu_user_1, String menu_user_2, double user_1_menu_price, double user_2_menu_price, String delivery_location) {
         GroupOrder group_order = orderManager.getCurrentOrders(order_id);
 
-        Assert.assertEquals(Locations.HALL_PRINCIPAL, group_order.get_delivery_location());
+        Assert.assertEquals(Locations.HALL_PRINCIPAL, group_order.getDeliveryLocation());
 
-        List<Order> user_1_orders = group_order.get_orders(user1.get_email());
-        List<Order> user_2_orders = group_order.get_orders(user2.get_email());
+        List<Order> user_1_orders = group_order.get_orders(user1.getEmail());
+        List<Order> user_2_orders = group_order.get_orders(user2.getEmail());
         Order user_1_order = user_1_orders.get(0);
         Order user_2_order = user_2_orders.get(0);
 
-        List<Menu> user_1_menus = user_1_order.get_menus();
-        List<Menu> user_2_menus = user_2_order.get_menus();
+        List<Menu> user_1_menus = user_1_order.getMenus();
+        List<Menu> user_2_menus = user_2_order.getMenus();
 
         Menu user_1_menu = user_1_menus.get(0);
         Menu user_2_menu = user_2_menus.get(0);
@@ -137,11 +137,11 @@ public class AddOrdertoGroupOrder {
         Assert.assertEquals(1, user_1_menus.size());
         Assert.assertEquals(1, user_2_menus.size());
 
-        Assert.assertEquals(menu_user_1, user_1_menu.get_name());
-        Assert.assertEquals(menu_user_2, user_2_menu.get_name());
+        Assert.assertEquals(menu_user_1, user_1_menu.getItemName());
+        Assert.assertEquals(menu_user_2, user_2_menu.getItemName());
 
-        Assert.assertEquals(user_1_menu_price, user_1_menu.get_price(), 0.01);
-        Assert.assertEquals(user_2_menu_price, user_2_menu.get_price(), 0.01);
+        Assert.assertEquals(user_1_menu_price, user_1_menu.getPrice(), 0.01);
+        Assert.assertEquals(user_2_menu_price, user_2_menu.getPrice(), 0.01);
     }
 
     @Then("The order can not be taken by the system")

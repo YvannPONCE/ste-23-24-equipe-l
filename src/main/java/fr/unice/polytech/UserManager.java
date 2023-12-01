@@ -2,9 +2,13 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.OrderManager.OrderManagerConnectedUser;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 import java.util.stream.Collectors;
+@Getter
+@Setter
 
 public class UserManager {
 
@@ -32,7 +36,7 @@ public class UserManager {
     public User get_user(String email) {
 
         List<User> users = this.userList.stream()
-                .filter(user -> user.get_email().equals(email))
+                .filter(user -> user.getEmail().equals(email))
                 .collect(Collectors.toList());
         if(users.size()>0)return users.get(0);
         return null;
@@ -45,7 +49,7 @@ public class UserManager {
         Collections.sort(orderHistory, new Comparator<Order>() {
             @Override
             public int compare(Order order1, Order order2) {
-                return order2.getCreationTime().compareTo(order1.getCreationTime()); // Inversion de l'ordre
+                return order2.getCreation_time().compareTo(order1.getCreation_time()); // Inversion de l'ordre
             }
         });
         for(Order order:orderHistory){
@@ -86,11 +90,11 @@ public class UserManager {
 
         if (selectedOrder != null) {
             System.out.println("Selected Order Details:");
-            List<Menu> orderItems = selectedOrder.get_menus();
+            List<Menu> orderItems = selectedOrder.getMenus();
             System.out.println("Order Items:");
             for (Menu orderItem : orderItems) {
                 System.out.println("  - " + orderItem.getItemName() +
-                        ", Price: " + orderItem.get_price());
+                        ", Price: " + orderItem.getPrice());
             }
         } else {
             System.out.println("Selected Order not found.");

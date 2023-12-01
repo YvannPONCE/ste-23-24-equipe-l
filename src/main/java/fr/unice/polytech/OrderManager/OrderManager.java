@@ -56,13 +56,12 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     }
     public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(order_id);
-
-        order.setStatus(Status.CREATED);
-        List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.get_uuid().equals(order_id))
+        order.getOrderState().setStatus(Status.CREATED);
+        List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (filtered_group_orders.size() > 0) {
             GroupOrder group_order = filtered_group_orders.get(0);
-            if (group_order.get_delivery_location() != delivery_location) return false;
+            if (group_order.getDeliveryLocation() != delivery_location) return false;
             group_order.add_order(email, order);
 
 
@@ -77,12 +76,12 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public UUID place_order_slot(String email, Order order, Locations delivery_location, LocalDateTime chosenSlot) {
         setEmail(email);
         UUID uuid = UUID.randomUUID();
-        Restaurant restaurant = restaurantManager.getRestaurant(order.get_restaurant_name());
+        Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurant_name());
         capacityCalculator = new RestaurantCapacityCalculator(restaurant);
         OrderObserver orderObserver = new OrderObserver(capacityCalculator);
 
-        if (capacityCalculator.canPlaceOrder(order.get_menus().size(), chosenSlot)) {
-            capacityCalculator.placeOrder_slot(order.get_menus().size(), chosenSlot);
+        if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot)) {
+            capacityCalculator.placeOrder_slot(order.getMenus().size(), chosenSlot);
             place_order(email, order, delivery_location);
             NotificationCenter notificationCenter1 = new NotificationCenter(this.userManager);
             notificationCenter1.order_confirmed(uuid, delivery_location, order.getCreation_time(), email);
@@ -99,13 +98,16 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public UUID place_order(String email, Order order, Locations delivery_location) {
         NotificationCenter notificationCenter1;
         setEmail(email);
+
         UUID uuid = UUID.randomUUID();
-        Restaurant restaurant=restaurantManager.getRestaurant(order.get_restaurant_name());
+        Restaurant restaurant=restaurantManager.getRestaurant(order.getRestaurant_name());
         capacityCalculator=new RestaurantCapacityCalculator(restaurant);
         OrderObserver orderObserver = new OrderObserver(capacityCalculator);
 
-        if (capacityCalculator.canPlaceOrder(order.get_menus().size())) {
-            capacityCalculator.placeOrder(order.get_menus().size());
+
+        if (capacityCalculator.canPlaceOrder(order.getMenus().size())) {
+            capacityCalculator.placeOrder(order.getMenus().size());
+
             place_order(email, order, delivery_location, uuid);
             notificationCenter1=new NotificationCenter(this.userManager);
             notificationCenter1.order_confirmed(uuid,delivery_location,order.getCreation_time(),email);
@@ -125,7 +127,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     public List<Order> getCurrentOrders(UUID order_id, String user_email) {
         List<GroupOrder> group_orders = this.group_orders.stream()
-                .filter(group_order -> group_order.get_uuid().equals(order_id))
+                .filter(group_order -> group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (group_orders.size() > 0) {
             GroupOrder group_order = group_orders.get(0);
@@ -148,7 +150,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     public GroupOrder getCurrentOrders(UUID order_id) {
         List<GroupOrder> group_orders = this.group_orders.stream()
-                .filter(group_order -> group_order.get_uuid().equals(order_id))
+                .filter(group_order -> group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (group_orders.size() > 0) {
             return group_orders.get(0);
@@ -161,9 +163,12 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         GroupOrder groupOrder = getCurrentOrders(orderId);
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
         orderAmountCalculator.applyMenuDiscount(15);
+
+
         if(paymentSystem.pay(card_number))
         {
             groupOrder.setPaid(email);
+
         }
         if (groupOrder.isPaid())
         {
@@ -175,7 +180,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public void pay_user_orders(String email, String card_number){
         List<Order> orders = get_current_user_orders(email);
         for (Order order : orders) {
-            if(order.getStatus()==Status.CREATED)
+            if(order.getOrderState().getStatus()==Status.CREATED)
             {
                 this.pay_order(order.getId(), email, card_number);
             }
@@ -193,7 +198,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public void validate_order(UUID order_id, String restaurant_name) {
         GroupOrder groupOrder;
         List<GroupOrder> groupOrders = this.group_orders.stream()
-                .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
+                .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
                 .collect(Collectors.toList());
         if(groupOrders.size()>0) {
             groupOrder = groupOrders.get(0);
@@ -203,7 +208,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             this.notificationCenter=new NotificationCenter(userManager);
             if (groupOrder.isReady()) {
                 User user = deliveryManager.addOrder(order_id);
-                notificationCenter.orderReady(order_id, user.getUsername(), user.getEmail(), groupOrder.get_delivery_location(),getEmail());
+                notificationCenter.orderReady(order_id, user.getUsername(), user.getEmail(), groupOrder.getDeliveryLocation(),getEmail());
             }
         }
     }
@@ -212,7 +217,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         GroupOrder groupOrder;
         NotificationCenter notificationCenter1;
         List<GroupOrder> groupOrders = this.group_orders.stream()
-                .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
+                .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
                 .collect(Collectors.toList());
 
         OrderObserver orderObserver = new OrderObserver(capacityCalculator);
@@ -220,18 +225,19 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         {
 
             groupOrder = groupOrders.get(0);
+
             groupOrder.validate_order_receipt();
             for(String email : groupOrder.getGlobal_orders().keySet())
             {
                 userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
                 List<Order> orders=get_current_user_orders(email);
                 for(Order order1:orders){
-                    Restaurant restaurant=restaurantManager.getRestaurant(order1.get_restaurant_name());
+                    Restaurant restaurant=restaurantManager.getRestaurant(order1.getRestaurant_name());
                     capacityCalculator=new RestaurantCapacityCalculator(restaurant);
-                    capacityCalculator.resetCapacityafterDelivery(order1.get_menus().size());
+                    capacityCalculator.resetCapacityafterDelivery(order1.getMenus().size());
 
                     notificationCenter1=new NotificationCenter(this.userManager);
-                    notificationCenter1.order_delivered(order_id, groupOrder.get_delivery_location(), LocalDateTime.now(), email);
+                    notificationCenter1.order_delivered(order_id, groupOrder.getDeliveryLocation(), LocalDateTime.now(), email);
 
 
                 }
@@ -245,7 +251,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public void setOrderAsClosed(UUID order_id) {
         GroupOrder groupOrder;
         List<GroupOrder> groupOrders = this.group_orders.stream()
-                .filter(groupOrder1 -> groupOrder1.get_uuid() == order_id)
+                .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
                 .collect(Collectors.toList());
         if(groupOrders.size()>0)
         {
@@ -259,8 +265,8 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
         if (selectedOrder != null) {
             UUID newOrderId = UUID.randomUUID();
-            Order newOrder = new Order(selectedOrder.get_restaurant_name());
-            for(Menu menu:selectedOrder.get_menus()){
+            Order newOrder = new Order(selectedOrder.getRestaurant_name());
+            for(Menu menu:selectedOrder.getMenus()){
                 newOrder.add_menu(menu);
             }
             place_order(userMail, newOrder, deliveryLocation, newOrderId);
@@ -302,20 +308,24 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         List<Order> orders = getCurrentOrders(orderId, email);
         User user = userManager.get_user(email);
         for(Order order : orders){
-            if(order.getStatus().ordinal()>Status.PROCESSING.ordinal()){
+            if(order.getOrderState().getStatus().ordinal()>Status.PROCESSING.ordinal()){
                 return false;
             }
         }
         for(Order order : orders){
-            List<Menu> menus = order.get_menus();
+            List<Menu> menus = order.getMenus();
             for(Menu menu : menus){
-                user.addCredit(menu.get_price());
+                user.addCredit(menu.getPrice());
             }
-            order.setStatus(Status.CANCELED);
+            order.getOrderState().cancel();
         }
         return true;
     }
 
+    public void reprocessingOrder(UUID orderId, String restaurantName) {
+        GroupOrder groupOrder = getCurrentOrders(orderId);
+        groupOrder.resetOrderProcessing(restaurantName);
+    }
     public void processingOrder(UUID orderId, String restaurantName) {
         GroupOrder groupOrder = getCurrentOrders(orderId);
         groupOrder.setOrderProcessing(restaurantName);

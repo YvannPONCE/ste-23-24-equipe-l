@@ -51,7 +51,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
 
     public void add_order(GroupOrder groupOrder)
     {
-        Locations location = groupOrder.get_delivery_location();
+        Locations location = groupOrder.getDeliveryLocation();
         locationStatistics.put(location, locationStatistics.get(location)+1);
 
         HashMap<String, List<Menu>> menusByRestaurants = groupOrder.getMenusByRestaurants();
@@ -135,7 +135,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         if(userOrders == null)return new HashMap<>();
         for(Order order : userOrders)
         {
-            restaurantCount.put(order.get_restaurant_name(), restaurantCount.getOrDefault(order.get_restaurant_name(), 0)+1);
+            restaurantCount.put(order.getRestaurant_name(), restaurantCount.getOrDefault(order.getRestaurant_name(), 0)+1);
         }
         return restaurantCount;
     }

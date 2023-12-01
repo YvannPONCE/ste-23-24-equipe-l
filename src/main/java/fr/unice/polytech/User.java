@@ -2,13 +2,16 @@ package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.Notification;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Setter
 public class User {
 
-    List<Notification> notifications;
+    List<Notification> Notifications;
     String email;
     String username;
 
@@ -26,7 +29,7 @@ public class User {
         this.OrderHistory =new ArrayList<>();
         this.role=role;
         this.Credit=0.00;
-        this.notifications=new ArrayList<>();
+        this.Notifications =new ArrayList<>();
     }
     public User(String email, String password, Role role){
         this(email, email, password, role);
@@ -43,47 +46,14 @@ public class User {
     }
 
 
-    public Role getRole() {
-        return role;
-    }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String get_email()
-    {
-        return this.email;
-    }
-
-    public Double getCredit() {
-        return this.Credit;
-    }
-    public void setCredit(Double credit) {
-        this.Credit = credit;
-    }
     public double addCredit(Double sum){
         return this.Credit=this.Credit+sum;
     }
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
 
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
 
-    public String getPassword() {
-        return password;
-    }
 
-    public String getEmail()
-    {
-        return this.email;
-    }
 
-    public String getUsername() {
-        return username;
-    }
+
 
 }

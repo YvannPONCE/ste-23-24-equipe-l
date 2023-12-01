@@ -1,6 +1,7 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
+import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
@@ -32,6 +33,7 @@ public class checkOrderHistorydefs {
     private RestaurantManager restaurantManager;
     private UUID orderSelected_id;
     private LinkedHashMap<Object, Object> orderHistoryMap;
+    private DeliveryManager deliveryManger;
 
 
     @Given("a user {string} with the following order history:")
@@ -63,8 +65,10 @@ public class checkOrderHistorydefs {
 
             orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
             orderManager.validate_order(orderId, string);
-            order.setStatus(Status.DELIVERED);
+            order.getOrderState().setStatus(Status.DELIVERED);
             orderManager.validate_order_receipt(order.getId());
+            deliveryManger =new DeliveryManager(orderManager,userManager);
+            deliveryManger.validateOrder("fff",orderId);
 
             orderHistoryMap.put(orderId, order);
         }
@@ -103,15 +107,15 @@ public class checkOrderHistorydefs {
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
 
-        orderSelected = orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(), user.get_email(), Locations.HALL_PRINCIPAL);
+        orderSelected = orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
     }
         @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {
 
-        Assert.assertEquals(orderSelected.getStatus(),Status.CREATED);
-        Assert.assertEquals(user.getOrderHistory().get(0).getStatus(),Status.DELIVERED);
-        Assert.assertEquals(orderSelected.get_menus(),user.getOrderHistory().get(0).get_menus());
-        Assert.assertFalse(orderSelected.getCreationTime().equals(user.getOrderHistory().get(0)));
+        Assert.assertEquals(orderSelected.getOrderState().getStatus(),Status.CREATED);
+        Assert.assertEquals(user.getOrderHistory().get(0).getOrderState().getStatus(),Status.CLOSED);
+        Assert.assertEquals(orderSelected.getMenus(),user.getOrderHistory().get(0).getMenus());
+        Assert.assertFalse(orderSelected.getCreation_time().equals(user.getOrderHistory().get(0)));
 
 
     }
@@ -128,7 +132,7 @@ public class checkOrderHistorydefs {
         System.setOut(new PrintStream(outputStream));
 
 
-        userManager.displaySelectedOrderDetails(orderSelected_id,user.get_email());
+        userManager.displaySelectedOrderDetails(orderSelected_id,user.getEmail());
         String capturedOutput = outputStream.toString();
         StringBuilder expectedOutputBuilder = new StringBuilder();
         expectedOutputBuilder.append("Selected Order Details:\n");

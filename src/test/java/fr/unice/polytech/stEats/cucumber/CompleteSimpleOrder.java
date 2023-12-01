@@ -61,6 +61,7 @@ public class CompleteSimpleOrder {
     @Given("The order is marked ready by the restaurant {string}")
     public void the_order_is_marked_ready_by_the_restaurant(String restaurant_name) {
         orderManager.validate_order(orderId, restaurant_name);
+
     }
 
     @When("The user {string} confirm the delivery")

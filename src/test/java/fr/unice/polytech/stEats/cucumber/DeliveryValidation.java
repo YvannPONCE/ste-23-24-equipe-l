@@ -55,7 +55,7 @@ public class DeliveryValidation {
     public void the_order_statue_updates_as_closed(String email) {
         GroupOrder groupOrder = orderManager.getCurrentOrders(orderID);
          for (Order order : orderManager.getCurrentOrders(orderID,email)) {
-                assertEquals(Status.CLOSED, order.getStatus());
+                assertEquals(Status.CLOSED, order.getOrderState().getStatus());
             }
     }
 

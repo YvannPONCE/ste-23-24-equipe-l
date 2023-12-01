@@ -1,10 +1,14 @@
 package fr.unice.polytech;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Getter
+@Setter
 public class Schedule {
 
     private Map<String, String[]> schedule;
@@ -37,13 +41,7 @@ public class Schedule {
         }
     }
 
-    public Map<String, String[]> getSchedule() {
-        return schedule;
-    }
 
-    public void setSchedule(Map<String, String[]> schedule) {
-        this.schedule = schedule;
-    }
 
     public List<Integer> getOpeningHours() {
         List<Integer> openingHoursList = new ArrayList<>();

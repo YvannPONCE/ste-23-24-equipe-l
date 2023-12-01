@@ -34,8 +34,8 @@ public class ManageRestaurant {
         Restaurant restaurant = restaurants.get(0);
         Assert.assertEquals(restaurant_name, restaurant.getName());
         Menu menu = restaurant.getListemenu().get(0);
-        Assert.assertEquals(menu_name, menu.get_name());
-        Assert.assertEquals(menu_price, menu.get_price(), 0.01);
+        Assert.assertEquals(menu_name, menu.getItemName());
+        Assert.assertEquals(menu_price, menu.getPrice(), 0.01);
     }
 
     @Given("the restaurant {string} is in the restaurant manager with menu {string} for {double} euros")
