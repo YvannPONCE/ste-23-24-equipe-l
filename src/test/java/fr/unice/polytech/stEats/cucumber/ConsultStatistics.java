@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -23,6 +24,7 @@ public class ConsultStatistics {
     RestaurantManager restaurantManager;
     OrderManager orderManager;
     DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
     User manager;
     private StatisticsManager statisticsManager;
 
@@ -42,8 +44,9 @@ public class ConsultStatistics {
         restaurantManager.add_restaurant(restaurant);
         statisticsManager = new StatisticsManager(restaurantManager);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
 
-        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
 
         User customer1 = new User("customer1@gmail.com", "password" ,Role.CUSTOMER_STUDENT);

@@ -18,7 +18,8 @@ public class User {
 
 
     Double Credit;
-    List<Order> OrderHistory;
+    @Getter
+    List<Order> orderHistory;
     Role role;
     private String password;
 
@@ -26,7 +27,7 @@ public class User {
     public User(String email, String username, String password, Role role){
         this.email=email;
         this.username=username;
-        this.OrderHistory =new ArrayList<>();
+        this.orderHistory =new ArrayList<>();
         this.role=role;
         this.Credit=0.00;
         this.Notifications =new ArrayList<>();
@@ -37,12 +38,10 @@ public class User {
     public User(String email, String password){
         this(email, email, password, Role.CUSTOMER_STUDENT);
     }
-    public List<Order> getOrderHistory() {
-        return OrderHistory;
-    }
+
     public void addOrderToHistory(List<Order> orders)
     {
-        this.OrderHistory.addAll(orders);
+        orderHistory.addAll(orders);
     }
 
 
@@ -51,9 +50,10 @@ public class User {
         return this.Credit=this.Credit+sum;
     }
 
-
-
-
-
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                '}';
+    }
 }

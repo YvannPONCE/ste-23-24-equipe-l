@@ -49,7 +49,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
     }
 
 
-    public void add_order(GroupOrder groupOrder)
+    public void addOrder(GroupOrder groupOrder)
     {
         Locations location = groupOrder.getDeliveryLocation();
         locationStatistics.put(location, locationStatistics.get(location)+1);
@@ -60,7 +60,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
             addMenuToRestaurant(entry.getKey(), entry.getValue());
         }
 
-        HashMap<String , List<Order>> globalOrders = groupOrder.getGlobal_orders();
+        HashMap<String , List<Order>> globalOrders = groupOrder.getGlobalOrders();
         for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet())
         {
             addOrderToUser(entry.getKey(), entry.getValue());

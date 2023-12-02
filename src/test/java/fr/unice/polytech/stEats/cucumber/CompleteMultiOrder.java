@@ -5,6 +5,7 @@ import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -27,6 +28,8 @@ public class CompleteMultiOrder {
     private Restaurant restaurant1;
     private Restaurant restaurant2;
     private DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
+    private  User deliveryMan;
     private User user;
 
     @Given("restaurants {string} and {string} use st-eats and one delivery man {string}")
@@ -37,9 +40,11 @@ public class CompleteMultiOrder {
         restaurantManager.add_restaurant(restaurant1);
         restaurantManager.add_restaurant(restaurant2);
         userManager = new UserManager();
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
-        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
-        deliveryManager.addDeliveryman(deliveryManName,"albert");
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager),new NotificationCenter(userManager));
+        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryMan = new User(deliveryManName,"albert", Role.DELIVER_MAN);
+        userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
 
     }
@@ -71,29 +76,33 @@ public class CompleteMultiOrder {
     @Given("the user {string} pay his order in second")
     public void the_user_pay_his_order_in_second(String userEmail) {
         orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
-        Assert.assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
+        Assert.assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string}")
     public void the_simple_order_is_marked_ready_by_the_restaurant(String restaurantName) {
-        orderManager.validate_order(orderId, restaurantName);
-        Assert.assertNotEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
+        orderManager.processingOrder(orderId, restaurant1.getName());
+        orderManager.processingOrder(orderId, restaurant2.getName());
+        orderManager.setOrderReady(orderId, restaurantName);
+        Assert.assertNotEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string} in second")
     public void the_simple_order_is_marked_ready_by_the_restaurant_in_second(String restaurantName) {
-        orderManager.validate_order(orderId, restaurantName);
-     //   Assert.assertEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
+        orderManager.setOrderReady(orderId, restaurantName);
+        Assert.assertEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @When("user {string} confirm the delivery")
     public void user_confirm_the_delivery(String userEmail) {
-        orderManager.validate_order_receipt(orderId);
-        Assert.assertEquals(Status.DELIVERED, orderManager.getCurrentOrders(this.orderId).getOrderStatus());
+
+        deliveryManager.validateOrder(deliveryMan.getEmail());
+        Assert.assertEquals(Status.DELIVERED, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @When("delivery man {string} confirm the delivery")
     public void delivery_man_confirm_the_delivery(String deliveryManName) {
-        deliveryManager.validateOrder(deliveryManName,orderId);
+
+        deliveryManager.validateOrder(deliveryManName);
     }
     @Then("The group order is marked as closed")
     public void the_group_order_is_marked_as_closed() {
-        assertEquals(Status.CLOSED,orderManager.getCurrentOrders(orderId).getOrderStatus());
+        assertEquals(true, deliveryManager.getDeliveryMenAvailability().get(deliveryMan.getEmail()));
     }
 }

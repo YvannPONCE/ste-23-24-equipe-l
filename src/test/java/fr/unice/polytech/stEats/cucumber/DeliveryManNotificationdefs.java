@@ -24,8 +24,8 @@ public class DeliveryManNotificationdefs {
     private RestaurantManager restaurantManager;
     private OrderManager orderManager;
     private DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
     private UUID orderId;
-    NotificationCenter notificationCenter;
     private UserManager userManager;
     private Order order;
 
@@ -38,10 +38,11 @@ public class DeliveryManNotificationdefs {
         userManager=new UserManager();
         userManager.add_user(new User("Albert@gmail.com","Albert"));
         userManager.add_user(new User(string,"user", Role.CUSTOMER_STAFF));
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
-        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
+        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);
+        userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
     this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
@@ -56,7 +57,7 @@ public class DeliveryManNotificationdefs {
     }
     @When("the order is ready and restaurant validate the order for delivery")
     public void the_order_is_ready_and_restaurant_validate_the_order_for_delivery() {
-        orderManager.validate_order(orderId, restaurant.getName());
+        orderManager.setOrderReady(orderId, restaurant.getName());
     }
 
     @Then("the delivery lan receives a  notification with the user informations")

@@ -1,9 +1,11 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.OrderManager.OrderManagerConnectedUser;
 import lombok.Getter;
 import lombok.Setter;
+import org.mockito.internal.matchers.Or;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,18 +14,17 @@ import java.util.stream.Collectors;
 
 public class UserManager {
 
-    private final OrderManagerConnectedUser orderManager;
+    private OrderManagerConnectedUser orderManager;
     List<User> userList;
 
-    public UserManager(OrderManagerConnectedUser orderManager) {
-        this.userList=new ArrayList<>();
+
+    public UserManager() {
+        userList = new ArrayList<>();
+    }
+    public void addOrderManager(OrderManagerConnectedUser orderManager){
         this.orderManager = orderManager;
     }
-    public UserManager() {
-        this(null);
-    }
-
-    public List<Order> get_order_history(String mail) {
+    public List<Order> getOrderHistory(String mail) {
         return get_user(mail).getOrderHistory();
     }
     public void add_user(User user)
@@ -43,7 +44,7 @@ public class UserManager {
     }
 
     public void displayOrderHistory(String mail) {
-        List<Order> orderHistory = get_order_history(mail);
+        List<Order> orderHistory = getOrderHistory(mail);
 
         // Tri de la liste des commandes par date chronologique (du plus récent au plus ancien)
         Collections.sort(orderHistory, new Comparator<Order>() {
@@ -58,7 +59,7 @@ public class UserManager {
     }
 
    public Order  find_selectedOrder(UUID orderId,String mail){
-        List<Order> orderHistory=get_order_history(mail);
+        List<Order> orderHistory= getOrderHistory(mail);
 
         for(Order order:orderHistory){
             if(order.id.equals(orderId)){
@@ -121,6 +122,34 @@ public class UserManager {
                 .collect(Collectors.toList());
         if(users.size()>0)return users.get(0);
         return null;
+    }
+
+    public List<String> getDeliveryMenID() {
+         return userList.stream()
+                .filter(user -> user.getRole().equals(Role.DELIVER_MAN))
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+    }
+
+    public void setOrderDelivered(String usersID, UUID orderID) {
+        User user = userList.stream()
+                .filter(user1 -> user1.getEmail().equals(usersID))
+                .findFirst().orElse(null);
+        if(user == null)return;
+        Order order = user.getOrderHistory().stream()
+                .filter(order2 -> order2.getId().equals(orderID))
+                .findFirst().orElse(null);
+        if(order == null)return;
+        order.getOrderState().closed();
+
+
+    }
+
+    public void deleteUser(String userEmail) {
+        List<User> users = userList.stream()
+                .filter(user -> user.getEmail().equals(userEmail))
+                .collect(Collectors.toList());
+        userList.removeAll(users);
     }
 }
 
