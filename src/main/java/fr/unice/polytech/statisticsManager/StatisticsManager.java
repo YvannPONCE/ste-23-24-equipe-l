@@ -49,7 +49,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
     }
 
 
-    public void add_order(GroupOrder groupOrder)
+    public void addOrder(GroupOrder groupOrder)
     {
         Locations location = groupOrder.getDeliveryLocation();
         locationStatistics.put(location, locationStatistics.get(location)+1);

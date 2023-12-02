@@ -20,6 +20,7 @@ public class UserNotificationdefs {
 
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
+    private UserManager userManager;
     private User user;
     private Object email;
     private Order order;
@@ -30,6 +31,7 @@ public class UserNotificationdefs {
 
     @Given("user {string} ordered from {string} a {string} menu")
     public void user_ordered_from_a_menu(String string, String string2, String string3) {
+        userManager = new UserManager();
         restaurant = new Restaurant(string2 );
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
@@ -37,10 +39,11 @@ public class UserNotificationdefs {
         user=new User(string,"ggg",Role.CUSTOMER_STAFF);
         email=string;
         order = new Order(string2);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
 
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );orderManager.userManager.add_user(user);
-        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
+        deliveryManager = new DeliveryManager(orderManager,userManager );
+        userManager.add_user(user);
+        userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
@@ -48,7 +51,7 @@ public class UserNotificationdefs {
         order.add_menu(new Menu(string3, 5.50));
         orderId = orderManager.place_order((String) email, order, Locations.HALL_PRINCIPAL);
 
-        orderManager.validate_order(orderId, "chickenTacky");
+        orderManager.setOrderReady(orderId, "chickenTacky");
     }
     @When("the order is validated")
     public void the_order_is_validated() {
@@ -75,7 +78,7 @@ public class UserNotificationdefs {
         orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
 
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );orderManager.userManager.add_user(user);
-        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
+        userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
@@ -91,7 +94,7 @@ public class UserNotificationdefs {
     @When("the order is ready for delivery")
     public void the_order_is_ready_for_delivery() {
         orderManager.processingOrder(orderId,"chickenTacky");
-        orderManager.validate_order(orderId, "chickenTacky");
+        orderManager.setOrderReady(orderId, "chickenTacky");
 
     }
     @Then("user receives a notification with delivery information")
@@ -117,7 +120,7 @@ public class UserNotificationdefs {
         order = new Order(string2);
         orderManager = new OrderManager(restaurantManager, new UserManager(), new StatisticsManager(restaurantManager));
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );orderManager.userManager.add_user(user);
-        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
+        userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
@@ -126,12 +129,12 @@ public class UserNotificationdefs {
         orderId = orderManager.place_order((String) email, order, Locations.HALL_PRINCIPAL);
         orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,"chickenTacky");
-        orderManager.validate_order(orderId,"chickenTacky");
+        orderManager.setOrderReady(orderId,"chickenTacky");
 
     }
     @When("user validate  order  receipt")
     public void user_validate_order_receipt() {
-    orderManager.validate_order_receipt(orderId);
+    deliveryManager.validateOrder(orderId);
     }
     @Then("user receives a notificatin")
     public void user_receives_a_notificatin() {

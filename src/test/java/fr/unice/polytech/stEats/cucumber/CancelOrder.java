@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
@@ -24,6 +25,7 @@ public class CancelOrder {
     Double menuPrice;
     UUID orderId;
     private Restaurant restaurant;
+    private NotificationCenter notificationCenter;
     private RestaurantManager restaurantManager;
 
     @Given("{string} is a customer")
@@ -32,7 +34,8 @@ public class CancelOrder {
         user = new User(userEmail, userEmail);
         userManager.add_user(user);
         restaurantManager = new RestaurantManager();
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
     }
     @Given("{string} has placed an order with {string} at {double} euros from {string}")
     public void has_placed_an_order_with_at_euros_from(String userEmail, String menuName, Double menuPrice, String restaurantName) {

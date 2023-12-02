@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -18,6 +19,8 @@ public class ConfirmOrder {
 
     OrderManager orderManager;
     RestaurantManager restaurantManager;
+    NotificationCenter notificationCenter;
+    UserManager userManager;
     UUID order_id;
     UUID order_id_1;
     UUID order_id_2;
@@ -28,7 +31,9 @@ public class ConfirmOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
+        userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, null, notificationCenter);
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -62,7 +67,9 @@ public class ConfirmOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
+        userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
@@ -96,7 +103,9 @@ public class ConfirmOrder {
         restaurantManager.add_restaurant(restaurant1);
         restaurantManager.add_restaurant(restaurant2);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
+        userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, null, notificationCenter);
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order_1 = new Order(restaurant_name_1);
         Order order_2 = new Order(restaurant_name_2);

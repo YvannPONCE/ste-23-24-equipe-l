@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -18,13 +19,14 @@ import java.util.UUID;
 
 public class AddMenuToCart {
 
-    OrderManager orderManager = new OrderManager(null, null, null);
+    OrderManager orderManager = new OrderManager(null, null, null, null);
 
     User user;
     UUID order_id;
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private UserManager userManager;
+    private NotificationCenter notificationCenter;
 
     @Given("One restaurant, One menu and one user {string}")
     public void one_restaurant_one_menu_and_one_user(String user_email) {
@@ -39,7 +41,8 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
@@ -73,7 +76,7 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
         order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
@@ -121,8 +124,7 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager) {
-        });
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name_1, menu_price_1));
         order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);

@@ -5,6 +5,7 @@ import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -32,7 +33,8 @@ public class ValidateOrderReceipt {
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private DeliveryManager deliveryManager;
-    private UserManager userMnager;
+    private UserManager userManager;
+    private NotificationCenter notificationCenter;
 
     @Given("user {string} as order a {string} at {double} at {string} and as paid his command")
     public void user_as_order_a_at_at_and_as_paid_his_command(String string, String string2, Double double1, String string3) {
@@ -50,7 +52,7 @@ public class ValidateOrderReceipt {
         Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
         Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
-        Mockito.when(mockuserManager.get_order_history(email)).thenReturn(user.getOrderHistory());
+        Mockito.when(mockuserManager.getOrderHistory(email)).thenReturn(user.getOrderHistory());
         List<User> users=new ArrayList<>();
         users.add(user);
         users.add(new User("Albert@gmail.com","Albert"));
@@ -63,14 +65,14 @@ public class ValidateOrderReceipt {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(18);
-        userMnager=new UserManager();
-        this.userMnager.add_user(new User("Albert@gmail.com","Albert"));
+        userManager =new UserManager();
+        this.userManager.add_user(new User("Albert@gmail.com","Albert"));
 
-        deliveryManager=new DeliveryManager(orderManager,userMnager);
-        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
-
-        orderManager = new OrderManager(restaurantManager,userMnager, statisticsManager,deliveryManager);
-        deliveryManager=new DeliveryManager(orderManager,userMnager);
+        deliveryManager=new DeliveryManager(orderManager, userManager);
+        userManager.addUser(new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager,deliveryManager, notificationCenter);
+        deliveryManager=new DeliveryManager(orderManager, userManager);
         orderManager.userManager =mockuserManager;
         order = new Order(string3);
         order.add_menu(new Menu(string,double1));
@@ -84,7 +86,7 @@ public class ValidateOrderReceipt {
         orderManager.processingOrder(orderId,restaurant.getName());
 
         
-        orderManager.validate_order(orderId,restaurant.getName());
+        orderManager.setOrderReady(orderId,restaurant.getName());
 
     }
 
@@ -92,7 +94,7 @@ public class ValidateOrderReceipt {
     public void user_confirm_the_receipt(String string) {
 
 
-        orderManager.validate_order_receipt(order.getId());
+        deliveryManager.validateOrder(order.getId());
 
     }
 

@@ -1,11 +1,12 @@
 package fr.unice.polytech.DeliveryManager;
 
-import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.GroupOrder;
 import fr.unice.polytech.OrderManager.OrderManager;
-import fr.unice.polytech.User;
 import fr.unice.polytech.UserManager;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryManagerConnectedUser{
 
@@ -13,7 +14,7 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
     private final UserManager usermanager;
     OrderManager orderManager;
     private Map<String, Boolean> deliveryMenAvailability;
-    private Map<String, UUID> deliveryMenOrders;
+    private Map<String, GroupOrder> deliveryMenOrders;
     private List<String> deliveryLocations;
 
     public DeliveryManager(OrderManager orderManager, UserManager userManager) {
@@ -23,6 +24,8 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
         this.deliveryMenOrders = new HashMap<>();
         deliveryLocations = new ArrayList<>();
     }
+
+    @Override
     public Map<String, Boolean> getDeliveryMenAvailability() {
         return deliveryMenAvailability;
     }
@@ -41,59 +44,52 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
         }
     }
 
-    public Map<String, UUID> getDeliveryMenOrders() {
-        return deliveryMenOrders;
-    }
+    public void addOrder(GroupOrder groupOrder){
+        getDeliveryMen();
+        Map.Entry<String, Boolean> availibleDeliveryMan = deliveryMenAvailability.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .findFirst().orElse(null);
 
-    public User addOrder(UUID orderID){
-        for (Map.Entry<String, Boolean> entry : deliveryMenAvailability.entrySet()) {
-            String key = entry.getKey();
-            Boolean value = entry.getValue();
-            if(value){
-                deliveryMenOrders.put(key,orderID);
-                deliveryMenAvailability.replace(key,false);
-
-                return usermanager.getUser(key);
-            }
+        if(availibleDeliveryMan != null){
+            deliveryMenAvailability.put(availibleDeliveryMan.getKey(), false);
+            deliveryMenOrders.put(availibleDeliveryMan.getKey(), groupOrder);
         }
-        return null;
-    }
 
-    public void validateOrder(String deliveryman, UUID order_id){
-        orderManager.setOrderAsClosed(order_id);
-        deliveryMenOrders.remove(deliveryman);
-        deliveryMenAvailability.replace(deliveryman, true);
-    }
-
-    public UUID getOrderToDelivery(String deliveryman, UUID orderID){
-        for (Map.Entry<String, UUID> entry : deliveryMenOrders.entrySet()) {
-            String key = entry.getKey();
-            UUID value = entry.getValue();
-            if(key.equals(deliveryman)){
-                return value;
-            }
-        }
-        return null;
-    }
-
-    public void addDeliveryman(String deliverManMail,String deliveryManPassword) {
-        deliveryMenAvailability.put(deliverManMail, true);
-        User user = new User(deliverManMail,deliveryManPassword, Role.DELIVER_MAN);
-        usermanager.add_user(user);
-    }
-
-    public void deleteDeliveryman(String deliveryman){
-        if(!deliveryMenOrders.containsKey(deliveryman)){
-            deliveryMenAvailability.remove(deliveryman);
-        }
-    }
-
-    public boolean isAvailable(String deliveryman){
-        return deliveryMenAvailability.get(deliveryman);
     }
 
     @Override
     public List<String> getLocations() {
         return deliveryLocations;
+    }
+
+    public void validateOrder(String deliveryman, UUID orderID){
+        GroupOrder groupOrder = deliveryMenOrders.get(deliveryman);
+        groupOrder.validateOrderReceipt();
+        if (groupOrder.getOrderState().getStatus() == Status.CLOSED){
+            deliveryMenOrders.replace(deliveryman, null);
+            deliveryMenAvailability.replace(deliveryman, true);
+        }
+    }
+    public void validateOrder(UUID orderID){
+        String deliveryManEmail = deliveryMenOrders.entrySet().stream()
+                .filter(entry -> entry.getValue().getUuid().equals(orderID))
+                .findFirst().orElse(null).getKey();
+        validateOrder(deliveryManEmail, orderID);
+    }
+
+    private GroupOrder getGroupOrder(UUID orderID){
+        return deliveryMenOrders.values().stream()
+                .filter(groupOrder -> groupOrder.getUuid().equals(orderID))
+                .findFirst().orElse(null);
+    }
+
+    private void getDeliveryMen(){
+        List<String> deliveryMenIDs = usermanager.getDeliveryMenID();
+        for(String deliveryManID : deliveryMenIDs){
+            if(deliveryMenAvailability.get(deliveryManID) == null){
+                deliveryMenAvailability.put(deliveryManID, true);
+                deliveryMenOrders.put(deliveryManID, null);
+            }
+        }
     }
 }

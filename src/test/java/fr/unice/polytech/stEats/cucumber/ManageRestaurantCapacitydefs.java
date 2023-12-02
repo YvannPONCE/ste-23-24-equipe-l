@@ -1,9 +1,11 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
+import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
@@ -22,10 +24,12 @@ public class ManageRestaurantCapacitydefs {
 
     private UserManager userManager;
     private Restaurant restaurant;
+    private DeliveryManager deliveryManager;
     private String user_email;
     private User user;
     private RestaurantManager restaurantManager;
     private OrderManager orderManager;
+    private  NotificationCenter notificationCenter;
     private UUID orderId;
     private RestaurantCapacityCalculator restaurantCapactityMock;
     private LocalDateTime mockDateTime;
@@ -46,8 +50,10 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(1);
-
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
+        deliveryManager = new DeliveryManager(orderManager, userManager);
+        orderManager.addDeliveryManager(deliveryManager);
     }
 
 
@@ -158,7 +164,7 @@ public class ManageRestaurantCapacitydefs {
         order.add_menu(menu);
 
         orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
-        orderManager.validate_order_receipt(order.getId());
+        deliveryManager.validateOrder(order.getId());
     }
     @Then("the restaurant is set to {int}")
     public void the_restaurant_is_set_to(Integer int1) {

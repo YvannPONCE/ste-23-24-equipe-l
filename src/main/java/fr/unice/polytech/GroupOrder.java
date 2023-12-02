@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class GroupOrder {
-    private Status orderStatus;
+    private OrderState orderState;
     UUID uuid;
     Locations delivery_location;
     public HashMap<String, List<Order>> global_orders;
@@ -20,7 +20,7 @@ public class GroupOrder {
         this.uuid = uuid;
         this.delivery_location = delivery_location;
         this.global_orders = new HashMap<>();
-        this.orderStatus = Status.CREATED;
+        this.orderState = new OrderState();
 
     }
 
@@ -70,7 +70,7 @@ public class GroupOrder {
                 if (order.getOrderState().getStatus() != Status.PAID) return;
             }
         }
-        orderStatus = Status.PAID;
+        orderState.next();
 
     }
 
@@ -93,7 +93,7 @@ public class GroupOrder {
 
 
     public boolean isPaid() {
-        return orderStatus == Status.PAID;
+        return orderState.getStatus() == Status.PAID;
     }
 
     public HashMap<String, List<Order>> getOrdersByRestaurants() {
@@ -130,9 +130,6 @@ public class GroupOrder {
                     .filter(order -> order.getRestaurant_name().equals(restaurantName))
                     .collect(Collectors.toList());
             for (Order order : matchingOrders) {
-
-
-                //order.getOrderState().setStatus(Status.PROCESSING);
                 order.getOrderState().next();
 
             }
@@ -143,7 +140,7 @@ public class GroupOrder {
                 if (order.getOrderState().getStatus() != Status.PROCESSING) return;
             }
         }
-        orderStatus = Status.PROCESSING;
+        orderState.next();
     }
 
     public void resetOrderProcessing(String restaurantName) {
@@ -165,7 +162,7 @@ public class GroupOrder {
                 if (order.getOrderState().getStatus() != Status.PROCESSING) return;
             }
         }
-        orderStatus = Status.PROCESSING;
+        orderState.next();
     }
 
     public void validate_order(String restaurantName) {
@@ -176,7 +173,6 @@ public class GroupOrder {
                     .collect(Collectors.toList());
 
             for (Order order : matchingOrders) {
-
                 order.getOrderState().next();
             }
 
@@ -190,41 +186,19 @@ public class GroupOrder {
 
 
         }
+        orderState.next();
 
-        orderStatus = Status.READY;
-
-    }
-
-    public void validate_order_receipt() {
-
-        orderStatus = Status.DELIVERED;
-        setOrdersStatus(Status.DELIVERED);
-    }
-
-    public void setClose() {
-        orderStatus = Status.CLOSED;
-        closeOrders();
-    }
-    private void closeOrders() {
-        for (List<Order> orders : global_orders.values()) {
-            for (Order order : orders) {
-                order.getOrderState().closed();
-            }
-        }
-    }
-
-    private void setOrdersStatus(Status status) {
-        for (List<Order> orders : global_orders.values()) {
-            for (Order order : orders) {
-                order.getOrderState().next();
-
-            }
-        }
     }
 
         public boolean isReady () {
-            return orderStatus == Status.READY;
+            return orderState.getStatus() == Status.READY;
         }
+
+    public void validateOrderReceipt() {
+        System.out.println("Next");
+        orderState.next();
+
     }
+}
 
 

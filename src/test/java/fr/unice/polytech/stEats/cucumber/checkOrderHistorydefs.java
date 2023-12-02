@@ -5,6 +5,8 @@ import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.Notification;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -34,6 +36,7 @@ public class checkOrderHistorydefs {
     private UUID orderSelected_id;
     private LinkedHashMap<Object, Object> orderHistoryMap;
     private DeliveryManager deliveryManger;
+    private NotificationCenter notificationCenter;
 
 
     @Given("a user {string} with the following order history:")
@@ -56,7 +59,9 @@ public class checkOrderHistorydefs {
             restaurantManager = new RestaurantManager();
             restaurantManager.add_restaurant(restaurant);
 
-            orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+            notificationCenter = new NotificationCenter(userManager);
+
+            orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
 
             order = new Order(restaurantName);
             order.add_menu(new Menu(item, price));
@@ -64,9 +69,9 @@ public class checkOrderHistorydefs {
             orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
 
             orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
-            orderManager.validate_order(orderId, string);
+            orderManager.setOrderReady(orderId, string);
             order.getOrderState().setStatus(Status.DELIVERED);
-            orderManager.validate_order_receipt(order.getId());
+            deliveryManger.validateOrder(order.getId());
             deliveryManger =new DeliveryManager(orderManager,userManager);
             deliveryManger.validateOrder("fff",orderId);
 

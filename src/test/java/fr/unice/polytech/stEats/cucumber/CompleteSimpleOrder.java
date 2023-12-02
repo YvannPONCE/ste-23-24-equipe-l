@@ -25,6 +25,7 @@ public class CompleteSimpleOrder {
     UserManager userManager;
     Restaurant restaurant;
     String user_email;
+    User deliveryMan;
 
     DeliveryManager deliveryManager;
     private User user;
@@ -36,50 +37,49 @@ public class CompleteSimpleOrder {
         restaurantManager.add_restaurant(restaurant);
         userManager = new UserManager();
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, null);
         deliveryManager = new DeliveryManager(orderManager,orderManager.userManager);
-        deliveryManager.addDeliveryman(deliveryManName,"delivery@gmail.com");
+        deliveryMan = new User("delivery@gmail.com", "pass", Role.DELIVER_MAN);
+        userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
     }
 
     @Given("user {string} order a {string} at {string} for {double} euros")
-    public void user_order_a_at_for_euros(String user_email, String menu_name, String restaurant_name, Double menu_price) {
-        this.user_email = user_email;
-        user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
+    public void user_order_a_at_for_euros(String userEmail, String menu_name, String restaurant_name, Double menu_price) {
+        user=new User(userEmail,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
 
         Order order = new Order(restaurant_name);
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
 
-        orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
     @Given("{string} pay his order")
-    public void pay_his_order(String user_email) {
-        orderManager.pay_order(this.orderId, user_email, "7936 3468 9302 8371");
+    public void pay_his_order(String userEmail) {
+        orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
     }
     @Given("The order is marked ready by the restaurant {string}")
     public void the_order_is_marked_ready_by_the_restaurant(String restaurant_name) {
-        orderManager.validate_order(orderId, restaurant_name);
+        orderManager.processingOrder(orderId, restaurant_name);
+        orderManager.setOrderReady(orderId, restaurant_name);
 
     }
 
     @When("The user {string} confirm the delivery")
     public void the_user_confirm_the_delivery(String string) {
-        orderManager.validate_order_receipt(orderId);
+        deliveryManager.validateOrder(deliveryMan.getEmail(), orderId);
     }
 
     @When("The delivery man {string} confirm the delivery")
     public void the_delivery_man_confirm_the_delivery(String string) {
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
-        deliveryManager.addDeliveryman(string,"delivery");
-        deliveryManager.addOrder(orderId);
-        deliveryManager.validateOrder(string,orderId);
+        deliveryManager.validateOrder(deliveryMan.getEmail(), orderId);
     }
 
     @Then("The order is marked as closed")
     public void the_order_is_marked_as_delivered() {
-        assertEquals(Status.CLOSED,orderManager.getCurrentOrders(orderId).getOrderStatus());
+        System.out.println(user.getEmail());
+        assertEquals(Status.CLOSED,userManager.getOrderHistory(user.getEmail()).get(0).getOrderState().getStatus());
     }
 
 }

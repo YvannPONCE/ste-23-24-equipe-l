@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.DeliveryManager.DeliveryManagerCampusManager;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Order;
 import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -13,6 +14,7 @@ import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.mk_latn.No;
 import org.junit.Assert;
 
 import java.util.UUID;
@@ -25,6 +27,7 @@ public class ManageDelivery {
     User deliveryMan;
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
+    private NotificationCenter notificationCenter;
     private DeliveryManagerCampusManager deliveryManagerCampusManager;
 
     @Given("an administrator user")
@@ -34,13 +37,14 @@ public class ManageDelivery {
         userManager=new UserManager();
         userManager.add_user(user);
         restaurantManager = new RestaurantManager();
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
         deliveryManagerCampusManager = new DeliveryManager(orderManager ,userManager);
     }
 
     @When("I want to add a delivery person")
     public void i_want_to_add_a_delivery_person() {
-        deliveryManagerCampusManager.addDeliveryman(deliveryMan.getEmail(), deliveryMan.getPassword());
+        userManager.addUser(new User(deliveryMan.getEmail(), deliveryMan.getPassword(), Role.DELIVER_MAN));
     }
 
     @Then("my list of available delivery personnel is increased by {int}")
@@ -55,7 +59,7 @@ public class ManageDelivery {
 
     @When("I want to remove a delivery person")
     public void i_want_to_remove_a_delivery_person() {
-        deliveryManagerCampusManager.deleteDeliveryman(deliveryMan.getEmail());
+        userManager.deleteUser(deliveryMan.getEmail());
     }
 
     @Then("the delivery person disappears from the list of delivery personnel")

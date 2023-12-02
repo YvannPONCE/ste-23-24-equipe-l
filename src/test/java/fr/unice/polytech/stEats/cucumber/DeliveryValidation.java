@@ -23,27 +23,28 @@ public class DeliveryValidation {
     OrderManager orderManager;
     UUID orderID;
     DeliveryManager deliveryManager;
+    UserManager userManager;
     private RestaurantManager restaurantManager;
 
     @Given("The campus user {string} has confirmed receipt of their order")
     public void the_campus_user_has_confirmed_receipt_of_their_order(String email) {
+        userManager = new UserManager();
         Restaurant restaurant = new Restaurant("KFC");
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         Order order = new Order("KFC");
         order.add_menu(new Menu("Bucket",21));
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, new UserManager(), statisticsManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
             orderManager.userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
-        orderManager.validate_order(order.getId(),email);
     }
 
     @Given("The delivery man {string} is assigned to this order")
     public void the_delivery_man_is_assigned_to_this_order(String email) {
-        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
-        deliveryManager.addDeliveryman(email,"deliveryMan");
-        deliveryManager.addOrder(orderID);
+        deliveryManager = new DeliveryManager(orderManager, userManager);
+        userManager.addUser(new User("Delivery Man", "Delivery Man", Role.DELIVER_MAN));
+        orderManager.setOrderReady(orderID,email);
     }
 
     @When("The delivery man {string} wants to validate the delivery in turn")
@@ -61,7 +62,7 @@ public class DeliveryValidation {
 
     @Then("The delivery man {string} become available for an new delivery")
     public void the_delivery_man_become_available_for_an_new_delivery(String email) {
-        assertEquals(deliveryManager.isAvailable(email),true);
+        assertEquals(deliveryManager.getDeliveryMenAvailability().get(email),true);
     }
 
 

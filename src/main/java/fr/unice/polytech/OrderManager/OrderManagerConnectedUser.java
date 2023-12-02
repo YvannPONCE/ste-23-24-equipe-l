@@ -17,6 +17,6 @@ public interface OrderManagerConnectedUser {
     public GroupOrder getCurrentOrders(UUID order_id);
     public void pay_order(UUID orderId, String email, String card_number);
     public void pay_user_orders(String email, String card_number);
-    public void validate_order_receipt(UUID order_id);
+    public void validateOrderReceipt(UUID order_id);
     public boolean cancelOrder(UUID orderId, String email);
 }

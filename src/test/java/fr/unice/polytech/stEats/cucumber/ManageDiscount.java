@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -39,6 +40,7 @@ public class ManageDiscount {
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private UserManager userManager;
+    private NotificationCenter notificationCenter;
 
 
     @Given("user {string} with {double} credit and the discount threshold is set to {int}")
@@ -50,9 +52,9 @@ public class ManageDiscount {
         restaurant.setCapacity(16);
         user1=new User(string,"john",Role.CUSTOMER_STUDENT);
         userManager.add_user(user1);
-
+        notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, null, notificationCenter);
         order = new Order("chickenTacky");
     }
     @When("the user selects {string} and adds {int} items ton his  order")
@@ -95,7 +97,8 @@ public class ManageDiscount {
         restaurantManager.add_restaurant(restaurant);
         restaurantManager.add_restaurant(restaurant2);
         restaurant.setCapacity(10);
-        orderManager=new OrderManager(restaurantManager,new UserManager(), new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager=new OrderManager(restaurantManager,new UserManager(), new StatisticsManager(restaurantManager), notificationCenter);
         orderManager.userManager.getUserList().add(user2);
         orderManager.userManager.getUserList().add(user3);
         order3=new Order("Mcdon");
