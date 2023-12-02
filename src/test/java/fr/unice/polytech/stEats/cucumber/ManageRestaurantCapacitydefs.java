@@ -52,7 +52,7 @@ public class ManageRestaurantCapacitydefs {
         restaurant.setCapacity(1);
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager, userManager);
+        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
     }
 
@@ -80,6 +80,7 @@ public class ManageRestaurantCapacitydefs {
     @Given("user {string} and Restaurant {string} has a capacity of {int} menus per hour with available slot")
     public void user_and_restaurant_has_a_capacity_of_menus_per_hour_with_available_slot(String string, String string2, Integer int1) {
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         this.user_email = string;
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
@@ -87,7 +88,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant2);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
     }
     @When("user order a {string} in the restaurant")
     public void user_order_a_in_the_restaurant(String string) {
@@ -111,6 +112,7 @@ public class ManageRestaurantCapacitydefs {
     public void user1_and_user2_place_orders_in_restaurant_luigi() {
         user3=new User("user3@exemple","karl",Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         this.user_email = "user1@exemple.com";
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
@@ -119,7 +121,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant2);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
     }
     @When("user order a {string} in the restaurant ans")
     public void user_order_a_in_the_restaurant_ans(String string) {
@@ -147,14 +149,19 @@ public class ManageRestaurantCapacitydefs {
     @Given("user {string} ordered in a  Restaurant {string} with a capacity of {int} menus per hour with available slot")
     public void user_ordered_in_a_restaurant_with_a_capacity_of_menus_per_hour_with_available_slot(String string, String string2, Integer int1) {
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         this.user_email = string;
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
+        user=new User("Delivery","Alex", Role.DELIVER_MAN);
+        userManager.add_user(user);
         restaurant = new Restaurant(string2);
         restaurantManager = new RestaurantManager();
-        restaurantManager.add_restaurant(restaurant);;
+        restaurantManager.add_restaurant(restaurant);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
+        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        orderManager.addDeliveryManager(deliveryManager);
     }
     @When("user order a {string} and validate order receipt")
     public void user_order_a_and_validate_order_receipt(String string) {
@@ -164,12 +171,15 @@ public class ManageRestaurantCapacitydefs {
         order.add_menu(menu);
 
         orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
-        deliveryManager.validateOrder(order.getId());
+        orderManager.pay_order(orderId, user_email, "7936 3468 9302 8371");
+        orderManager.processingOrder(orderId, restaurant.getName());
+        orderManager.setOrderReady(orderId, restaurant.getName());
+        deliveryManager.validateOrder("Delivery");
     }
     @Then("the restaurant is set to {int}")
     public void the_restaurant_is_set_to(Integer int1) {
         Assert.assertFalse(orderId.equals(null));
-        Assert.assertEquals(Optional.of(restaurant.getHourlyCapacity(LocalDateTime.now().getHour())),Optional.of(int1));
+        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.now().getHour()));
     }
 
 }

@@ -41,7 +41,7 @@ public class DeliveryManNotificationdefs {
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
+        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);
         userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
     this.notificationCenter=new NotificationCenter(orderManager.userManager);

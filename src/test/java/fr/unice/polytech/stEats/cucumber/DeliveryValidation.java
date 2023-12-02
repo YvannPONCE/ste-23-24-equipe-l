@@ -5,6 +5,7 @@ import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -25,31 +26,37 @@ public class DeliveryValidation {
     DeliveryManager deliveryManager;
     UserManager userManager;
     private RestaurantManager restaurantManager;
+    private Restaurant restaurant;
+    private NotificationCenter notificationCenter;
 
-    @Given("The campus user {string} has confirmed receipt of their order")
-    public void the_campus_user_has_confirmed_receipt_of_their_order(String email) {
+    @Given("The campus user {string} has ordered")
+    public void the_campus_user_has_ordered(String email) {
         userManager = new UserManager();
-        Restaurant restaurant = new Restaurant("KFC");
+        restaurant = new Restaurant("KFC");
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        Order order = new Order("KFC");
+        Order order = new Order(restaurant.getName());
         order.add_menu(new Menu("Bucket",21));
+        notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
-            orderManager.userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
+        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        orderManager.addDeliveryManager(deliveryManager);
+        userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
         orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
+        orderManager.pay_order(orderID, email, "7936 3468 9302 8371");
+        orderManager.processingOrder(orderID, restaurant.getName());
     }
 
     @Given("The delivery man {string} is assigned to this order")
     public void the_delivery_man_is_assigned_to_this_order(String email) {
-        deliveryManager = new DeliveryManager(orderManager, userManager);
-        userManager.addUser(new User("Delivery Man", "Delivery Man", Role.DELIVER_MAN));
-        orderManager.setOrderReady(orderID,email);
+        userManager.addUser(new User(email, email, Role.DELIVER_MAN));
+        orderManager.setOrderReady(orderID, restaurant.getName());
     }
 
-    @When("The delivery man {string} wants to validate the delivery in turn")
-    public void the_delivery_man_wants_to_validate_the_delivery_in_turn(String email) {
-        deliveryManager.validateOrder(email,orderID);
+    @When("The user validate the order")
+    public void the_user_validate_the_order(){
+        deliveryManager.validateOrder(orderID);
     }
 
     @Then("The order statue of {string} updates as closed")

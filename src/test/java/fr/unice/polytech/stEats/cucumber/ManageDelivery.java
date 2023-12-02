@@ -39,7 +39,7 @@ public class ManageDelivery {
         restaurantManager = new RestaurantManager();
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-        deliveryManagerCampusManager = new DeliveryManager(orderManager ,userManager);
+        deliveryManagerCampusManager = new DeliveryManager(orderManager ,userManager, notificationCenter);
     }
 
     @When("I want to add a delivery person")
@@ -49,7 +49,7 @@ public class ManageDelivery {
 
     @Then("my list of available delivery personnel is increased by {int}")
     public void my_list_of_available_delivery_personnel_is_increased_by(Integer int1) {
-        Assert.assertTrue(deliveryManagerCampusManager.getDeliveryMenAvailability().size() >0);
+        Assert.assertTrue(userManager.getDeliveryMenID().size() >0);
     }
 
     @Then("the specified delivery person is marked as available")

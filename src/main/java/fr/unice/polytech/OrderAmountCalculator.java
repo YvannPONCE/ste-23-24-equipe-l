@@ -1,13 +1,8 @@
 package fr.unice.polytech;
 
-import fr.unice.polytech.Enum.Status;
 import lombok.Getter;
 import lombok.Setter;
-import org.mockito.internal.matchers.Or;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 @Getter
 @Setter
 public class OrderAmountCalculator {
@@ -30,7 +25,7 @@ public class OrderAmountCalculator {
 
         if(this.order.qualifiesForMenuDiscount(itemCountThreshold)){
 
-        for (String email : this.order.global_orders.keySet()) {
+        for (String email : this.order.globalOrders.keySet()) {
           for(Order order:  this.order.get_orders(email))  {
 
               double discountAmount = (discountPercentage / 100) * order.calculateTotalPrice();
@@ -42,7 +37,7 @@ public class OrderAmountCalculator {
         }
     }
         else{
-            for (String email : this.order.global_orders.keySet()) {
+            for (String email : this.order.globalOrders.keySet()) {
                 for(Order order:  this.order.get_orders(email))  {
                     order.calculateTotalPrice();
 

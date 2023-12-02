@@ -43,7 +43,7 @@ public class UserConsultStatistics {
         StatisticManagerOrderManager statisticManagerOrderManager = statisticsManager;
         orderManager = new OrderManager(restaurantManager, userManager, statisticManagerOrderManager, null, notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
+        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager, notificationCenter);
         userManager.addUser(new User("deliveryManEmail","deliveryManName", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
     }

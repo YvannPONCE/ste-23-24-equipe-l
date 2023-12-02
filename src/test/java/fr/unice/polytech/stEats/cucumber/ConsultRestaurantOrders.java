@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Menu;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Order;
 import fr.unice.polytech.RestaurantManager.RestaurantManagerStaff;
 import fr.unice.polytech.UserManager;
@@ -16,6 +17,7 @@ import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
 import org.junit.Assert;
 
+import java.text.Normalizer;
 import java.util.List;
 
 public class ConsultRestaurantOrders {
@@ -26,6 +28,7 @@ public class ConsultRestaurantOrders {
     private OrderManager orderManager;
     private StatisticsManager statisticsManager;
     private DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
 
     @Given("a restaurant {string}")
     public void a_restaurant(String restaurantName) {
@@ -34,9 +37,10 @@ public class ConsultRestaurantOrders {
         restaurantManager.addRestaurant(restaurant);
 
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager,userManager,statisticsManager );
-        deliveryManager = new DeliveryManager(orderManager, userManager);
+        orderManager = new OrderManager(restaurantManager,userManager,statisticsManager, notificationCenter );
+        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
     }
     @Given("the restaurant has complete {int} orders of a {string} menu at {double} euros")

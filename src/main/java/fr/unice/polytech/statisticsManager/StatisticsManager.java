@@ -60,7 +60,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
             addMenuToRestaurant(entry.getKey(), entry.getValue());
         }
 
-        HashMap<String , List<Order>> globalOrders = groupOrder.getGlobal_orders();
+        HashMap<String , List<Order>> globalOrders = groupOrder.getGlobalOrders();
         for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet())
         {
             addOrderToUser(entry.getKey(), entry.getValue());

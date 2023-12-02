@@ -19,8 +19,10 @@ public class Login {
     @Given("the user with email {string} and a password of {string}")
     public void the_user_with_email_and_a_password_of(String userEmail, String userPassword) {
         user = new User(userEmail, userPassword);
-        OrderManagerConnectedUser orderManager = new OrderManager(null, null, null);
-        userManager = new UserManager(orderManager);
+        userManager = new UserManager();
+        OrderManagerConnectedUser orderManager = new OrderManager(null, null, null, null);
+        userManager.addOrderManager(orderManager);
+
     }
     @When("the user signin to the App")
     public void the_user_signin_to_the_app() {

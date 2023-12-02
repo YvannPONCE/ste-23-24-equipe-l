@@ -48,7 +48,6 @@ public class ValidateOrderReceipt {
         RestaurantManager mockRestaurantManager = Mockito.mock(RestaurantManager.class);
         mockRestaurant = Mockito.mock(Restaurant.class);
         mockuserManager=Mockito.mock(UserManager.class);
-        email=string;
         Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
         user=new User(string,"james", Role.CUSTOMER_STUDENT);
         Mockito.when(mockRestaurantManager.getRestaurant(Mockito.anyString())).thenReturn(mockRestaurant);
@@ -66,40 +65,36 @@ public class ValidateOrderReceipt {
         restaurantManager.add_restaurant(restaurant);
         restaurant.setCapacity(18);
         userManager =new UserManager();
-        this.userManager.add_user(new User("Albert@gmail.com","Albert"));
+        notificationCenter = new NotificationCenter(userManager);
+        user = new User("Albert@gmail.com","Albert");
+        this.userManager.add_user(user);
 
-        deliveryManager=new DeliveryManager(orderManager, userManager);
+        deliveryManager=new DeliveryManager(orderManager, userManager, notificationCenter);
         userManager.addUser(new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager,deliveryManager, notificationCenter);
-        deliveryManager=new DeliveryManager(orderManager, userManager);
-        orderManager.userManager =mockuserManager;
+        deliveryManager=new DeliveryManager(orderManager, userManager, notificationCenter);
+        orderManager.addDeliveryManager(deliveryManager);
         order = new Order(string3);
         order.add_menu(new Menu(string,double1));
         Mockito.when(mockRestaurant.getOrders()).thenReturn(Arrays.asList(order));
 
 
-        orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
-        orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
-
+        orderManager.pay_order(orderId, user.getEmail(), "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,restaurant.getName());
-
-        
         orderManager.setOrderReady(orderId,restaurant.getName());
 
     }
 
     @When("user {string} confirm the receipt")
     public void user_confirm_the_receipt(String string) {
-
-
-        deliveryManager.validateOrder(order.getId());
-
+        deliveryManager.validateOrder(orderId);
     }
 
     @Then("the order is marked as delivered")
     public void the_order_is_marked_as_delivered() {
-        assertEquals(order.getOrderState().getStatus(),Status.DELIVERED);
+        assertEquals(Status.CLOSED, order.getOrderState().getStatus());
     }
 }

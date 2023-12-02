@@ -102,9 +102,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             place_order(email, order, delivery_location, uuid);
             notificationCenter.order_confirmed(uuid,delivery_location,order.getCreation_time(),email);
 
-            this.capacityCalculator.addObserver(this);
-
-
+            this.capacityCalculator.addObserver(orderObserver);
             return uuid;
         } else {
             nextSlot=capacityCalculator.getNextSlot();
@@ -151,11 +149,9 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
         orderAmountCalculator.applyMenuDiscount(15);
 
-
         if(paymentSystem.pay(card_number))
         {
             groupOrder.setPaid(email);
-
         }
         if (groupOrder.isPaid())
         {
@@ -182,16 +178,15 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
     }
 
-    public void setOrderReady(UUID order_id, String restaurant_name) {
+    public void setOrderReady(UUID orderID, String restaurant_name) {
         GroupOrder groupOrder;
         List<GroupOrder> groupOrders = this.group_orders.stream()
-                .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
+                .filter(groupOrder1 -> groupOrder1.getUuid() == orderID)
                 .collect(Collectors.toList());
         if(!groupOrders.isEmpty()) {
             groupOrder = groupOrders.get(0);
-            groupOrder.validate_order(restaurant_name);
+            groupOrder.setOrderReady(restaurant_name);
 
-            this.notificationCenter=new NotificationCenter(userManager);
             if (groupOrder.isReady()) {
                 deliveryManager.addOrder(groupOrder);
             }
@@ -246,8 +241,8 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     }
 
-    public void addDeliveryManager(DeliveryManager deliveryManager) {
-        this.deliveryManager = deliveryManager;
+    public void addDeliveryManager(DeliveryManager newDeliveryManager) {
+        this.deliveryManager = newDeliveryManager;
     }
 
 
@@ -295,22 +290,5 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public void processingOrder(UUID orderId, String restaurantName) {
         GroupOrder groupOrder = getCurrentOrders(orderId);
         groupOrder.setOrderProcessing(restaurantName);
-    }
-
-    private void saveOrdersForUser(GroupOrder groupOrder){
-        for(String email : groupOrder.getGlobal_orders().keySet())
-        {
-            userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
-            List<Order> orders=get_current_user_orders(email);
-            for(Order order1:orders){
-                Restaurant restaurant=restaurantManager.getRestaurant(order1.getRestaurant_name());
-                capacityCalculator=new RestaurantCapacityCalculator(restaurant);
-                capacityCalculator.resetCapacityafterDelivery(order1.getMenus().size());
-
-                notificationCenter.order_delivered(groupOrder.getUuid(), groupOrder.getDeliveryLocation(), LocalDateTime.now(), email);
-
-
-            }
-        }
     }
 }

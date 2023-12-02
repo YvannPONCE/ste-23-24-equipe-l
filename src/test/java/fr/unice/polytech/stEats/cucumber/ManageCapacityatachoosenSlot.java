@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -26,6 +27,7 @@ public class ManageCapacityatachoosenSlot {
     private User user;
     private Restaurant restaurant2;
     private RestaurantManager restaurantManager;
+    private NotificationCenter notificationCenter;
     private OrderManager orderManager;
     private LocalTime time;
     private Order order;
@@ -35,6 +37,7 @@ public class ManageCapacityatachoosenSlot {
     @Given("user {string} order at {int}:{int} at {string}")
     public void user_order_at_at(String string, Integer int1, Integer int2, String string2) {
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         this.user_email = string;
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
@@ -45,7 +48,7 @@ public class ManageCapacityatachoosenSlot {
 
        localDateTime = LocalDateTime.of(LocalDate.now(), time);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
     }
     @When("user choose a  {int} nuggets menu")
     public void user_choose_a_nuggets_menu(Integer int1) {
@@ -65,6 +68,7 @@ public class ManageCapacityatachoosenSlot {
     @Given("user {string} order at {int}:{int} at {string} but the chosen slot is full")
     public void user_order_at_at_but_the_chosen_slot_is_full(String string, Integer int1, Integer int2, String string2) {
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         this.user_email = string;
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
@@ -76,7 +80,7 @@ public class ManageCapacityatachoosenSlot {
 
         localDateTime = LocalDateTime.of(LocalDate.now(), time);
 
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
     }
     @When("user order his demand is rejected")
     public void user_order_his_demand_is_rejected() {

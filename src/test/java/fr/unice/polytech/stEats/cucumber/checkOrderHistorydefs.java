@@ -5,7 +5,6 @@ import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
-import fr.unice.polytech.NotificationCenter.Notification;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
@@ -34,7 +33,6 @@ public class checkOrderHistorydefs {
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private UUID orderSelected_id;
-    private LinkedHashMap<Object, Object> orderHistoryMap;
     private DeliveryManager deliveryManger;
     private NotificationCenter notificationCenter;
 
@@ -43,11 +41,16 @@ public class checkOrderHistorydefs {
     public void a_user_with_the_following_order_history(String string, io.cucumber.datatable.DataTable dataTable) {
 
         List<Map<String, String>> orderData = dataTable.asMaps(String.class, String.class);
-        user = new User(string, "james", Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
+        restaurantManager = new RestaurantManager();
+        user = new User(string, "james", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
-
-        orderHistoryMap = new LinkedHashMap<>();  // Utiliser une LinkedHashMap pour préserver l'ordre
+        user = new User("deliver", "pass", Role.DELIVER_MAN);
+        userManager.add_user(user);
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
+        deliveryManger = new DeliveryManager(orderManager, userManager, notificationCenter);
+        orderManager.addDeliveryManager(deliveryManger);
 
         for (Map<String, String> row : orderData) {
             String item = row.get("Item");
@@ -56,26 +59,19 @@ public class checkOrderHistorydefs {
 
             restaurant = new Restaurant(restaurantName);
             restaurant.setCapacity(16);
-            restaurantManager = new RestaurantManager();
             restaurantManager.add_restaurant(restaurant);
 
             notificationCenter = new NotificationCenter(userManager);
 
-            orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-
             order = new Order(restaurantName);
             order.add_menu(new Menu(item, price));
 
-            orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
+            orderId = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
-            orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
-            orderManager.setOrderReady(orderId, string);
-            order.getOrderState().setStatus(Status.DELIVERED);
-            deliveryManger.validateOrder(order.getId());
-            deliveryManger =new DeliveryManager(orderManager,userManager);
-            deliveryManger.validateOrder("fff",orderId);
-
-            orderHistoryMap.put(orderId, order);
+            orderManager.pay_order(orderId, user.getEmail(), "7936 3468 9302 8371");
+            orderManager.processingOrder(orderId, restaurant.getName());
+            orderManager.setOrderReady(orderId, order.getRestaurant_name());
+            deliveryManger.validateOrder(orderId);
         }
     }
 

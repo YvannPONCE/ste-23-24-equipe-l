@@ -28,6 +28,7 @@ public class CompleteMultiOrder {
     private Restaurant restaurant1;
     private Restaurant restaurant2;
     private DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
     private  User deliveryMan;
     private User user;
 
@@ -39,8 +40,9 @@ public class CompleteMultiOrder {
         restaurantManager.add_restaurant(restaurant1);
         restaurantManager.add_restaurant(restaurant2);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager),new NotificationCenter(userManager));
-        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
+        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
         deliveryMan = new User(deliveryManName,"albert", Role.DELIVER_MAN);
         userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
@@ -91,13 +93,13 @@ public class CompleteMultiOrder {
     @When("user {string} confirm the delivery")
     public void user_confirm_the_delivery(String userEmail) {
 
-        deliveryManager.validateOrder(orderId);
+        deliveryManager.validateOrder(deliveryMan.getEmail());
         Assert.assertEquals(Status.DELIVERED, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @When("delivery man {string} confirm the delivery")
     public void delivery_man_confirm_the_delivery(String deliveryManName) {
 
-        deliveryManager.validateOrder(deliveryManName,orderId);
+        deliveryManager.validateOrder(deliveryManName);
     }
     @Then("The group order is marked as closed")
     public void the_group_order_is_marked_as_closed() {

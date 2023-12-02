@@ -67,6 +67,7 @@ public class AddMenuToCart {
     public void two_restaurants_two_menus_and_one_user(String user_email) {
         this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
 
         userManager.add_user(user);
     }
@@ -116,6 +117,7 @@ public class AddMenuToCart {
     public void one_restaurant_two_menus_and_one_user(String user_email) {
         this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
 
         userManager.add_user(user);
     }

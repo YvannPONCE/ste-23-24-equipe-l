@@ -5,6 +5,7 @@ import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -12,6 +13,7 @@ import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 
 import java.util.UUID;
 
@@ -26,6 +28,7 @@ public class CompleteSimpleOrder {
     Restaurant restaurant;
     String user_email;
     User deliveryMan;
+    private NotificationCenter notificationCenter;
 
     DeliveryManager deliveryManager;
     private User user;
@@ -36,9 +39,10 @@ public class CompleteSimpleOrder {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
-        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, null);
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
+        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);
         deliveryMan = new User("delivery@gmail.com", "pass", Role.DELIVER_MAN);
         userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
@@ -63,22 +67,22 @@ public class CompleteSimpleOrder {
     public void the_order_is_marked_ready_by_the_restaurant(String restaurant_name) {
         orderManager.processingOrder(orderId, restaurant_name);
         orderManager.setOrderReady(orderId, restaurant_name);
-
+        Assert.assertEquals(Status.READY, deliveryManager.getOrderStatus(orderId));
     }
 
     @When("The user {string} confirm the delivery")
     public void the_user_confirm_the_delivery(String string) {
-        deliveryManager.validateOrder(deliveryMan.getEmail(), orderId);
+        deliveryManager.validateOrder(deliveryMan.getEmail());
+        Assert.assertEquals(Status.DELIVERED, deliveryManager.getOrderStatus(orderId));
     }
 
     @When("The delivery man {string} confirm the delivery")
     public void the_delivery_man_confirm_the_delivery(String string) {
-        deliveryManager.validateOrder(deliveryMan.getEmail(), orderId);
+        deliveryManager.validateOrder(deliveryMan.getEmail());
     }
 
     @Then("The order is marked as closed")
     public void the_order_is_marked_as_delivered() {
-        System.out.println(user.getEmail());
         assertEquals(Status.CLOSED,userManager.getOrderHistory(user.getEmail()).get(0).getOrderState().getStatus());
     }
 

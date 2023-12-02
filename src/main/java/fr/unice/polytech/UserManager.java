@@ -1,9 +1,11 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.OrderManager.OrderManagerConnectedUser;
 import lombok.Getter;
 import lombok.Setter;
+import org.mockito.internal.matchers.Or;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,19 +14,17 @@ import java.util.stream.Collectors;
 
 public class UserManager {
 
-    private final OrderManagerConnectedUser orderManager;
+    private OrderManagerConnectedUser orderManager;
     List<User> userList;
 
-    public UserManager(OrderManagerConnectedUser orderManager) {
-        this.userList=new ArrayList<>();
+
+    public UserManager() {
+        userList = new ArrayList<>();
+    }
+    public void addOrderManager(OrderManagerConnectedUser orderManager){
         this.orderManager = orderManager;
     }
-    public UserManager() {
-        this(null);
-    }
-
     public List<Order> getOrderHistory(String mail) {
-        System.out.println(userList);
         return get_user(mail).getOrderHistory();
     }
     public void add_user(User user)
