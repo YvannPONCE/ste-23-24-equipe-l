@@ -213,7 +213,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
     }
 
-    public void validate_order_receipt(UUID order_id) {
+public void validate_order_receipt(UUID order_id) {
         GroupOrder groupOrder;
         NotificationCenter notificationCenter1;
         List<GroupOrder> groupOrders = this.group_orders.stream()

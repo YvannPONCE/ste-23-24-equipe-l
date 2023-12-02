@@ -23,7 +23,11 @@ public class UserManager {
         this(null);
     }
 
-    public List<Order> get_order_history(String mail) {
+    /**
+     * Display the order history of a user
+     * @param mail the e-mail address of the user
+     */
+    public HashMap<String,List<Order>> get_order_history(String mail) {
         return get_user(mail).getOrderHistory();
     }
     public void add_user(User user)
@@ -43,26 +47,34 @@ public class UserManager {
     }
 
     public void displayOrderHistory(String mail) {
-        List<Order> orderHistory = get_order_history(mail);
+        HashMap<String,List<Order>> orderHistory = get_order_history(mail);
+        List<Order> orderHistoryList = new ArrayList<>();
+        for(String restaurant_name: orderHistory.keySet()) {
+            for (Order order : orderHistory.get(restaurant_name)) {
+                orderHistoryList.add(order);
+            }
+        }
 
         // Tri de la liste des commandes par date chronologique (du plus récent au plus ancien)
-        Collections.sort(orderHistory, new Comparator<Order>() {
+        Collections.sort(orderHistoryList, new Comparator<Order>() {
             @Override
             public int compare(Order order1, Order order2) {
                 return order2.getCreation_time().compareTo(order1.getCreation_time()); // Inversion de l'ordre
             }
         });
-        for(Order order:orderHistory){
-        order.displayOrderSummary();
+        for(Order order: orderHistoryList) {
+            order.displayOrderSummary();
         }
     }
 
    public Order  find_selectedOrder(UUID orderId,String mail){
-        List<Order> orderHistory=get_order_history(mail);
+        HashMap<String, List<Order>> orderHistory=get_order_history(mail);
 
-        for(Order order:orderHistory){
-            if(order.id.equals(orderId)){
-                return order;
+        for(String restaurant_name: orderHistory.keySet()){
+            for(Order order: orderHistory.get(restaurant_name)) {
+                if (order.id.equals(orderId)) {
+                    return order;
+                }
             }
         }
         return null;
