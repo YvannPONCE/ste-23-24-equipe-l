@@ -16,7 +16,6 @@ import org.junit.Assert;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 import java.util.UUID;
 
 public class ManageCapacityatachoosenSlot {
@@ -25,7 +24,7 @@ public class ManageCapacityatachoosenSlot {
     private UserManager userManager;
     private String user_email;
     private User user;
-    private Restaurant restaurant2;
+    private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private NotificationCenter notificationCenter;
     private OrderManager orderManager;
@@ -41,9 +40,9 @@ public class ManageCapacityatachoosenSlot {
         this.user_email = string;
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
-        restaurant2 = new Restaurant(string2);
+        restaurant = new Restaurant(string2);
         restaurantManager = new RestaurantManager();
-        restaurantManager.add_restaurant(restaurant2);
+        restaurantManager.add_restaurant(restaurant);
          time = LocalTime.of(int1, int2);
 
        localDateTime = LocalDateTime.of(LocalDate.now(), time);
@@ -52,17 +51,17 @@ public class ManageCapacityatachoosenSlot {
     }
     @When("user choose a  {int} nuggets menu")
     public void user_choose_a_nuggets_menu(Integer int1) {
-        order = new Order(restaurant2.getName());
+        order = new Order(restaurant.getName());
         Menu menu = new Menu("chicken nuggets", 8.00);
         order.add_menu(menu);
         order.add_menu(menu);
 
 
-        orderId = orderManager.place_order_slot(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
+        orderId = orderManager.placeOrderSlot(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
     }
     @Then("capacity at this restaurant should be {int}")
     public void capacity_at_this_restaurant_should_be(Integer int1) {
-        Assert.assertEquals(Optional.of(restaurant2.getHourlyCapacity(LocalDateTime.from(localDateTime).getHour())),Optional.of(int1));
+        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.from(localDateTime).getHour()));
     }
 
     @Given("user {string} order at {int}:{int} at {string} but the chosen slot is full")
@@ -72,10 +71,10 @@ public class ManageCapacityatachoosenSlot {
         this.user_email = string;
         user=new User(user_email,"john", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
-        restaurant2 = new Restaurant(string2);
+        restaurant = new Restaurant(string2);
         restaurantManager = new RestaurantManager();
-        restaurantManager.add_restaurant(restaurant2);
-        restaurant2.setHourlyCapacity(16,0);
+        restaurantManager.add_restaurant(restaurant);
+        restaurant.setHourlyCapacity(16,0);
         time = LocalTime.of(int1, int2);
 
         localDateTime = LocalDateTime.of(LocalDate.now(), time);
@@ -84,11 +83,11 @@ public class ManageCapacityatachoosenSlot {
     }
     @When("user order his demand is rejected")
     public void user_order_his_demand_is_rejected() {
-        order = new Order(restaurant2.getName());
+        order = new Order(restaurant.getName());
         Menu menu = new Menu("chicken nuggets", 8.00);
         order.add_menu(menu);
         order.add_menu(menu);
-        orderId = orderManager.place_order_slot(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
+        orderId = orderManager.placeOrderSlot(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
 
 
     }

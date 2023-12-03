@@ -47,7 +47,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
 
     // Méthode pour obtenir la capacité à une heure spécifique
     public int getHourlyCapacity(int hour) {
-        return (int) hourlyCapacities.getOrDefault(hour, capacity);
+        return hourlyCapacities.getOrDefault(hour, capacity);
 
     }
     private void initializeHourlyCapacities() {
@@ -63,37 +63,24 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     public int getCapacity() {
         return capacity;
     }
-
     public Schedule getHoraires() {
         return horaires;
     }
-
     public String getName() {
         return name;
     }
-
     public void setHoraires(Schedule horaires) {
         this.horaires = horaires;
     }
-
-
     public List<Menu> getListemenu() {
         return listemenu;
     }
-
     public void setListemenu(List<Menu> listemenu) {
         this.listemenu = listemenu;
     }
-
     public void placeOrder(List<Order> ordersToAdd) {
         this.orders.addAll(ordersToAdd);
     }
-
-    public List<Order> getOrders() {
-        return this.orders;
-    }
-
-
     public void addMenu(Menu menu) {
         listemenu.add(menu);
     }

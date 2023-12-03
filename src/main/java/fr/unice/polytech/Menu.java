@@ -15,8 +15,10 @@ public class Menu {
         this.price = price;
     }
 
-
-
+    public Menu(Menu menu) {
+        itemName = menu.getItemName();
+        price = menu.getPrice();
+    }
 
 
     public void displayItem() {
@@ -36,5 +38,13 @@ public class Menu {
     @Override
     public int hashCode() {
         return Objects.hash(itemName, price);
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "itemName='" + itemName + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

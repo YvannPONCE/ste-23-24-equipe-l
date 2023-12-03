@@ -5,6 +5,7 @@ import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,21 +53,18 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
     public void addOrder(GroupOrder groupOrder)
     {
         Locations location = groupOrder.getDeliveryLocation();
-        locationStatistics.put(location, locationStatistics.get(location)+1);
+        Map<String, List<Menu>> menusByRestaurants = groupOrder.getMenusByRestaurants();
+        Map<String , List<Order>> globalOrders = groupOrder.getGlobalOrders();
 
-        HashMap<String, List<Menu>> menusByRestaurants = groupOrder.getMenusByRestaurants();
+        locationStatistics.put(location, locationStatistics.get(location)+1);
         for(Map.Entry<String, List<Menu>> entry : menusByRestaurants.entrySet())
         {
             addMenuToRestaurant(entry.getKey(), entry.getValue());
         }
-
-        HashMap<String , List<Order>> globalOrders = groupOrder.getGlobalOrders();
         for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet())
         {
             addOrderToUser(entry.getKey(), entry.getValue());
         }
-
-
     }
     private void addMenuToRestaurant(String restaurantName, List<Menu> menus)
     {
@@ -79,7 +77,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         if(corespondingRestaurant == null)return;
         HashMap<Menu, Integer> menusPopularity = menuStatisticsByRestaurants.get(corespondingRestaurant);
         for (Menu menu : menus) {
-            menusPopularity.merge(menu, 1, Integer::sum);
+            menusPopularity.merge(new Menu(menu), 1, Integer::sum);
         }
     }
     private void addOrderToUser(String userEmail, List<Order> orders)
@@ -87,7 +85,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         List<Order> userOrders = userStatistics.get(userEmail);
         if(userOrders == null)
         {
-            userStatistics.put(userEmail, orders);
+            userStatistics.put(userEmail, new ArrayList<>(orders));
             return;
         }
         userOrders.addAll(orders);

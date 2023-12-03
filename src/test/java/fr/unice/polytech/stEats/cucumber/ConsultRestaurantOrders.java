@@ -5,7 +5,7 @@ import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Order;
-import fr.unice.polytech.RestaurantManager.RestaurantManagerStaff;
+import fr.unice.polytech.OrderManager.OrderManagerStaff;
 import fr.unice.polytech.UserManager;
 import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
@@ -17,7 +17,6 @@ import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
 import org.junit.Assert;
 
-import java.text.Normalizer;
 import java.util.List;
 
 public class ConsultRestaurantOrders {
@@ -51,7 +50,7 @@ public class ConsultRestaurantOrders {
             Order order = new Order(restaurant.getName());
             order.add_menu(menu);
 
-            orderManager.place_order("email", order, Locations.HALL_PRINCIPAL);
+            orderManager.placeOrder("email", order, Locations.HALL_PRINCIPAL);
             orderManager.pay_user_orders("email", "7936 3468 9302 8371");
         }
     }
@@ -60,8 +59,8 @@ public class ConsultRestaurantOrders {
     }
     @Then("they retrieve the list with the {int} orders")
     public void they_retrieve_the_list_with_the_orders(Integer n) {
-        RestaurantManagerStaff restaurantManagerStaff = restaurantManager;
-        List<Order> orders = restaurantManagerStaff.getCurrentOrders(restaurant.getName());
+        OrderManagerStaff orderManagerStaff = orderManager;
+        List<Order> orders = orderManagerStaff.getCurrentOrders(restaurant.getName());
         Assert.assertEquals(n.intValue(), orders.size());
     }
 

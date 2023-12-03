@@ -64,11 +64,11 @@ public class ManageDiscount {
             order.add_menu(menu);
         }
 
-        orderId=orderManager.place_order(user1.getEmail(), order, Locations.HALL_PRINCIPAL);
+        orderId=orderManager.placeOrder(user1.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         orderAmountCalculator =new OrderAmountCalculator(orderManager.getCurrentOrders(order_id),orderManager.userManager);
         orderAmountCalculator.setItemCountThreshold(16);
-        orderManager.pay_order(orderId,user1.getEmail(),CreditCard);
+        orderManager.payOrder(orderId,user1.getEmail(),CreditCard);
 
         }
 
@@ -112,7 +112,7 @@ public class ManageDiscount {
         for(int i=0;i<int1;i++){
             order2.add_menu(menu);
         }
-        orderId2=orderManager.place_order(user2.getEmail(),order2,Locations.HALL_PRINCIPAL);
+        orderId2=orderManager.placeOrder(user2.getEmail(),order2,Locations.HALL_PRINCIPAL);
     }
     @When("The second join {int} a {string} menu at {double} euros from {string} to his friend command")
     public void the_second_join_a_menu_at_euros_from_to_his_friend_command(Integer int1, String string, Double double1, String string2) {
@@ -122,9 +122,9 @@ public class ManageDiscount {
         for(int i=0;i<int1;i++){
             order3.add_menu(menu);
         }
-     orderManager.place_order(user3.getEmail(),order3,Locations.HALL_PRINCIPAL, (UUID) orderId2);
-        orderManager.pay_order(orderId2,user2.getEmail(),CreditCard);
-        orderManager.pay_order(orderId2,user3.getEmail(),CreditCard);
+     orderManager.placeOrder(user3.getEmail(),order3,Locations.HALL_PRINCIPAL, (UUID) orderId2);
+        orderManager.payOrder(orderId2,user2.getEmail(),CreditCard);
+        orderManager.payOrder(orderId2,user3.getEmail(),CreditCard);
     }
     @Then("Both users can get discount after paying they have additional credit depending on their order amount")
     public void both_users_can_get_discount_after_paying_they_have_additional_credit_depending_on_their_order_amount() {
@@ -157,8 +157,8 @@ public class ManageDiscount {
        for(int i=0;i<int1;i++){
            order4.add_menu(menu);
        }
-       orderId3=orderManager.place_order(user4.getEmail(),order4,Locations.HALL_PRINCIPAL);
-       orderManager.pay_order(orderId3,user4.getEmail(),CreditCard);
+       orderId3=orderManager.placeOrder(user4.getEmail(),order4,Locations.HALL_PRINCIPAL);
+       orderManager.payOrder(orderId3,user4.getEmail(),CreditCard);
     }
     @Then("he   should not receive a  a discount of {int}% and his credit should stay {double}")
     public void he_should_not_receive_a_a_discount_of_and_his_credit_should_stay(Integer int1, Double double1) {

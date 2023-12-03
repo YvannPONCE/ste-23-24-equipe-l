@@ -48,7 +48,7 @@ public class CancelOrder {
         Order order = new Order(restaurantName);
         order.add_menu(menu);
 
-        orderId = orderManager.place_order(userEmail, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL);
        order.getOrderState().next();
 
     }

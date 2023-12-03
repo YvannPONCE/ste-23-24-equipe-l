@@ -66,9 +66,9 @@ public class checkOrderHistorydefs {
             order = new Order(restaurantName);
             order.add_menu(new Menu(item, price));
 
-            orderId = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
+            orderId = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
-            orderManager.pay_order(orderId, user.getEmail(), "7936 3468 9302 8371");
+            orderManager.payOrder(orderId, user.getEmail(), "7936 3468 9302 8371");
             orderManager.processingOrder(orderId, restaurant.getName());
             orderManager.setOrderReady(orderId, order.getRestaurant_name());
             deliveryManger.validateOrder(orderId);
