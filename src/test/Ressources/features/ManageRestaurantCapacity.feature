@@ -19,5 +19,5 @@ Feature: Manage Restaurant Capacity
   Scenario: show update of retaurant capacity after receipt validation
     Given user "user4@example.com" ordered in a  Restaurant "mario" with a capacity of 10 menus per hour with available slot
     When user order a "pasta" and validate order receipt
-    Then the restaurant is set to 10
+    Then the restaurant is set to 8
 

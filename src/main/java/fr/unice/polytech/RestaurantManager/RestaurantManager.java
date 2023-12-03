@@ -28,11 +28,6 @@ public class RestaurantManager implements RestaurantManagerUser, RestaurantManag
         return this.restaurants;
     }
 
-    @Override
-    public List<Order> getCurrentOrders(String restaurantName){
-        return getRestaurant(restaurantName).getOrders();
-    }
-
     public Restaurant getRestaurant(String restaurant_name) {
         List<Restaurant> foundRestaurants = this.restaurants.stream()
                 .filter(restaurant -> restaurant.getName().equals(restaurant_name))

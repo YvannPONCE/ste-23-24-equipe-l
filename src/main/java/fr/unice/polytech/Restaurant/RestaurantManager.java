@@ -11,7 +11,6 @@ public interface RestaurantManager extends RestaurantUser {
     public int getHourlyCapacity(int hour);
     public void setHoraires(Schedule horaires);
     public void setListemenu(List<Menu> listemenu);
-    public List<Order> getOrders();
     public void addMenu(Menu menu);
     public void setCapacity(int i);
 }

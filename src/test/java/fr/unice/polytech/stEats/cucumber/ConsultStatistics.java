@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -23,6 +24,7 @@ public class ConsultStatistics {
     RestaurantManager restaurantManager;
     OrderManager orderManager;
     DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
     User manager;
     private StatisticsManager statisticsManager;
 
@@ -42,8 +44,9 @@ public class ConsultStatistics {
         restaurantManager.add_restaurant(restaurant);
         statisticsManager = new StatisticsManager(restaurantManager);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
 
-        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
 
         User customer1 = new User("customer1@gmail.com", "password" ,Role.CUSTOMER_STUDENT);
@@ -58,13 +61,13 @@ public class ConsultStatistics {
         order3.add_menu(new Menu("tartare", 15.5));
             orderManager.userManager.add_user(customer1);
             orderManager.userManager.add_user(customer2);
-        UUID orderId1 = orderManager.place_order(customer1.getEmail() ,order1, Locations.HALL_PRINCIPAL);
-        UUID orderId2 = orderManager.place_order(customer2.getEmail() ,order2, Locations.BATIMENT_E);
-        UUID orderId3 = orderManager.place_order(customer1.getEmail() ,order3, Locations.BATIMENT_E);
+        UUID orderId1 = orderManager.placeOrder(customer1.getEmail() ,order1, Locations.HALL_PRINCIPAL);
+        UUID orderId2 = orderManager.placeOrder(customer2.getEmail() ,order2, Locations.BATIMENT_E);
+        UUID orderId3 = orderManager.placeOrder(customer1.getEmail() ,order3, Locations.BATIMENT_E);
 
-        orderManager.pay_order(orderId1, customer1.getEmail(), "7936 3468 9302 8371");
-        orderManager.pay_order(orderId2, customer2.getEmail(), "7936 3468 9302 8371");
-        orderManager.pay_order(orderId3, customer1.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrder(orderId1, customer1.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrder(orderId2, customer2.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrder(orderId3, customer1.getEmail(), "7936 3468 9302 8371");
 
     }
     @When("i want to consult the volume of orders")

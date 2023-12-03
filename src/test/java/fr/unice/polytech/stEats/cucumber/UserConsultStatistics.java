@@ -3,6 +3,8 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -25,6 +27,7 @@ public class UserConsultStatistics {
     private StatisticsManager statisticsManager;
     private OrderManager orderManager;
     private DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
 
     @Given("the application is running with two restaurant {string} and {string}")
     public void the_application_is_running_with_two_restaurant_and(String restaurantName1, String restaurantName2) {
@@ -35,19 +38,20 @@ public class UserConsultStatistics {
         restaurantManager.add_restaurant(restaurant2);
 
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
         statisticsManager = new StatisticsManager(restaurantManager);
         StatisticManagerOrderManager statisticManagerOrderManager = statisticsManager;
-        orderManager = new OrderManager(restaurantManager, userManager, statisticManagerOrderManager);
+        orderManager = new OrderManager(restaurantManager, userManager, statisticManagerOrderManager, null, notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager);
-        deliveryManager.addDeliveryman("deliveryManEmail","deliveryManName");
+        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager, notificationCenter);
+        userManager.addUser(new User("deliveryManEmail","deliveryManName", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
     }
     @Given("User {string} order a {string} at {int} euros at {string}")
     public void user_order_a_at_euros_at(String userEmail, String menuName, Integer menuPrice, String menuRestaurant) {
         Menu menu = new Menu(menuName, menuPrice);
         Order order = new Order(menuRestaurant, new ArrayList<Menu>(Arrays.asList(menu)));
-        orderManager.place_order(userEmail ,order, Locations.HALL_PRINCIPAL);
+        orderManager.placeOrder(userEmail ,order, Locations.HALL_PRINCIPAL);
         orderManager.pay_user_orders(userEmail, "7936 3468 9302 8371");
     }
     @When("when {string} consult her favorites restaurants")
@@ -69,7 +73,7 @@ public class UserConsultStatistics {
         for(int i =0;i<numberOfOrders;++i) {
             menu = new Menu("Bucket", 7.5);
             order = new Order(restaurantName, new ArrayList<Menu>(Arrays.asList(menu)));
-            orderManager.place_order("My email", order, Locations.HALL_PRINCIPAL);
+            orderManager.placeOrder("My email", order, Locations.HALL_PRINCIPAL);
             orderManager.pay_user_orders("My email", "7936 3468 9302 8371");
         }
     }

@@ -33,7 +33,7 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
     }
 
     @Override
-    public boolean orderReady(UUID order_id, String delivery_manName, String deliveryman_mail, Locations locations, String customer_email) {
+    public boolean orderReady(UUID order_id, String delivery_manName, Locations locations, String customer_email) {
         
         String message = String.format("Dear %s,\n\n"
                 + "You have a new delivery request for order ID %s.\n"
@@ -52,9 +52,9 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
         // Envoyer le message à l'utilisateur
         sendNotification(customer_email, userMessage);
         orderReadyNotificationSent = true;
-        User user=findUser(deliveryman_mail);
+        User user=findUser(delivery_manName);
         user.getNotifications().add(new Notification(message));
-        sendNotification(deliveryman_mail, message);
+        sendNotification(user.getEmail(), message);
         return true;
     }
 

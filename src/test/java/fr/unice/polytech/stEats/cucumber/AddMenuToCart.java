@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Role;
 
+import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -18,13 +19,14 @@ import java.util.UUID;
 
 public class AddMenuToCart {
 
-    OrderManager orderManager = new OrderManager(null, null, null);
+    OrderManager orderManager = new OrderManager(null, null, null, null);
 
     User user;
     UUID order_id;
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
     private UserManager userManager;
+    private NotificationCenter notificationCenter;
 
     @Given("One restaurant, One menu and one user {string}")
     public void one_restaurant_one_menu_and_one_user(String user_email) {
@@ -39,10 +41,11 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
 
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros.")
@@ -64,6 +67,7 @@ public class AddMenuToCart {
     public void two_restaurants_two_menus_and_one_user(String user_email) {
         this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
 
         userManager.add_user(user);
     }
@@ -73,14 +77,14 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         Order order_2 = new Order(restaurant_name_2);
         order_2.add_menu(new Menu(menu_name_2, menu_price_2));
-        orderManager.place_order(user.getEmail(), order_2, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.placeOrder(user.getEmail(), order_2, Locations.HALL_PRINCIPAL, order_id);
 
     }
 
@@ -113,6 +117,7 @@ public class AddMenuToCart {
     public void one_restaurant_two_menus_and_one_user(String user_email) {
         this.user = new User(user_email, user_email,Role.CUSTOMER_STUDENT);
         userManager = new UserManager();
+        notificationCenter = new NotificationCenter(userManager);
 
         userManager.add_user(user);
     }
@@ -121,15 +126,14 @@ public class AddMenuToCart {
         restaurant = new Restaurant(restaurant_name);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager) {
-        });
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name_1, menu_price_1));
-        order_id = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         Order order_2 = new Order(restaurant_name);
         order_2.add_menu(new Menu(menu_name_2, menu_price_2));
-        orderManager.place_order(user.getEmail(), order_2, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.placeOrder(user.getEmail(), order_2, Locations.HALL_PRINCIPAL, order_id);
     }
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros as well as the {string} menu at {double} euros.")
     public void the_menu_from_is_stored_in_the_current_order_and_cost_euros_as_well_as_the_menu_at_euros(String menu_name_1, String restaurant_name, Double menu_price_1, String menu_name_2, Double menu_price_2) {

@@ -41,7 +41,7 @@ jobs:
            cache: 'maven'
 
        - name: SonarQube
-         run: mvn clean verify -Pcoverage sonar:sonar -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} -Dsonar.token=${{ secrets.SONARQUBE_TOKEN }} -Dsonar.projectKey=STEats-Team-L -Dsonar.projectName='STEats-Team-L'
+         run: mvn clean verify -Pcoverage sonar:sonar -Dsonar.host.url=${{ secrets.SONARQUBE_URL }} -Dsonar.token=${{ secrets.SONARQUBE_TOKEN }} -Dsonar.projectKey=STEats-Team-L -Dsonar.projectName='STEats-Team-L' -Dsonar.qualitygate.wait=true
 
 
 

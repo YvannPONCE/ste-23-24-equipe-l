@@ -45,7 +45,7 @@ public class RestaurantCapacityCalculator extends Observable {
             clearChanged();
         }
     }
-    public void placeOrder_slot(int numberOfMenus, LocalDateTime chosenSlot) {
+    public void placeOrderSlot(int numberOfMenus, LocalDateTime chosenSlot) {
         int chosenHour = chosenSlot.getHour();
 
         updateHourlyCapacity(chosenHour, restaurant.getHourlyCapacity(chosenHour) - numberOfMenus);

@@ -42,7 +42,7 @@ public class User {
     /*
     public void addOrderToHistory(List<Order> orders)
     {
-        this.OrderHistory.addAll(orders);
+        orderHistory.addAll(orders);
     }
      */
 
@@ -50,6 +50,12 @@ public class User {
         return this.Credit=this.Credit+sum;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                '}';
+    }
     /**
      * Add a list of orders to the order history of the user
      * @param orders the list of orders to add

@@ -24,8 +24,8 @@ public class DeliveryManNotificationdefs {
     private RestaurantManager restaurantManager;
     private OrderManager orderManager;
     private DeliveryManager deliveryManager;
+    private NotificationCenter notificationCenter;
     private UUID orderId;
-    NotificationCenter notificationCenter;
     private UserManager userManager;
     private Order order;
 
@@ -38,10 +38,11 @@ public class DeliveryManNotificationdefs {
         userManager=new UserManager();
         userManager.add_user(new User("Albert@gmail.com","Albert"));
         userManager.add_user(new User(string,"user", Role.CUSTOMER_STAFF));
-        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager));
+        notificationCenter = new NotificationCenter(userManager);
+        orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager );
-        deliveryManager.addDeliveryman("Albert@gmail.com","Albert");
+        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);
+        userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
     this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
@@ -49,14 +50,14 @@ public class DeliveryManNotificationdefs {
         order.add_menu(new Menu("chicken nuggets", 5.50));
 
 
-        orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
+        orderId = orderManager.placeOrder(string, order, Locations.HALL_PRINCIPAL);
+        orderManager.payOrder(orderId, string, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,restaurant.getName());
 
     }
     @When("the order is ready and restaurant validate the order for delivery")
     public void the_order_is_ready_and_restaurant_validate_the_order_for_delivery() {
-        orderManager.validate_order(orderId, restaurant.getName());
+        orderManager.setOrderReady(orderId, restaurant.getName());
     }
 
     @Then("the delivery lan receives a  notification with the user informations")
