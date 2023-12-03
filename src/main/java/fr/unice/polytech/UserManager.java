@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 @Getter
 @Setter
-
 public class UserManager {
 
     private OrderManagerConnectedUser orderManager;

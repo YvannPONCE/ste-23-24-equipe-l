@@ -38,6 +38,7 @@ public class UserConsultStatistics {
         restaurantManager.add_restaurant(restaurant2);
 
         userManager = new UserManager();
+        userManager.add_user(new User("melanie@egmail.com", "password", Role.CUSTOMER_STUDENT));
         notificationCenter = new NotificationCenter(userManager);
         statisticsManager = new StatisticsManager(restaurantManager);
         StatisticManagerOrderManager statisticManagerOrderManager = statisticsManager;
@@ -73,8 +74,8 @@ public class UserConsultStatistics {
         for(int i =0;i<numberOfOrders;++i) {
             menu = new Menu("Bucket", 7.5);
             order = new Order(restaurantName, new ArrayList<Menu>(Arrays.asList(menu)));
-            orderManager.placeOrder("My email", order, Locations.HALL_PRINCIPAL);
-            orderManager.pay_user_orders("My email", "7936 3468 9302 8371");
+            orderManager.placeOrder("melanie@egmail.com", order, Locations.HALL_PRINCIPAL);
+            orderManager.pay_user_orders("melanie@egmail.com", "7936 3468 9302 8371");
         }
     }
     @When("As a student I want to consult the most popular delivery locations")

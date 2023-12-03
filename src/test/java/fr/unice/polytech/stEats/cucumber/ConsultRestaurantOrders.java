@@ -2,10 +2,12 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Order;
 import fr.unice.polytech.OrderManager.OrderManagerStaff;
+import fr.unice.polytech.User;
 import fr.unice.polytech.UserManager;
 import fr.unice.polytech.statisticsManager.StatisticsManager;
 import io.cucumber.java.en.Given;
@@ -15,9 +17,10 @@ import io.cucumber.java.en.When;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
-import java.util.List;
+import java.util.*;
 
 public class ConsultRestaurantOrders {
 
@@ -34,13 +37,14 @@ public class ConsultRestaurantOrders {
         restaurant = new Restaurant(restaurantName);
         restaurantManager = new RestaurantManager();
         restaurantManager.addRestaurant(restaurant);
-
         userManager = new UserManager();
         notificationCenter = new NotificationCenter(userManager);
         statisticsManager = new StatisticsManager(restaurantManager);
         orderManager = new OrderManager(restaurantManager,userManager,statisticsManager, notificationCenter );
         deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
+        User user = new User("email", "password", Role.CUSTOMER_STUDENT);
+        userManager.add_user(user);
     }
     @Given("the restaurant has complete {int} orders of a {string} menu at {double} euros")
     public void the_restaurant_has_complete_orders_of_a_menu_at_euros(Integer n, String menuName, Double menuPrice) {

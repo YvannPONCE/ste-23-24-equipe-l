@@ -3,6 +3,8 @@ package fr.unice.polytech.Restaurant;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Order;
 import fr.unice.polytech.Schedule;
+import lombok.Getter;
+import net.bytebuddy.asm.Advice;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,22 +15,16 @@ import java.util.Map;
 
 public class Restaurant implements RestaurantUser, RestaurantManager, RestaurantOrderManager {
 
-
-
     private String name;
-
-
     private Schedule horaires;
     private Map<Integer, Integer> hourlyCapacities;
-
     private List<Menu> listemenu;
     private List<Order> orders;
-     int capacity;
-
-
-
-
-
+    int capacity;
+    int discountThreshold;
+    int discountPeriod;
+    double discountPercentage;
+    HashMap<String, LocalDateTime> discountedUsers;
 
     public Restaurant(String name) {
         this.name = name;
@@ -37,8 +33,10 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         this.orders = new ArrayList<>();
         this.capacity=10;
         this.hourlyCapacities = new HashMap<>();
+        this.discountPercentage = 0.15;
+        this.discountPeriod = 15;
+        this.discountThreshold = 10;
         initializeHourlyCapacities();
-
     }
 
     public void setHourlyCapacity(int hour, int capacity) {
@@ -57,6 +55,12 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         }
     }
 
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+    public int getDiscountThreshold() {
+        return discountThreshold;
+    }
     public void setcapacity(int newC) {
         this.capacity=newC;
     }
@@ -88,7 +92,15 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         this.capacity=i;
     }
 
-    
+    public void addUserToDiscountedUsers(String mail) {
+        LocalDateTime lastDiscountExpirationDate = discountedUsers.get(mail);
+        if (lastDiscountExpirationDate == null || lastDiscountExpirationDate.isBefore(LocalDateTime.now())) {
+            discountedUsers.put(mail, LocalDateTime.now().plusDays(this.discountPeriod));
+        } else {
+            LocalDateTime newDiscount = lastDiscountExpirationDate.plusDays(this.discountPeriod);
+            discountedUsers.put(mail, newDiscount);
+        }
+    }
 }
 
 
