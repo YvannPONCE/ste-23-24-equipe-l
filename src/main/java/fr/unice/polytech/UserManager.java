@@ -144,6 +144,7 @@ public class UserManager {
                 .collect(Collectors.toList());
     }
 
+    /*
     public void setOrderDelivered(String usersID, UUID orderID) {
         User user = userList.stream()
                 .filter(user1 -> user1.getEmail().equals(usersID))
@@ -154,9 +155,8 @@ public class UserManager {
                 .findFirst().orElse(null);
         if(order == null)return;
         order.getOrderState().closed();
-
-
     }
+     */
 
     public void deleteUser(String userEmail) {
         List<User> users = userList.stream()
