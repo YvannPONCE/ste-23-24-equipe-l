@@ -50,8 +50,8 @@ public class DeliveryManNotificationdefs {
         order.add_menu(new Menu("chicken nuggets", 5.50));
 
 
-        orderId = orderManager.place_order(string, order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_order(orderId, string, "7936 3468 9302 8371");
+        orderId = orderManager.placeOrder(string, order, Locations.HALL_PRINCIPAL);
+        orderManager.payOrder(orderId, string, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,restaurant.getName());
 
     }

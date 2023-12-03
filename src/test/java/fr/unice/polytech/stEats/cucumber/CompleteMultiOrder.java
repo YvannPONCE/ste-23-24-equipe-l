@@ -55,7 +55,7 @@ public class CompleteMultiOrder {
         Menu menu = new Menu(menuName, menuPrice);
         order.add_menu(menu);
 
-        orderId = orderManager.place_order(userEmail, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL);
     }
 
     @Given("the user {string} order a {string} at {string} for {double} euros on his friend order")
@@ -65,17 +65,17 @@ public class CompleteMultiOrder {
         Menu menu = new Menu(menuName, menuPrice);
         order.add_menu(menu);
 
-        orderManager.place_order(userEmail, order, Locations.HALL_PRINCIPAL, this.orderId);
+        orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL, this.orderId);
     }
 
     @Given("the user {string} pay his order")
     public void the_user_pay_his_order(String userEmail) {
-        orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
-        Assert.assertNotEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId));
+        orderManager.payOrder(this.orderId, userEmail, "7936 3468 9302 8371");
+        Assert.assertNotEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @Given("the user {string} pay his order in second")
     public void the_user_pay_his_order_in_second(String userEmail) {
-        orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
+        orderManager.payOrder(this.orderId, userEmail, "7936 3468 9302 8371");
         Assert.assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string}")

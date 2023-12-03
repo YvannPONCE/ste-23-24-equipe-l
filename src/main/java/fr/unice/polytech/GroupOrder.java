@@ -6,6 +6,7 @@ import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.state.OrderState;
 import lombok.Getter;
 import lombok.Setter;
+import org.mockito.internal.matchers.Or;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,9 +26,20 @@ public class GroupOrder {
 
     }
 
+    public GroupOrder(GroupOrder groupOrder) {
+        this.uuid = groupOrder.getUuid();
+        this.delivery_location = groupOrder.getDeliveryLocation();
+        this.globalOrders = new HashMap<>(groupOrder.globalOrders);
+        this.orderState = groupOrder.getOrderState();
+    }
 
-    public HashMap<String, List<Order>> getGlobalOrders() {
-        return globalOrders;
+
+    public Map<String, List<Order>> getGlobalOrders() {
+        Map<String, List<Order>> orders = new HashMap<>();
+        for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet()){
+            orders.put(entry.getKey(), Collections.unmodifiableList(globalOrders.get(entry.getKey())));
+        }
+        return  Collections.unmodifiableMap(orders);
     }
 
     public Locations getDeliveryLocation() {
@@ -202,6 +214,13 @@ public class GroupOrder {
                 .flatMap(List::stream) // Stream each list and concatenate
                 .collect(Collectors.toList());
         for (Order order : concatenatedOrders)order.getOrderState().setStatus(Status.CLOSED);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupOrder{" +
+                "globalOrders=" + globalOrders +
+                '}';
     }
 }
 

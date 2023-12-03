@@ -51,13 +51,13 @@ public class AddOrdertoGroupOrder {
         order.add_menu(new Menu(menu_name, menu_price));
 
 
-        order_id = orderManager.place_order(user1.getEmail(), order, Locations.HALL_PRINCIPAL);
+        order_id = orderManager.placeOrder(user1.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
     @When("The second user add a {string} menu at {double} euros from {string}")
     public void the_second_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name) {
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        orderManager.place_order(user2.getEmail(), order, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.placeOrder(user2.getEmail(), order, Locations.HALL_PRINCIPAL, order_id);
     }
     @Then("Two {string} menu from {string} are stored in the current order and cost {double} euros each.")
     public void two_menu_from_are_stored_in_the_current_order_and_cost_euros_each(String menu_name, String restaurant_name, double menu_price) {
@@ -110,14 +110,14 @@ public class AddOrdertoGroupOrder {
     public void the_second_join_a_menu_at_euros_from(String menu_name, Double menu_price, String restaurant_name) {
         Order order = new Order(restaurant_name);
         order.add_menu(new Menu(menu_name, menu_price));
-        orderManager.place_order(user2.getEmail(), order, Locations.HALL_PRINCIPAL, order_id);
+        orderManager.placeOrder(user2.getEmail(), order, Locations.HALL_PRINCIPAL, order_id);
     }
 
     @When("The second join a {string} menu at {double} euros from {string} to deliver at another location {string}")
     public void the_second_join_a_menu_at_euros_from_to_deliver_at_another_location(String menuName, Double menuPrice, String restaurantName, String Location) {
         Order order = new Order(restaurantName);
         order.add_menu(new Menu(menuName, menuPrice));
-        returnStatus = orderManager.place_order(user2.getEmail(), order, Locations.BATIMENT_C, order_id);
+        returnStatus = orderManager.placeOrder(user2.getEmail(), order, Locations.BATIMENT_C, order_id);
     }
 
     @Then("Both users can see {string} and {string} menus in the cart at {double} and {double} delivered to {string}.")

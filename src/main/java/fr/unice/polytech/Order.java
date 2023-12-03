@@ -64,5 +64,13 @@ public class Order {
         return sum;
     }
 
-
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", restaurant_name='" + restaurant_name + '\'' +
+                ", menus=" + menus +
+                ", orderState=" + orderState +
+                '}';
+    }
 }

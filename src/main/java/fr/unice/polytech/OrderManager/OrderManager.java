@@ -4,7 +4,6 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
-import fr.unice.polytech.NotificationCenter.Notification;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 
@@ -13,21 +12,20 @@ import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
 import lombok.Getter;
-import org.mockito.internal.matchers.Not;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class OrderManager  implements CapacityObserver, OrderManagerConnectedUser, OrderManagerDeliveryManager {
+public class OrderManager  implements CapacityObserver, OrderManagerConnectedUser, OrderManagerDeliveryManager, OrderManagerStaff {
 
     private final StatisticManagerOrderManager statisticsManager;
     PaymentSystem paymentSystem = new PaymentSystem();
     RestaurantManager restaurantManager;
     DeliveryManager deliveryManager;
     NotificationCenter notificationCenter;
-    List<GroupOrder> group_orders;
+    List<GroupOrder> groupOrders;
     public UserManager userManager;
     OrderAmountCalculator orderAmountCalculator;
     private RestaurantCapacityCalculator capacityCalculator;
@@ -39,7 +37,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     String email;
 
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager, StatisticManagerOrderManager statisticsManager, DeliveryManager deliveryManager, NotificationCenter notificationCenter) {
-        this.group_orders = new ArrayList<>();
+        this.groupOrders = new ArrayList<>();
         this.statisticsManager = statisticsManager;
         this.restaurantManager = restaurantManager;
         this.userManager = userManager;
@@ -49,10 +47,10 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager, StatisticManagerOrderManager statisticsManager, NotificationCenter notificationCenter){
         this(restaurantManager, userManager, statisticsManager, null, notificationCenter);
     }
-    public boolean place_order(String email, Order order, Locations delivery_location, UUID order_id) {
+    public boolean placeOrder(String email, Order order, Locations delivery_location, UUID order_id) {
         order.setId(order_id);
         order.getOrderState().setStatus(Status.CREATED);
-        List<GroupOrder> filtered_group_orders = group_orders.stream().filter(current_group_order -> current_group_order.getUuid().equals(order_id))
+        List<GroupOrder> filtered_group_orders = groupOrders.stream().filter(current_group_order -> current_group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (!filtered_group_orders.isEmpty()) {
             GroupOrder group_order = filtered_group_orders.get(0);
@@ -64,19 +62,18 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         } else {
             GroupOrder group_order = new GroupOrder(order_id, delivery_location);
             group_order.add_order(email, order);
-            this.group_orders.add(group_order);
+            this.groupOrders.add(group_order);
             return true;
         }
     }
-    public UUID place_order_slot(String email, Order order, Locations delivery_location, LocalDateTime chosenSlot) {
+    public UUID placeOrderSlot(String email, Order order, Locations delivery_location, LocalDateTime chosenSlot) {
         UUID uuid = UUID.randomUUID();
         Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurant_name());
         capacityCalculator = new RestaurantCapacityCalculator(restaurant);
-        OrderObserver orderObserver = new OrderObserver(capacityCalculator);
 
         if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot)) {
-            capacityCalculator.placeOrder_slot(order.getMenus().size(), chosenSlot);
-            place_order(email, order, delivery_location);
+            capacityCalculator.placeOrderSlot(order.getMenus().size(), chosenSlot);
+            placeOrder(email, order, delivery_location, uuid);
             notificationCenter.order_confirmed(uuid, delivery_location, order.getCreation_time(), email);
 
             this.capacityCalculator.addObserver(this);
@@ -88,7 +85,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
     }
 
-    public UUID place_order(String email, Order order, Locations delivery_location) {
+    public UUID placeOrder(String email, Order order, Locations deliveryLocation) {
 
         UUID uuid = UUID.randomUUID();
         Restaurant restaurant=restaurantManager.getRestaurant(order.getRestaurant_name());
@@ -99,8 +96,8 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         if (capacityCalculator.canPlaceOrder(order.getMenus().size())) {
             capacityCalculator.placeOrder(order.getMenus().size());
 
-            place_order(email, order, delivery_location, uuid);
-            notificationCenter.order_confirmed(uuid,delivery_location,order.getCreation_time(),email);
+            placeOrder(email, order, deliveryLocation, uuid);
+            notificationCenter.order_confirmed(uuid,deliveryLocation,order.getCreation_time(),email);
 
             this.capacityCalculator.addObserver(orderObserver);
             return uuid;
@@ -111,30 +108,42 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     }
 
     public List<Order> getCurrentOrders(UUID order_id, String user_email) {
-        List<GroupOrder> group_orders = this.group_orders.stream()
+        List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (!group_orders.isEmpty()) {
             GroupOrder group_order = group_orders.get(0);
-            return group_order.get_orders(user_email);
+            return Collections.unmodifiableList(group_order.get_orders(user_email));
         }
         return new ArrayList<>();
     }
 
-    public List<Order> get_current_user_orders(String user_email){
-        List<GroupOrder> group_orders = new ArrayList<>(this.group_orders);
+    public List<Order> getCurrentUserOrders(String user_email){
+        List<GroupOrder> group_orders = new ArrayList<>(this.groupOrders);
         if (!group_orders.isEmpty()) {
             List<Order> response = new ArrayList<>();
             for (GroupOrder groupOrder : group_orders) {
                 response.addAll(groupOrder.get_orders(user_email));
             }
-            return response;
+            return Collections.unmodifiableList(response);
         }
         return new ArrayList<>();
     }
 
+    public List<Order> getCurrentOrders(String restaurantName) {
+        List<Order> orders = new ArrayList<>();
+        for(GroupOrder groupOrder : groupOrders){
+            List<Order> orderList = groupOrder.getOrdersByRestaurants().getOrDefault(restaurantName, new ArrayList<>()).stream()
+                    .filter(order -> order.getOrderState().getStatus().equals(Status.PAID) || order.getOrderState().getStatus().equals(Status.PROCESSING))
+                    .collect(Collectors.toList());
+            orders.addAll(orderList);
+
+        }
+        return Collections.unmodifiableList(orders);
+    }
+
     public GroupOrder getCurrentOrders(UUID order_id) {
-        List<GroupOrder> group_orders = this.group_orders.stream()
+        List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (!group_orders.isEmpty()) {
@@ -144,7 +153,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     }
 
 
-    public void pay_order(UUID orderId, String email, String card_number) {
+    public void payOrder(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = getCurrentOrders(orderId);
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
         orderAmountCalculator.applyMenuDiscount(15);
@@ -155,17 +164,16 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
         if (groupOrder.isPaid())
         {
-            sendOrders(groupOrder);
-            statisticsManager.addOrder(groupOrder);
+           statisticsManager.addOrder(groupOrder);
         }
     }
 
     public void pay_user_orders(String email, String card_number){
-        List<Order> orders = get_current_user_orders(email);
+        List<Order> orders = getCurrentUserOrders(email);
         for (Order order : orders) {
             if(order.getOrderState().getStatus()==Status.CREATED)
             {
-                this.pay_order(order.getId(), email, card_number);
+                this.payOrder(order.getId(), email, card_number);
             }
         }
     }
@@ -180,7 +188,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     public void setOrderReady(UUID orderID, String restaurant_name) {
         GroupOrder groupOrder;
-        List<GroupOrder> groupOrders = this.group_orders.stream()
+        List<GroupOrder> groupOrders = this.groupOrders.stream()
                 .filter(groupOrder1 -> groupOrder1.getUuid() == orderID)
                 .collect(Collectors.toList());
         if(!groupOrders.isEmpty()) {
@@ -195,7 +203,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     public void validateOrderReceipt(UUID order_id) {
         GroupOrder groupOrder;
-        List<GroupOrder> groupOrders = this.group_orders.stream()
+        List<GroupOrder> groupOrders = this.groupOrders.stream()
                 .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
                 .collect(Collectors.toList());
 
@@ -211,7 +219,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     public void setOrderAsClosed(UUID order_id) {
         GroupOrder groupOrder;
-        List<GroupOrder> groupOrders = this.group_orders.stream()
+        List<GroupOrder> groupOrders = this.groupOrders.stream()
                 .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
                 .collect(Collectors.toList());
         if(!groupOrders.isEmpty())
@@ -230,7 +238,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             for(Menu menu:selectedOrder.getMenus()){
                 newOrder.add_menu(menu);
             }
-            place_order(userMail, newOrder, deliveryLocation, newOrderId);
+            placeOrder(userMail, newOrder, deliveryLocation, newOrderId);
 
             return newOrder;
         } else {

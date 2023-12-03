@@ -43,8 +43,8 @@ public class DeliveryValidation {
         deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
         userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
-        orderID = orderManager.place_order(email,order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_order(orderID, email, "7936 3468 9302 8371");
+        orderID = orderManager.placeOrder(email,order, Locations.HALL_PRINCIPAL);
+        orderManager.payOrder(orderID, email, "7936 3468 9302 8371");
         orderManager.processingOrder(orderID, restaurant.getName());
     }
 
@@ -69,7 +69,7 @@ public class DeliveryValidation {
 
     @Then("The delivery man {string} become available for an new delivery")
     public void the_delivery_man_become_available_for_an_new_delivery(String email) {
-        assertEquals(deliveryManager.getDeliveryMenAvailability().get(email),true);
+        assertEquals(true, deliveryManager.getDeliveryMenAvailability().get(email));
     }
 
 

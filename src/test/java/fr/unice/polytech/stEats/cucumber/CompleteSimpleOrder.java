@@ -57,11 +57,11 @@ public class CompleteSimpleOrder {
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
 
-        orderId = orderManager.place_order(user.getEmail(), order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
     @Given("{string} pay his order")
     public void pay_his_order(String userEmail) {
-        orderManager.pay_order(this.orderId, userEmail, "7936 3468 9302 8371");
+        orderManager.payOrder(this.orderId, userEmail, "7936 3468 9302 8371");
     }
     @Given("The order is marked ready by the restaurant {string}")
     public void the_order_is_marked_ready_by_the_restaurant(String restaurant_name) {

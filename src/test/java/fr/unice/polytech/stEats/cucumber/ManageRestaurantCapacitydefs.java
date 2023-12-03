@@ -64,7 +64,7 @@ public class ManageRestaurantCapacitydefs {
         order.add_menu(menu);
         order.add_menu(menu);
 
-        orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
 
 
     }
@@ -97,7 +97,7 @@ public class ManageRestaurantCapacitydefs {
         order.add_menu(menu);
 
 
-        orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
 
     }
     @Then("user have a created order status")
@@ -132,10 +132,10 @@ public class ManageRestaurantCapacitydefs {
 
             order2.add_menu(menu);
         order.add_menu(menu);
-        orderId2=orderManager.place_order(user3.getEmail(),order2,Locations.HALL_PRINCIPAL);
+        orderId2=orderManager.placeOrder(user3.getEmail(),order2,Locations.HALL_PRINCIPAL);
 
 
-        orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
     }
     @Then("user have a created order status and restaurant capacity become {int}")
     public void user_have_a_created_order_status_and_restaurant_capacity_become(Integer int1) {
@@ -170,8 +170,8 @@ public class ManageRestaurantCapacitydefs {
         order.add_menu(menu);
         order.add_menu(menu);
 
-        orderId = orderManager.place_order(user_email, order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_order(orderId, user_email, "7936 3468 9302 8371");
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
+        orderManager.payOrder(orderId, user_email, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId, restaurant.getName());
         orderManager.setOrderReady(orderId, restaurant.getName());
         deliveryManager.validateOrder("Delivery");
