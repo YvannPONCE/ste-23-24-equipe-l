@@ -15,6 +15,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -83,7 +85,8 @@ public class CompleteSimpleOrder {
 
     @Then("The order is marked as closed")
     public void the_order_is_marked_as_delivered() {
-        assertEquals(Status.CLOSED,userManager.getOrderHistory(user.getEmail()).get(0).getOrderState().getStatus());
+        HashMap<String, List<Order>> orderHistory = userManager.get_order_history(user.getEmail());
+        assertEquals(Status.CLOSED,orderHistory.get(orderHistory.keySet().iterator().next()).get(0).getOrderState().getStatus());
     }
 
 }

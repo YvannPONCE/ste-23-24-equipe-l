@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 @Getter
 @Setter
-
 public class UserManager {
 
     private OrderManagerConnectedUser orderManager;
@@ -24,7 +23,12 @@ public class UserManager {
     public void addOrderManager(OrderManagerConnectedUser orderManager){
         this.orderManager = orderManager;
     }
-    public List<Order> getOrderHistory(String mail) {
+
+    /**
+     * Display the order history of a user
+     * @param mail the e-mail address of the user
+     */
+    public HashMap<String,List<Order>> get_order_history(String mail) {
         return get_user(mail).getOrderHistory();
     }
     public void add_user(User user)
@@ -44,26 +48,34 @@ public class UserManager {
     }
 
     public void displayOrderHistory(String mail) {
-        List<Order> orderHistory = getOrderHistory(mail);
+        HashMap<String,List<Order>> orderHistory = get_order_history(mail);
+        List<Order> orderHistoryList = new ArrayList<>();
+        for(String restaurant_name: orderHistory.keySet()) {
+            for (Order order : orderHistory.get(restaurant_name)) {
+                orderHistoryList.add(order);
+            }
+        }
 
         // Tri de la liste des commandes par date chronologique (du plus récent au plus ancien)
-        Collections.sort(orderHistory, new Comparator<Order>() {
+        Collections.sort(orderHistoryList, new Comparator<Order>() {
             @Override
             public int compare(Order order1, Order order2) {
                 return order2.getCreation_time().compareTo(order1.getCreation_time()); // Inversion de l'ordre
             }
         });
-        for(Order order:orderHistory){
-        order.displayOrderSummary();
+        for(Order order: orderHistoryList) {
+            order.displayOrderSummary();
         }
     }
 
    public Order  find_selectedOrder(UUID orderId,String mail){
-        List<Order> orderHistory= getOrderHistory(mail);
+        HashMap<String, List<Order>> orderHistory=get_order_history(mail);
 
-        for(Order order:orderHistory){
-            if(order.id.equals(orderId)){
-                return order;
+        for(String restaurant_name: orderHistory.keySet()){
+            for(Order order: orderHistory.get(restaurant_name)) {
+                if (order.id.equals(orderId)) {
+                    return order;
+                }
             }
         }
         return null;
@@ -131,6 +143,7 @@ public class UserManager {
                 .collect(Collectors.toList());
     }
 
+    /*
     public void setOrderDelivered(String usersID, UUID orderID) {
         User user = userList.stream()
                 .filter(user1 -> user1.getEmail().equals(usersID))
@@ -141,9 +154,8 @@ public class UserManager {
                 .findFirst().orElse(null);
         if(order == null)return;
         order.getOrderState().closed();
-
-
     }
+     */
 
     public void deleteUser(String userEmail) {
         List<User> users = userList.stream()

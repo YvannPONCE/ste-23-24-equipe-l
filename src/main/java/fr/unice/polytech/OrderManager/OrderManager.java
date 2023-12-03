@@ -57,12 +57,12 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             if (group_order.getDeliveryLocation() != delivery_location) return false;
             group_order.add_order(email, order);
 
-
             return true;
         } else {
             GroupOrder group_order = new GroupOrder(order_id, delivery_location);
             group_order.add_order(email, order);
             this.groupOrders.add(group_order);
+
             return true;
         }
     }
@@ -91,18 +91,21 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         Restaurant restaurant=restaurantManager.getRestaurant(order.getRestaurant_name());
         capacityCalculator=new RestaurantCapacityCalculator(restaurant);
         OrderObserver orderObserver = new OrderObserver(capacityCalculator);
-
+        User client = this.userManager.get_user(email);
 
         if (capacityCalculator.canPlaceOrder(order.getMenus().size())) {
             capacityCalculator.placeOrder(order.getMenus().size());
-
-            placeOrder(email, order, deliveryLocation, uuid);
+            if(client.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
+                order.setTotalPrice(order.getTotalPrice()*(1-restaurant.getDiscountPercentage()));
+            }
+            this.placeOrder(email, order, deliveryLocation, uuid);
             notificationCenter.order_confirmed(uuid,deliveryLocation,order.getCreation_time(),email);
-
             this.capacityCalculator.addObserver(orderObserver);
+
             return uuid;
         } else {
             nextSlot=capacityCalculator.getNextSlot();
+
             return null;
         }
     }

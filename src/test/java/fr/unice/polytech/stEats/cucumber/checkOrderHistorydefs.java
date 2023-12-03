@@ -26,8 +26,6 @@ public class checkOrderHistorydefs {
     UUID orderId;
     User user;
     private Order order;
-    String email;
-    private StringWriter expectedOutput;
     private String capturedOutput;
     private Order orderSelected;
     private Restaurant restaurant;
@@ -35,6 +33,7 @@ public class checkOrderHistorydefs {
     private UUID orderSelected_id;
     private DeliveryManager deliveryManger;
     private NotificationCenter notificationCenter;
+    private Order oldOrder;
 
 
     @Given("a user {string} with the following order history:")
@@ -107,16 +106,17 @@ public class checkOrderHistorydefs {
 
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
-
-        orderSelected = orderManager.reorderFromHistory(user.getOrderHistory().get(0).getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
+        String restaurantName = user.getOrderHistory().keySet().iterator().next();
+        this.oldOrder = user.getOrderHistory().get(restaurantName).get(0);
+        orderSelected = orderManager.reorderFromHistory(this.oldOrder.getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
     }
-        @Then("the new order is selected as new order to place")
+    @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {
 
         Assert.assertEquals(orderSelected.getOrderState().getStatus(),Status.CREATED);
-        Assert.assertEquals(user.getOrderHistory().get(0).getOrderState().getStatus(),Status.CLOSED);
-        Assert.assertEquals(orderSelected.getMenus(),user.getOrderHistory().get(0).getMenus());
-        Assert.assertFalse(orderSelected.getCreation_time().equals(user.getOrderHistory().get(0)));
+        Assert.assertEquals(this.oldOrder.getOrderState().getStatus(),Status.CLOSED);
+        Assert.assertEquals(orderSelected.getMenus(),this.oldOrder.getMenus());
+        Assert.assertFalse(orderSelected.getCreation_time().equals(this.oldOrder));
 
 
     }
