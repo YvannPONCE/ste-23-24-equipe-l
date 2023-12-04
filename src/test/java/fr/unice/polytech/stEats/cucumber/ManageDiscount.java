@@ -68,7 +68,7 @@ public class ManageDiscount {
 
         orderAmountCalculator =new OrderAmountCalculator(orderManager.getCurrentOrders(order_id),orderManager.userManager);
         orderAmountCalculator.setItemCountThreshold(16);
-        orderManager.payOrder(orderId,user1.getEmail(),CreditCard);
+        orderManager.payOrders(user1.getEmail(),CreditCard);
 
         }
 
@@ -120,8 +120,8 @@ public class ManageDiscount {
             order3.add_menu(menu);
         }
      orderManager.placeOrder(user3.getEmail(),order3, orderId2);
-        orderManager.payOrder(orderId2,user2.getEmail(),CreditCard);
-        orderManager.payOrder(orderId2,user3.getEmail(),CreditCard);
+        orderManager.payOrders(user2.getEmail(),CreditCard);
+        orderManager.payOrders(user3.getEmail(),CreditCard);
     }
     @Then("Both users can get discount after paying they have additional credit depending on their order amount")
     public void both_users_can_get_discount_after_paying_they_have_additional_credit_depending_on_their_order_amount() {
@@ -155,7 +155,7 @@ public class ManageDiscount {
            order4.add_menu(menu);
        }
        orderId3=orderManager.placeOrder(user4.getEmail(),order4,Locations.HALL_PRINCIPAL);
-       orderManager.payOrder(orderId3,user4.getEmail(),CreditCard);
+       orderManager.payOrders(user4.getEmail(),CreditCard);
     }
     @Then("he   should not receive a  a discount of {int}% and his credit should stay {double}")
     public void he_should_not_receive_a_a_discount_of_and_his_credit_should_stay(Integer int1, Double double1) {

@@ -63,9 +63,6 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     public int getDiscountThreshold() {
         return discountThreshold;
     }
-    public void setcapacity(int newC) {
-        this.capacity=newC;
-    }
     public int getCapacity() {
         return capacity;
     }

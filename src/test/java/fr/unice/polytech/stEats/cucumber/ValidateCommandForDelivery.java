@@ -56,7 +56,7 @@ public class ValidateCommandForDelivery {
 
         userManager.addUser(new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId, user_email, "7936 3468 9302 8371");
+        orderManager.payOrders( user_email, "7936 3468 9302 8371");
     }
     @When("the restaurant has finish preprared the order")
     public void the_restaurant_has_finish_preprared_the_order() {

@@ -22,13 +22,22 @@ public class NotificationCenter implements NotificationDeliveryManagerInterface,
     
     private boolean orderReadyNotificationSent = false;
     @Override
-    public boolean order_confirmed(UUID order_id, Locations locations, Date delivery_date, String customer_email) {
+    public boolean order_confirmed(UUID orderId, Locations locations, Date deliveryDate, String customerEmail) {
         String message= String.format("Dear %s,\n\nThank you for placing an order with order ID %s. Your order for delivery to %s on %s has been confirmed.\n\nBest regards,\nThe Order Confirmation Team",
-                customer_email, order_id.toString(), locations.toString(), delivery_date.toString());
-        User user=findUser(customer_email);
+                customerEmail, orderId.toString(), locations.toString(), deliveryDate.toString());
+        User user=findUser(customerEmail);
         if(user==null)return false;
         user.getNotifications().add(new Notification(message));
-        sendNotification(customer_email, message);
+        sendNotification(customerEmail, message);
+        return true;
+    }
+    public boolean orderSold(UUID orderId, Locations locations, Date deliveryDate, String staffEmail) {
+        String message= "New order "+orderId+" sold to "+ locations +" for " + deliveryDate.toString();
+
+        User user=findUser(staffEmail);
+        if(user==null)return false;
+        user.getNotifications().add(new Notification(message));
+        sendNotification(staffEmail, message);
         return true;
     }
 

@@ -88,7 +88,7 @@ public class UserNotificationdefs {
 
         order.add_menu(new Menu("chickennuggets", 5.50));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId,(String) email,"7936 3468 9302 8371");
+        orderManager.payOrders((String) email,"7936 3468 9302 8371");
 
 
     }
@@ -134,7 +134,7 @@ public class UserNotificationdefs {
 
         order.add_menu(new Menu("chickennuggets", 5.50));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId, userEmail, "7936 3468 9302 8371");
+        orderManager.payOrders(userEmail, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,"chickenTacky");
         orderManager.setOrderReady(orderId,"chickenTacky");
 

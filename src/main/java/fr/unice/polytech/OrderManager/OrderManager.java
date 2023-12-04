@@ -115,7 +115,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
                 .collect(Collectors.toList());
         if (!group_orders.isEmpty()) {
             GroupOrder group_order = group_orders.get(0);
-            return Collections.unmodifiableList(group_order.get_orders(userEmail));
+            return Collections.unmodifiableList(group_order.getOrders(userEmail));
         }
         return new ArrayList<>();
     }
@@ -151,27 +151,23 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         return null;
     }
 
-
-    public void payOrder(UUID orderId, String email, String card_number) {
-        GroupOrder groupOrder = getCurrentOrders(orderId);
-        this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
-        orderAmountCalculator.applyMenuDiscount(15, email);
-        if(paymentSystem.pay(card_number))
-        {
-            groupOrder.setPaid(email);
-        }
-        if (groupOrder.isPaid())
-        {
-           statisticsManager.addOrder(groupOrder);
-        }
-    }
-
     public void payOrders(String email, String card_number){
-        List<Order> orders = getCurrentUserOrders(email);
-        for (Order order : orders) {
-            if(order.getOrderState().getStatus()==Status.CREATED)
-            {
-                this.payOrder(order.getId(), email, card_number);
+        if(paymentSystem.pay(card_number)) {
+            List<GroupOrder> groupOrders1 = groupOrders.stream()
+                    .filter(groupOrder -> (groupOrder.getOrders(email).isEmpty() == false) && (groupOrder.getOrderState().getStatus().equals(Status.PAID) == false))
+                    .collect(Collectors.toList());
+
+            for (GroupOrder groupOrder : groupOrders1){
+                this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
+                orderAmountCalculator.applyMenuDiscount(15, email);
+                if(paymentSystem.pay(card_number))
+                {
+                    groupOrder.setPaid(email);
+                }
+                if (groupOrder.isPaid())
+                {
+                    statisticsManager.addOrder(groupOrder);
+                }
             }
         }
     }

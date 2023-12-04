@@ -44,7 +44,7 @@ public class ConfirmOrder {
     }
     @When("the user {string} pays their order and payment fails")
     public void the_user_pays_their_order_and_payment_fails(String user_email) {
-        orderManager.payOrder(this.order_id, user_email, "7936 3468 9302 8871");
+        orderManager.payOrders(user_email, "7936 3468 9302 8871");
     }
     @Then("the order {string} at {double} from {string} will not be transmitted to the restaurant")
     public void the_order_will_not_be_transmitted_to_the_restaurant(String menuName, Double menuPrice, String restaurantName) {
@@ -80,7 +80,7 @@ public class ConfirmOrder {
     }
     @When("user {string} pay his command")
     public void user_pay_his_command(String user_email) {
-        orderManager.payOrder(this.order_id, user_email, "7936 3468 9302 8371");
+        orderManager.payOrders(user_email, "7936 3468 9302 8371");
     }
 
     @Then("The order {string} at {double} from {string} has been transmit to the restaurant")
