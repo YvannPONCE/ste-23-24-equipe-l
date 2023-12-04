@@ -3,6 +3,7 @@ package fr.unice.polytech.DeliveryManager;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.GroupOrder;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
+import fr.unice.polytech.Order;
 import fr.unice.polytech.UserManager;
 
 import java.time.LocalDateTime;
@@ -83,10 +84,11 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
 
     public void validateOrder(UUID orderID){
         try {
-            String deliveryManEmail = deliveryMenOrders.entrySet().stream()
+            Map.Entry<String, GroupOrder> deliveryManEmail = deliveryMenOrders.entrySet().stream()
                     .filter(entry -> entry.getValue().getUuid().equals(orderID))
-                    .findFirst().orElse(null).getKey();
-            validateOrder(deliveryManEmail, true);
+                    .findFirst().orElse(null);
+            if(deliveryManEmail ==null)return;
+            validateOrder(deliveryManEmail.getKey(), true);
         }
         catch (NullPointerException e)
         {
