@@ -39,7 +39,7 @@ public class ManageDelivery {
         restaurantManager = new RestaurantManager();
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-        deliveryManagerCampusManager = new DeliveryManager(orderManager ,userManager, notificationCenter);
+        deliveryManagerCampusManager = new DeliveryManager(userManager, notificationCenter);
     }
 
     @When("I want to add a delivery person")

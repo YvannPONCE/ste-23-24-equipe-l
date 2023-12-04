@@ -1,13 +1,12 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
-import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.state.OrderState;
 import lombok.Getter;
 import lombok.Setter;
-import org.mockito.internal.matchers.Or;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 @Getter
@@ -16,13 +15,15 @@ public class GroupOrder {
     private OrderState orderState;
     UUID uuid;
     Locations delivery_location;
+    LocalDateTime deliveryTime;
     public HashMap<String, List<Order>> globalOrders;
 
-    public GroupOrder(UUID uuid, Locations delivery_location) {
+    public GroupOrder(UUID uuid, Locations delivery_location, LocalDateTime deliveryTime) {
         this.uuid = uuid;
         this.delivery_location = delivery_location;
         this.globalOrders = new HashMap<>();
         this.orderState = new OrderState();
+        this.deliveryTime = deliveryTime;
 
     }
 
@@ -46,7 +47,7 @@ public class GroupOrder {
         return delivery_location;
     }
 
-    public boolean add_order(String user_email, Order order) {
+    public boolean addOrder(String user_email, Order order) {
         if (order.getMenus().size() < 1) {
             return false;
         }

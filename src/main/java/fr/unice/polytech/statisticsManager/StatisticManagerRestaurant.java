@@ -10,4 +10,6 @@ public interface StatisticManagerRestaurant {
     public HashMap<Locations, Integer> get_popular_locations();
     public HashMap<Menu, Integer> get_popular_menus(String restaurantName);
     public int getOrdersCount();
+
+    public int getVolumeByRestaurant(String restaurantName1);
 }

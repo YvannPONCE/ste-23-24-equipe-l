@@ -48,7 +48,7 @@ public class checkOrderHistorydefs {
         userManager.add_user(user);
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-        deliveryManger = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManger = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManger);
 
         for (Map<String, String> row : orderData) {

@@ -52,7 +52,7 @@ public class ManageRestaurantCapacitydefs {
         restaurant.setCapacity(1);
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
     }
 
@@ -160,7 +160,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager.add_restaurant(restaurant);
 
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
     }
     @When("user order a {string} and validate order receipt")

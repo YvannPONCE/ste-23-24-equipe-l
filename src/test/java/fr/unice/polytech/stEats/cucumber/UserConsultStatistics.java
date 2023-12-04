@@ -44,7 +44,7 @@ public class UserConsultStatistics {
         StatisticManagerOrderManager statisticManagerOrderManager = statisticsManager;
         orderManager = new OrderManager(restaurantManager, userManager, statisticManagerOrderManager, null, notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager, orderManager.userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         userManager.addUser(new User("deliveryManEmail","deliveryManName", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
     }
@@ -53,7 +53,7 @@ public class UserConsultStatistics {
         Menu menu = new Menu(menuName, menuPrice);
         Order order = new Order(menuRestaurant, new ArrayList<Menu>(Arrays.asList(menu)));
         orderManager.placeOrder(userEmail ,order, Locations.HALL_PRINCIPAL);
-        orderManager.pay_user_orders(userEmail, "7936 3468 9302 8371");
+        orderManager.payOrders(userEmail, "7936 3468 9302 8371");
     }
     @When("when {string} consult her favorites restaurants")
     public void when_consult_her_favorites_restaurants(String string) {
@@ -75,7 +75,7 @@ public class UserConsultStatistics {
             menu = new Menu("Bucket", 7.5);
             order = new Order(restaurantName, new ArrayList<Menu>(Arrays.asList(menu)));
             orderManager.placeOrder("melanie@egmail.com", order, Locations.HALL_PRINCIPAL);
-            orderManager.pay_user_orders("melanie@egmail.com", "7936 3468 9302 8371");
+            orderManager.payOrders("melanie@egmail.com", "7936 3468 9302 8371");
         }
     }
     @When("As a student I want to consult the most popular delivery locations")

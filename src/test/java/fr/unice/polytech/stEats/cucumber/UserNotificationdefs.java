@@ -42,7 +42,7 @@ public class UserNotificationdefs {
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager,userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         userManager.add_user(user);
         userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
@@ -80,7 +80,7 @@ public class UserNotificationdefs {
         order = new Order(string2);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
 
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);orderManager.userManager.add_user(user);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);orderManager.userManager.add_user(user);
         userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
@@ -126,7 +126,7 @@ public class UserNotificationdefs {
         email=userEmail;
         order = new Order(restaurantName);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager,userManager, notificationCenter);orderManager.userManager.add_user(user);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);orderManager.userManager.add_user(user);
         userManager.addUser( new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderManager.addDeliveryManager(deliveryManager);
         this.notificationCenter=new NotificationCenter(orderManager.userManager);

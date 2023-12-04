@@ -44,7 +44,7 @@ public class CompleteSimpleOrder {
         notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         deliveryMan = new User("delivery@gmail.com", "pass", Role.DELIVER_MAN);
         userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
