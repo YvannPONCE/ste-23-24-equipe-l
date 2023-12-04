@@ -71,36 +71,6 @@ public class checkOrderHistorydefs {
         }
     }
 
-    @When("the user wants to view their order history")
-    public void the_user_wants_to_view_their_order_history() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        System.setOut(new PrintStream(outputStream));
-        System.setOut(originalOut);
-        capturedOutput = outputStream.toString();
-
-
-    }
-     @Then("the order history is displayed")
-        public void the_order_history_is_displayed() {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PrintStream originalOut = System.out;
-            System.setOut(new PrintStream(outputStream));
-
-
-            userManager.displayOrderHistory("user@example.com");
-            String capturedOutput = outputStream.toString();
-            StringBuilder expectedOutputBuilder = new StringBuilder();
-            expectedOutputBuilder.append("Restaurant Name: chicken tacky\nMenu Name: chicken nuggets\n");
-            expectedOutputBuilder.append("Restaurant Name: luigi\nMenu Name: pasta\n");
-            String expectedOutput = expectedOutputBuilder.toString();
-            capturedOutput = capturedOutput.replaceAll("\\s", "");
-            expectedOutput = expectedOutput.replaceAll("\\s", "");
-
-            Assert.assertEquals(expectedOutput, expectedOutput);
-        }
-
-
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
         String restaurantName = user.getOrderHistory().keySet().iterator().next();

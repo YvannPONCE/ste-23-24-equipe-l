@@ -42,7 +42,7 @@ public class EmailNotificationDecorator implements NotificationDecoratorInterfac
                 multipart.addBodyPart(textPart);
                 multipart.addBodyPart(attachmentPart);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
 
             message.setContent(multipart);
@@ -51,7 +51,7 @@ public class EmailNotificationDecorator implements NotificationDecoratorInterfac
 
 
         } catch (MessagingException mex) {
-            mex.printStackTrace();
+            System.out.println(mex);
         }
     }
 
