@@ -19,7 +19,9 @@ public class RestaurantCapacityCalculator extends Observable {
         this.currentTime = LocalDateTime.now();
     }
 
-
+    public LocalDateTime getCurrentSlot() {
+        return this.nextSlot;
+    }
     public boolean canPlaceOrder(int numberOfMenus) {
         return restaurant.getHourlyCapacity(getCurrentTime().getHour()) - numberOfMenus > 0;
     }

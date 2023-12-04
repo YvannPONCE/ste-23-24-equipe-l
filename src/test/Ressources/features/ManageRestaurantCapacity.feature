@@ -11,6 +11,7 @@ Feature: Manage Restaurant Capacity
       Given user "user1@example.com" and Restaurant "luigi" has a capacity of 10 menus per hour with available slot
       When user order a "pasta" in the restaurant
       Then user have a created order status
+
   Scenario: Attempt to order in a available slot with two users
     Given user1 and user2 place orders in restaurant luigi
     When user order a "pasta" in the restaurant ans

@@ -21,27 +21,25 @@ public class OrderAmountCalculator {
 
 
 
-    public void applyMenuDiscount( double discountPercentage) {
+    public void applyMenuDiscount(double discountPercentage, String email) {
 
         if(this.order.qualifiesForMenuDiscount(itemCountThreshold)){
 
-        for (String email : this.order.globalOrders.keySet()) {
           for(Order order:  this.order.get_orders(email))  {
 
-              double discountAmount = (discountPercentage / 100) * order.calculateTotalPrice();
+//              double discountAmount = (discountPercentage / 100) * order.calculateTotalPrice();
+              double discountAmount = (discountPercentage / 100) * order.getTotalPrice();
+              System.out.println("discountAmount "+discountAmount);
 
               userManager.get_user(email).addCredit(discountAmount);
 
             }
 
-        }
     }
         else{
-            for (String email : this.order.globalOrders.keySet()) {
                 for(Order order:  this.order.get_orders(email))  {
-                    order.calculateTotalPrice();
+//                    order.calculateTotalPrice();
 
-                }
 
             }
 

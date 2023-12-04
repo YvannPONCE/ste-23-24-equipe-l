@@ -13,6 +13,7 @@ import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -95,7 +96,10 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
         if (capacityCalculator.canPlaceOrder(order.getMenus().size())) {
             capacityCalculator.placeOrder(order.getMenus().size());
-            if(client.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
+            if(client.getNumberOfOrdersFromRestaurant(restaurant.getName()) !=0 &&client.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
+                restaurant.addUserToDiscountedUsers(email);
+            }
+            if(restaurant.getDiscountExpirationDate(email)!=null && restaurant.getDiscountExpirationDate(email).isAfter(LocalDate.now())){
                 order.setTotalPrice(order.getTotalPrice()*(1-restaurant.getDiscountPercentage()));
             }
             this.placeOrder(email, order, deliveryLocation, uuid);
@@ -106,7 +110,18 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         } else {
             nextSlot=capacityCalculator.getNextSlot();
 
-            return null;
+            capacityCalculator.placeOrder(order.getMenus().size());
+            if(client.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
+                restaurant.addUserToDiscountedUsers(email);
+            }
+            if(restaurant.getDiscountExpirationDate(email)!=null && restaurant.getDiscountExpirationDate(email).isAfter(LocalDate.now())){
+                order.setTotalPrice(order.getTotalPrice()*(1-restaurant.getDiscountPercentage()));
+            }
+            this.placeOrder(email, order, deliveryLocation, uuid);
+            notificationCenter.order_confirmed(uuid,deliveryLocation,order.getCreation_time(),email);
+            this.capacityCalculator.addObserver(orderObserver);
+
+            return uuid;
         }
     }
 
@@ -159,7 +174,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public void payOrder(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = getCurrentOrders(orderId);
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
-        orderAmountCalculator.applyMenuDiscount(15);
+        orderAmountCalculator.applyMenuDiscount(15, email);
 
         if(paymentSystem.pay(card_number))
         {

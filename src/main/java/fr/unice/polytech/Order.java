@@ -38,15 +38,11 @@ public class Order {
         return menus.size();
     }
 
-
-
-
     public void add_menu(Menu menu)
     {
         this.menus.add(menu);
+        this.totalPrice += menu.getPrice();
     }
-
-
 
     public void displayOrderSummary() {
         System.out.println(" Restaurant Name: " + restaurant_name);
