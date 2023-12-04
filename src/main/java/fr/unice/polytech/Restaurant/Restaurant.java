@@ -21,6 +21,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     private Map<Integer, Integer> hourlyCapacities;
     private List<Menu> listemenu;
     private List<Order> orders;
+    private List<String> staffMembers;
     int capacity;
     int discountThreshold;
     int discountPeriod;
@@ -38,6 +39,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         this.discountPeriod = 15;
         this.discountThreshold = 10;
         this.discountedUsers = new HashMap<>();
+        this.staffMembers = new ArrayList<>();
         initializeHourlyCapacities();
     }
 
@@ -57,14 +59,18 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         }
     }
 
+    public List<String> getStaffMembers() {
+        return staffMembers;
+    }
+    public void AddStaffMember(String staffMember) {
+        staffMembers.add(staffMember);
+    }
+
     public double getDiscountPercentage() {
         return discountPercentage;
     }
     public int getDiscountThreshold() {
         return discountThreshold;
-    }
-    public void setcapacity(int newC) {
-        this.capacity=newC;
     }
     public int getCapacity() {
         return capacity;

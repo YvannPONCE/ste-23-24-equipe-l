@@ -63,7 +63,7 @@ public class CompleteSimpleOrder {
     }
     @Given("{string} pay his order")
     public void pay_his_order(String userEmail) {
-        orderManager.payOrder(this.orderId, userEmail, "7936 3468 9302 8371");
+        orderManager.payOrders(userEmail, "7936 3468 9302 8371");
     }
     @Given("The order is marked ready by the restaurant {string}")
     public void the_order_is_marked_ready_by_the_restaurant(String restaurant_name) {

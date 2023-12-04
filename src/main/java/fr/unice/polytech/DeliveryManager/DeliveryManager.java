@@ -113,7 +113,7 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
     private void addOrdersToHistory(GroupOrder groupOrder){
         for(String email : groupOrder.getGlobalOrders().keySet())
         {
-            userManager.addOrdersToHistory(email, groupOrder.get_orders(email));
+            userManager.addOrdersToHistory(email, groupOrder.getOrders(email));
             notificationCenter.order_delivered(groupOrder.getUuid(), groupOrder.getDeliveryLocation(), LocalDateTime.now(), email);
         }
     }

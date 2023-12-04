@@ -70,13 +70,13 @@ public class CompleteMultiOrder {
 
     @Given("the user {string} pay his order")
     public void the_user_pay_his_order(String userEmail) {
-        orderManager.payOrder(this.orderId, userEmail, "7936 3468 9302 8371");
+        orderManager.payOrders(userEmail, "7936 3468 9302 8371");
         Assert.assertNotEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @Given("the user {string} pay his order in second")
     public void the_user_pay_his_order_in_second(String userEmail) {
-        orderManager.payOrder(this.orderId, userEmail, "7936 3468 9302 8371");
-        Assert.assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
+        orderManager.payOrders(userEmail, "7936 3468 9302 8371");
+        assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string}")
     public void the_simple_order_is_marked_ready_by_the_restaurant(String restaurantName) {

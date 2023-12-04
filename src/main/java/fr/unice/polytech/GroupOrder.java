@@ -69,16 +69,17 @@ public class GroupOrder {
 
     }
 
-    public List<Order> get_orders(String user_email) {
-        return this.globalOrders.get(user_email);
+    public List<Order> getOrders(String user_email) {
+        List<Order> orders = this.globalOrders.get(user_email);
+        if (orders == null) return new ArrayList<>();
+        return orders;
     }
 
     public void setPaid(String userEmail) {
-        List<Order> orders = get_orders(userEmail);
+        List<Order> orders = getOrders(userEmail);
         for (Order order : orders) {
             order.getOrderState().next();
         }
-
         for (List<Order> orders2 : this.globalOrders.values()) {
             for (Order order : orders2) {
                 if (order.getOrderState().getStatus() != Status.PAID) return;

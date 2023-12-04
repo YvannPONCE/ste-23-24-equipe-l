@@ -64,7 +64,7 @@ public class checkOrderHistorydefs {
             oldOrder.add_menu(new Menu(item, price));
             orderId = orderManager.placeOrder(user.getEmail(), oldOrder, Locations.HALL_PRINCIPAL);
 
-            orderManager.payOrder(orderId, user.getEmail(), "7936 3468 9302 8371");
+            orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
             orderManager.processingOrder(orderId, restaurant.getName());
             orderManager.setOrderReady(orderId, oldOrder.getRestaurantName());
             deliveryManger.validateOrder(orderId);
@@ -108,7 +108,7 @@ public class checkOrderHistorydefs {
     }
     @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {
-        Order orderSelected = orderManager.getCurrentOrders(orderId).get_orders(user.getEmail()).get(0);
+        Order orderSelected = orderManager.getCurrentOrders(orderId).getOrders(user.getEmail()).get(0);
 
         Assert.assertEquals(Status.CREATED, orderSelected.getOrderState().getStatus());
         Assert.assertEquals(this.oldOrder.getMenus(), orderSelected.getMenus());

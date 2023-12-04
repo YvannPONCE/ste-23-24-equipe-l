@@ -25,7 +25,7 @@ public class OrderAmountCalculator {
 
         if(this.order.qualifiesForMenuDiscount(itemCountThreshold)){
 
-          for(Order order:  this.order.get_orders(email))  {
+          for(Order order:  this.order.getOrders(email))  {
 
 //              double discountAmount = (discountPercentage / 100) * order.calculateTotalPrice();
               double discountAmount = (discountPercentage / 100) * order.getTotalPrice();
@@ -37,7 +37,7 @@ public class OrderAmountCalculator {
 
     }
         else{
-                for(Order order:  this.order.get_orders(email))  {
+                for(Order order:  this.order.getOrders(email))  {
 //                    order.calculateTotalPrice();
 
 

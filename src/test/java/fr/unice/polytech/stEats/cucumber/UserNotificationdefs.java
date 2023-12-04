@@ -60,8 +60,9 @@ public class UserNotificationdefs {
     }
     @Then("user receives a notification with the order information")
     public void user_receives_a_notification_with_the_order_information() {
+        GroupOrder groupOrder = orderManager.getCurrentOrders(orderId);
         String message= String.format("Dear %s,\n\nThank you for placing an order with order ID %s. Your order for delivery to %s on %s has been confirmed.\n\nBest regards,\nThe Order Confirmation Team",
-                user.getEmail(),orderId.toString(), Locations.HALL_PRINCIPAL, order.getCreation_time());
+                user.getEmail(),orderId.toString(), Locations.HALL_PRINCIPAL, groupOrder.getDeliveryTime());
         Assert.assertEquals(user.getNotifications().get(0).getMessage(),message);
 
 
@@ -88,7 +89,7 @@ public class UserNotificationdefs {
 
         order.add_menu(new Menu("chickennuggets", 5.50));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId,(String) email,"7936 3468 9302 8371");
+        orderManager.payOrders((String) email,"7936 3468 9302 8371");
 
 
     }
@@ -134,7 +135,7 @@ public class UserNotificationdefs {
 
         order.add_menu(new Menu("chickennuggets", 5.50));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId, userEmail, "7936 3468 9302 8371");
+        orderManager.payOrders(userEmail, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,"chickenTacky");
         orderManager.setOrderReady(orderId,"chickenTacky");
 

@@ -18,7 +18,6 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 public class Ristournes {
@@ -55,11 +54,11 @@ public class Ristournes {
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
         this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(this.order_id, user.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
     }
     @Then("User pays {double}")
     public void user_pays(Double menu_price) {
-        Double price_paid = this.orderManager.getCurrentOrders(order_id).get_orders(user.getEmail()).get(0).getTotalPrice();
+        Double price_paid = this.orderManager.getCurrentOrders(order_id).getOrders(user.getEmail()).get(0).getTotalPrice();
         Assert.assertEquals(menu_price, price_paid);
     }
 
@@ -83,7 +82,7 @@ public class Ristournes {
             Menu menu = new Menu("menu", 10.0);
             order.add_menu(menu);
             this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
-            orderManager.payOrder(this.order_id, user.getEmail(), "7936 3468 9302 8371");
+            orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
         }
     }
     @When("User orders for the 10th time {string} for {double}")
@@ -92,7 +91,7 @@ public class Ristournes {
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
         this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(this.order_id, user.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
     }
     @Then("User recieves discount of {int}% for a period of {int} days")
     public void user_recieves_discount_of_for_a_period_of_days(Integer discount_percentage, Integer discount_period) {
@@ -123,7 +122,7 @@ public class Ristournes {
             Menu menu = new Menu("menu", 10.0);
             order.add_menu(menu);
             this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
-            orderManager.payOrder(this.order_id, user.getEmail(), "7936 3468 9302 8371");
+            orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
         }
     }
     @When("User orders {string} for {double}")
@@ -132,11 +131,11 @@ public class Ristournes {
         Menu menu = new Menu(menu_name, menu_price);
         order.add_menu(menu);
         this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(this.order_id, user.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
     }
     @Then("User pays discounted price of {double}")
     public void user_pays_discounted_price_of(Double discounted_price) {
-        Double price_paid = this.orderManager.getCurrentOrders(order_id).get_orders(user.getEmail()).get(0).getTotalPrice();
+        Double price_paid = this.orderManager.getCurrentOrders(order_id).getOrders(user.getEmail()).get(0).getTotalPrice();
         Assert.assertEquals(discounted_price, price_paid);
     }
 }

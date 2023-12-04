@@ -51,7 +51,7 @@ public class DeliveryManNotificationdefs {
 
 
         orderId = orderManager.placeOrder(string, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId, string, "7936 3468 9302 8371");
+        orderManager.payOrders(string, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,restaurant.getName());
 
     }

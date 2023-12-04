@@ -169,7 +169,7 @@ public class ManageRestaurantCapacitydefs {
         order.add_menu(menu);
 
         orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderId, user_email, "7936 3468 9302 8371");
+        orderManager.payOrders(user_email, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId, restaurant.getName());
         orderManager.setOrderReady(orderId, restaurant.getName());
         deliveryManager.validateOrder("Delivery");

@@ -44,7 +44,7 @@ public class DeliveryValidation {
         orderManager.addDeliveryManager(deliveryManager);
         userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
         orderID = orderManager.placeOrder(email,order, Locations.HALL_PRINCIPAL);
-        orderManager.payOrder(orderID, email, "7936 3468 9302 8371");
+        orderManager.payOrders( email, "7936 3468 9302 8371");
         orderManager.processingOrder(orderID, restaurant.getName());
     }
 

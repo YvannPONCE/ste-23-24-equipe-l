@@ -63,7 +63,7 @@ public class ValidateOrderReceipt {
 
         orderId = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
-        orderManager.payOrder(orderId, user.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,restaurant.getName());
         orderManager.setOrderReady(orderId,restaurant.getName());
 

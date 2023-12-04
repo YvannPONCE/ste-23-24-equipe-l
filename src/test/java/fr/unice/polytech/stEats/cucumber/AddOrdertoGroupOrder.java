@@ -119,8 +119,8 @@ public class AddOrdertoGroupOrder {
 
         Assert.assertEquals(Locations.HALL_PRINCIPAL, group_order.getDeliveryLocation());
 
-        List<Order> user_1_orders = group_order.get_orders(user1.getEmail());
-        List<Order> user_2_orders = group_order.get_orders(user2.getEmail());
+        List<Order> user_1_orders = group_order.getOrders(user1.getEmail());
+        List<Order> user_2_orders = group_order.getOrders(user2.getEmail());
         Order user_1_order = user_1_orders.get(0);
         Order user_2_order = user_2_orders.get(0);
 

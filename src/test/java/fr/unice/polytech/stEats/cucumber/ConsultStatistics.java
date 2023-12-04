@@ -65,9 +65,9 @@ public class ConsultStatistics {
         UUID orderId2 = orderManager.placeOrder(customer2.getEmail() ,order2, Locations.BATIMENT_E);
         UUID orderId3 = orderManager.placeOrder(customer1.getEmail() ,order3, Locations.BATIMENT_E);
 
-        orderManager.payOrder(orderId1, customer1.getEmail(), "7936 3468 9302 8371");
-        orderManager.payOrder(orderId2, customer2.getEmail(), "7936 3468 9302 8371");
-        orderManager.payOrder(orderId3, customer1.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(customer1.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(customer2.getEmail(), "7936 3468 9302 8371");
+        orderManager.payOrders(customer1.getEmail(), "7936 3468 9302 8371");
 
     }
     @When("i want to consult the volume of orders")
