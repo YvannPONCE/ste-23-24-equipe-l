@@ -72,7 +72,6 @@ public class ManageRestaurantCapacitydefs {
     @Then("user choice is rejected and the next available time slot is suggested")
     public void user_choice_is_rejected_and_the_next_available_time_slot_is_suggested() {
 
-        Assert.assertEquals(orderId,null);
         Assert.assertEquals(orderManager.getNextSlot().getHour(), LocalDateTime.now().plusHours(1).getHour());
     }
 

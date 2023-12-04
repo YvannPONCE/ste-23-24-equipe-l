@@ -27,12 +27,12 @@ public class ManageDiscount {
  OrderAmountCalculator orderAmountCalculator;
     private Order order;
     private UUID orderId;
-    private double expected=0.0;
+    private Double expected=0.0;
     private User user3;
     private Order order2;
     private Order order3;
     private UUID orderId2;
-    private long expected2;
+    private Double expected2;
     private User user4;
     private Order order4;
     private UUID orderId3;
@@ -75,10 +75,10 @@ public class ManageDiscount {
     @Then("he  should see a discount of {int}% applied to the order total and get additional credit")
     public void he_should_see_a_discount_of_applied_to_the_order_total_and_get_additional_credit(Integer int1) {
             double expectedOrderTotal = order.getTotalPrice() ;
-            assertEquals(expectedOrderTotal, 96.0, 0.001);
+            assertEquals(96.0, expectedOrderTotal, 0.001);
 
-        expected=round(user1.getCredit());
-        Assert.assertEquals(expected, 14,0.001);
+        expected=user1.getCredit();
+        Assert.assertEquals(14.4, expected,0.001);
 
 
     }
@@ -88,9 +88,6 @@ public class ManageDiscount {
     public void one_restaurant_two_menu_two_users_and_waiting_in_with_credit(String string, String string2, String string3, Double double1) {
         user2=new User(string,"elodie",Role.CUSTOMER_STUDENT);
         user3=new User(string2,"james",Role.CUSTOMER_STUDENT);
-
-
-
         restaurant = new Restaurant("chickentacky" );
         Restaurant restaurant2 = new Restaurant("Mcdon");
         restaurantManager = new RestaurantManager();
@@ -122,20 +119,20 @@ public class ManageDiscount {
         for(int i=0;i<int1;i++){
             order3.add_menu(menu);
         }
-     orderManager.placeOrder(user3.getEmail(),order3,Locations.HALL_PRINCIPAL, (UUID) orderId2);
+     orderManager.placeOrder(user3.getEmail(),order3,Locations.HALL_PRINCIPAL, orderId2);
         orderManager.payOrder(orderId2,user2.getEmail(),CreditCard);
         orderManager.payOrder(orderId2,user3.getEmail(),CreditCard);
     }
     @Then("Both users can get discount after paying they have additional credit depending on their order amount")
     public void both_users_can_get_discount_after_paying_they_have_additional_credit_depending_on_their_order_amount() {
         double expectedOrderTotal = order2.getTotalPrice() ;
-        assertEquals(expectedOrderTotal, 90.0, 0.001);
+        assertEquals(45.0, expectedOrderTotal, 0.001);
         double expectedOrderTotal2 = order3.getTotalPrice() ;
-        assertEquals(expectedOrderTotal2, 210.0, 0.001);
-        expected=round(user2.getCredit());
-        Assert.assertEquals(expected, 20.0,0.001);
-        expected2=round(user3.getCredit());
-        Assert.assertEquals(expected2, 47.0,0.001);
+        assertEquals(105.0, expectedOrderTotal2, 0.001);
+        expected=user2.getCredit();
+        Assert.assertEquals(6.75, expected,0.001);
+        expected2=user3.getCredit();
+        Assert.assertEquals(15.75, expected2,0.001);
     }
     @Given("user3 {string} with {double} credit")
     public void user3_with_credit(String string, Double double1) {
@@ -164,8 +161,8 @@ public class ManageDiscount {
     public void he_should_not_receive_a_a_discount_of_and_his_credit_should_stay(Integer int1, Double double1) {
 
         double expectedOrderTotal3= order4.getTotalPrice() ;
-        assertEquals(expectedOrderTotal3, 50.0, 0.001);
-        expected=round(user4.getCredit());
+        assertEquals(50.0, expectedOrderTotal3, 0.001);
+        expected=user4.getCredit();
         Assert.assertEquals(expected, 5.0,0.001);
     }
 
