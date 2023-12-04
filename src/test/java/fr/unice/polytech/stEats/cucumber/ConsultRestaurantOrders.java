@@ -17,7 +17,6 @@ import io.cucumber.java.en.When;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.OrderManager.OrderManager;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 
 import java.util.*;
@@ -41,7 +40,7 @@ public class ConsultRestaurantOrders {
         notificationCenter = new NotificationCenter(userManager);
         statisticsManager = new StatisticsManager(restaurantManager);
         orderManager = new OrderManager(restaurantManager,userManager,statisticsManager, notificationCenter );
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
         User user = new User("email", "password", Role.CUSTOMER_STUDENT);
         userManager.add_user(user);
@@ -55,7 +54,7 @@ public class ConsultRestaurantOrders {
             order.add_menu(menu);
 
             orderManager.placeOrder("email", order, Locations.HALL_PRINCIPAL);
-            orderManager.pay_user_orders("email", "7936 3468 9302 8371");
+            orderManager.payOrders("email", "7936 3468 9302 8371");
         }
     }
     @When("the staff wants to consult the current orders")

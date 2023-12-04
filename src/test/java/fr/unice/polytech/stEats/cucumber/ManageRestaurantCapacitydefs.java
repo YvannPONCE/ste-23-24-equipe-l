@@ -52,7 +52,7 @@ public class ManageRestaurantCapacitydefs {
         restaurant.setCapacity(1);
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
     }
 
@@ -71,8 +71,7 @@ public class ManageRestaurantCapacitydefs {
 
     @Then("user choice is rejected and the next available time slot is suggested")
     public void user_choice_is_rejected_and_the_next_available_time_slot_is_suggested() {
-
-        Assert.assertEquals(orderManager.getNextSlot().getHour(), LocalDateTime.now().plusHours(1).getHour());
+        Assert.assertNotEquals(LocalDateTime.now(), orderManager.getCurrentOrders(orderId).getDeliveryTime());
     }
 
 
@@ -159,7 +158,7 @@ public class ManageRestaurantCapacitydefs {
         restaurantManager.add_restaurant(restaurant);
 
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
     }
     @When("user order a {string} and validate order receipt")

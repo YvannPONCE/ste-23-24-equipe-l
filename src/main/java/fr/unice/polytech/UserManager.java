@@ -1,11 +1,9 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Role;
-import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.OrderManager.OrderManagerConnectedUser;
 import lombok.Getter;
 import lombok.Setter;
-import org.mockito.internal.matchers.Or;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +26,7 @@ public class UserManager {
      * Display the order history of a user
      * @param mail the e-mail address of the user
      */
-    public HashMap<String,List<Order>> get_order_history(String mail) {
+    public HashMap<String,List<Order>> getOrderHistory(String mail) {
         return get_user(mail).getOrderHistory();
     }
     public void add_user(User user)
@@ -48,7 +46,7 @@ public class UserManager {
     }
 
     public void displayOrderHistory(String mail) {
-        HashMap<String,List<Order>> orderHistory = get_order_history(mail);
+        HashMap<String,List<Order>> orderHistory = getOrderHistory(mail);
         List<Order> orderHistoryList = new ArrayList<>();
         for(String restaurant_name: orderHistory.keySet()) {
             for (Order order : orderHistory.get(restaurant_name)) {
@@ -69,7 +67,7 @@ public class UserManager {
     }
 
    public Order  find_selectedOrder(UUID orderId,String mail){
-        HashMap<String, List<Order>> orderHistory=get_order_history(mail);
+        HashMap<String, List<Order>> orderHistory= getOrderHistory(mail);
 
         for(String restaurant_name: orderHistory.keySet()){
             for(Order order: orderHistory.get(restaurant_name)) {

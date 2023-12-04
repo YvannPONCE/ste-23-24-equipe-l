@@ -11,7 +11,6 @@ import fr.unice.polytech.RestaurantManager.CapacityObserver;
 import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
-import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,12 +29,6 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public UserManager userManager;
     OrderAmountCalculator orderAmountCalculator;
     private RestaurantCapacityCalculator capacityCalculator;
-    @Getter
-    private LocalDateTime nextSlot;
-
-
-
-    String email;
 
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager, StatisticManagerOrderManager statisticsManager, DeliveryManager deliveryManager, NotificationCenter notificationCenter) {
         this.groupOrders = new ArrayList<>();
@@ -48,104 +41,92 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public OrderManager(RestaurantManager restaurantManager, UserManager userManager, StatisticManagerOrderManager statisticsManager, NotificationCenter notificationCenter){
         this(restaurantManager, userManager, statisticsManager, null, notificationCenter);
     }
-    public boolean placeOrder(String email, Order order, Locations delivery_location, UUID order_id) {
-        order.setId(order_id);
-        order.getOrderState().setStatus(Status.CREATED);
-        List<GroupOrder> filtered_group_orders = groupOrders.stream().filter(current_group_order -> current_group_order.getUuid().equals(order_id))
-                .collect(Collectors.toList());
-        if (!filtered_group_orders.isEmpty()) {
-            GroupOrder group_order = filtered_group_orders.get(0);
-            if (group_order.getDeliveryLocation() != delivery_location) return false;
-            group_order.add_order(email, order);
 
-            return true;
-        } else {
-            GroupOrder group_order = new GroupOrder(order_id, delivery_location);
-            group_order.add_order(email, order);
-            this.groupOrders.add(group_order);
+    public UUID placeOrder(String email, Order order, UUID orderID) {
+        GroupOrder groupOrder = groupOrders.stream()
+                .filter(groupOrder1 -> groupOrder1.getUuid().equals(orderID))
+                .findFirst()
+                .orElse(null);
+        if (groupOrder == null)return UUID.fromString("00000000-0000-0000-0000-000000000000");
 
-            return true;
-        }
+        Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurantName());
+        if(restaurant == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
+        User user = userManager.getUser(email);
+        if(user == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        placeOrder(user, order, restaurant, groupOrder.getDeliveryLocation(),groupOrder.getDeliveryTime(), orderID);
+        return orderID;
     }
-    public UUID placeOrderSlot(String email, Order order, Locations delivery_location, LocalDateTime chosenSlot) {
-        UUID uuid = UUID.randomUUID();
-        Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurant_name());
-        capacityCalculator = new RestaurantCapacityCalculator(restaurant);
-
-        if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot)) {
-            capacityCalculator.placeOrderSlot(order.getMenus().size(), chosenSlot);
-            placeOrder(email, order, delivery_location, uuid);
-            notificationCenter.order_confirmed(uuid, delivery_location, order.getCreation_time(), email);
-
-            this.capacityCalculator.addObserver(this);
-
-            return uuid;
-        } else {
-            nextSlot = capacityCalculator.getNextSlot_chosen(chosenSlot);
-            return null;
-        }
-    }
-
     public UUID placeOrder(String email, Order order, Locations deliveryLocation) {
-
+        LocalDateTime deliveryTime = LocalDateTime.now();
+        return placeOrder(email, order, deliveryLocation, deliveryTime);
+    }
+    public UUID placeOrder(String email, Order order, Locations deliveryLocation, LocalDateTime chosenSlot) {
         UUID uuid = UUID.randomUUID();
-        Restaurant restaurant=restaurantManager.getRestaurant(order.getRestaurant_name());
-        capacityCalculator=new RestaurantCapacityCalculator(restaurant);
-        OrderObserver orderObserver = new OrderObserver(capacityCalculator);
-        User client = this.userManager.get_user(email);
 
-        if (capacityCalculator.canPlaceOrder(order.getMenus().size())) {
-            capacityCalculator.placeOrder(order.getMenus().size());
-            if(client.getNumberOfOrdersFromRestaurant(restaurant.getName()) !=0 &&client.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
+        User user = userManager.getUser(email);
+        if(user == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
+        Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurantName());
+        if(restaurant == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        capacityCalculator = new RestaurantCapacityCalculator(restaurant);
+        LocalDateTime deliverySlot = chosenSlot;
+        if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot) == false ){
+            deliverySlot = capacityCalculator.getNextSlotChosen(chosenSlot);
+            if(user.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
                 restaurant.addUserToDiscountedUsers(email);
             }
-            if(restaurant.getDiscountExpirationDate(email)!=null && restaurant.getDiscountExpirationDate(email).isAfter(LocalDate.now())){
-                order.setTotalPrice(order.getTotalPrice()*(1-restaurant.getDiscountPercentage()));
-            }
-            this.placeOrder(email, order, deliveryLocation, uuid);
-            notificationCenter.order_confirmed(uuid,deliveryLocation,order.getCreation_time(),email);
-            this.capacityCalculator.addObserver(orderObserver);
-
-            return uuid;
-        } else {
-            nextSlot=capacityCalculator.getNextSlot();
-
-            capacityCalculator.placeOrder(order.getMenus().size());
-            if(client.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
-                restaurant.addUserToDiscountedUsers(email);
-            }
-            if(restaurant.getDiscountExpirationDate(email)!=null && restaurant.getDiscountExpirationDate(email).isAfter(LocalDate.now())){
-                order.setTotalPrice(order.getTotalPrice()*(1-restaurant.getDiscountPercentage()));
-            }
-            this.placeOrder(email, order, deliveryLocation, uuid);
-            notificationCenter.order_confirmed(uuid,deliveryLocation,order.getCreation_time(),email);
-            this.capacityCalculator.addObserver(orderObserver);
-
-            return uuid;
         }
+
+        capacityCalculator.placeOrderSlot(order.getMenus().size(), deliverySlot);
+        placeOrder(user, order, restaurant, deliveryLocation, deliverySlot, uuid);
+        this.capacityCalculator.addObserver(this);
+        return uuid;
+    }
+    private void placeOrder(User user, Order order, Restaurant restaurant, Locations deliveryLocation, LocalDateTime deliveryTime, UUID orderID)
+    {
+        order.setId(orderID);
+        order.getOrderState().setStatus(Status.CREATED);
+        GroupOrder groupOrder = groupOrders.stream()
+                .filter(current_group_order -> current_group_order.getUuid().equals(orderID))
+                .findFirst()
+                .orElse(null);
+
+        if(user.getNumberOfOrdersFromRestaurant(restaurant.getName()) !=0 &&user.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
+            restaurant.addUserToDiscountedUsers(user.getEmail());
+        }
+        if(restaurant.getDiscountExpirationDate(user.getEmail())!=null && restaurant.getDiscountExpirationDate(user.getEmail()).isAfter(LocalDate.now())){
+            order.setTotalPrice(order.getTotalPrice()*(1-restaurant.getDiscountPercentage()));
+        }
+
+        if (groupOrder != null) {
+            groupOrder.addOrder(user.getEmail(), order);
+        } else {
+            groupOrder = new GroupOrder(orderID, deliveryLocation, deliveryTime);
+            groupOrder.addOrder(user.getEmail(), order);
+            this.groupOrders.add(groupOrder);
+        }
+        notificationCenter.order_confirmed(orderID, deliveryLocation, order.getCreation_time(), user.getEmail());
     }
 
-    public List<Order> getCurrentOrders(UUID order_id, String user_email) {
+    public List<Order> getCurrentOrders(UUID order_id, String userEmail) {
         List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
         if (!group_orders.isEmpty()) {
             GroupOrder group_order = group_orders.get(0);
-            return Collections.unmodifiableList(group_order.get_orders(user_email));
+            return Collections.unmodifiableList(group_order.get_orders(userEmail));
         }
         return new ArrayList<>();
     }
 
     public List<Order> getCurrentUserOrders(String user_email){
-        List<GroupOrder> group_orders = new ArrayList<>(this.groupOrders);
-        if (!group_orders.isEmpty()) {
-            List<Order> response = new ArrayList<>();
-            for (GroupOrder groupOrder : group_orders) {
-                response.addAll(groupOrder.get_orders(user_email));
-            }
-            return Collections.unmodifiableList(response);
-        }
-        return new ArrayList<>();
+         return groupOrders.stream()
+                 .map(groupOrder -> groupOrder.globalOrders)
+                 .filter(stringListHashMap -> stringListHashMap.get(user_email)!=null)
+                 .flatMap(map -> map.values().stream())
+                 .flatMap(List::stream)
+                 .collect(Collectors.toList());
     }
 
     public List<Order> getCurrentOrders(String restaurantName) {
@@ -175,7 +156,6 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         GroupOrder groupOrder = getCurrentOrders(orderId);
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
         orderAmountCalculator.applyMenuDiscount(15, email);
-
         if(paymentSystem.pay(card_number))
         {
             groupOrder.setPaid(email);
@@ -186,7 +166,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
     }
 
-    public void pay_user_orders(String email, String card_number){
+    public void payOrders(String email, String card_number){
         List<Order> orders = getCurrentUserOrders(email);
         for (Order order : orders) {
             if(order.getOrderState().getStatus()==Status.CREATED)
@@ -247,24 +227,9 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
     }
 
-    public Order reorderFromHistory(UUID selectedOrderId, String userMail, Locations deliveryLocation) {
+    public UUID reorderFromHistory(UUID selectedOrderId, String userMail, Locations deliveryLocation) {
         Order selectedOrder = userManager.find_selectedOrder(selectedOrderId, userMail);
-
-        if (selectedOrder != null) {
-            UUID newOrderId = UUID.randomUUID();
-            Order newOrder = new Order(selectedOrder.getRestaurant_name());
-            for(Menu menu:selectedOrder.getMenus()){
-                newOrder.add_menu(menu);
-            }
-            placeOrder(userMail, newOrder, deliveryLocation, newOrderId);
-
-            return newOrder;
-        } else {
-            System.out.println("Commande sélectionnée introuvable dans l'historique de l'utilisateur.");
-            return null;
-        }
-
-
+        return placeOrder(userMail, selectedOrder, deliveryLocation);
     }
 
     public void addDeliveryManager(DeliveryManager newDeliveryManager) {

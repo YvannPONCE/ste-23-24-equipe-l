@@ -89,7 +89,7 @@ public class ConfirmOrder {
         List<Order> orders = orderManager.getCurrentOrders(restaurantName);
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
-        Assert.assertEquals(restaurantName, order.getRestaurant_name());
+        Assert.assertEquals(restaurantName, order.getRestaurantName());
         List<Menu> menus = order.getMenus();
         Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
@@ -122,14 +122,14 @@ public class ConfirmOrder {
     }
     @When("the user {string} pays their order")
     public void the_user_pays_their_order(String user_email) {
-        orderManager.pay_user_orders(user_email, "7936 3468 9302 8371");
+        orderManager.payOrders(user_email, "7936 3468 9302 8371");
     }
     @Then("the order {string} at {double} from {string} and the order {string} at {double} from {string} will be transmitted to the restaurants")
     public void the_order_at_from_and_the_order_at_from_will_be_transmitted_to_the_restaurants(String menu_name_1, Double menu_price_1, String restaurant_name_1, String menu_name_2, Double menu_price_2, String restaurant_name_2) {
         List<Order> orders = orderManager.getCurrentOrders(restaurant_name_1);
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
-        Assert.assertEquals(restaurant_name_1, order.getRestaurant_name());
+        Assert.assertEquals(restaurant_name_1, order.getRestaurantName());
         List<Menu> menus = order.getMenus();
         Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
@@ -139,7 +139,7 @@ public class ConfirmOrder {
         List<Order> orders_2 =  orderManager.getCurrentOrders(restaurant_name_2);
         Assert.assertEquals(1, orders_2.size());
         Order order_2 = orders_2.get(0);
-        Assert.assertEquals(restaurant_name_2, order_2.getRestaurant_name());
+        Assert.assertEquals(restaurant_name_2, order_2.getRestaurantName());
         List<Menu> menus_2 = order_2.getMenus();
         Assert.assertEquals(1, menus_2.size());
         Menu menu_2 = menus_2.get(0);

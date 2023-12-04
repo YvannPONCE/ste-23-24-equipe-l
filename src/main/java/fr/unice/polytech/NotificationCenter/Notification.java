@@ -13,7 +13,10 @@ public class Notification {
         return Message;
     }
 
-    public void setMessage(String message) {
-        Message = message;
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "Message='" + Message + '\'' +
+                '}';
     }
 }

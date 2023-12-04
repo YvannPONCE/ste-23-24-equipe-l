@@ -51,11 +51,11 @@ public class ValidateOrderReceipt {
         user = new User("Albert@gmail.com","Albert");
         this.userManager.add_user(user);
 
-        deliveryManager=new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager=new DeliveryManager(userManager, notificationCenter);
         userManager.addUser(new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager,deliveryManager, notificationCenter);
-        deliveryManager=new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager=new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
         order = new Order(string3);
         order.add_menu(new Menu(string,double1));

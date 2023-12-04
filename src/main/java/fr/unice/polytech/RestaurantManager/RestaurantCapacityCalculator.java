@@ -75,7 +75,7 @@ public class RestaurantCapacityCalculator extends Observable {
         this.nextSlot = getNextAvailableSlot();
         return nextSlot;
     }
-    public LocalDateTime getNextSlot_chosen(LocalDateTime chosenSlot){
+    public LocalDateTime getNextSlotChosen(LocalDateTime chosenSlot){
         this.nextSlot=getNextSlotAfterChosen(chosenSlot);
         return nextSlot;
     }

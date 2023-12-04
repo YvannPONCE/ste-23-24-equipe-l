@@ -40,7 +40,7 @@ public class DeliveryValidation {
         notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
         userManager.add_user(new User(email,"rrr", Role.CUSTOMER_STUDENT));
         orderID = orderManager.placeOrder(email,order, Locations.HALL_PRINCIPAL);

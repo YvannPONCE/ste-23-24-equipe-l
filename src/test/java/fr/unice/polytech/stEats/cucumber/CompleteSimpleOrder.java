@@ -44,7 +44,7 @@ public class CompleteSimpleOrder {
         notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
-        deliveryManager = new DeliveryManager(orderManager,orderManager.userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         deliveryMan = new User("delivery@gmail.com", "pass", Role.DELIVER_MAN);
         userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
@@ -85,7 +85,7 @@ public class CompleteSimpleOrder {
 
     @Then("The order is marked as closed")
     public void the_order_is_marked_as_delivered() {
-        HashMap<String, List<Order>> orderHistory = userManager.get_order_history(user.getEmail());
+        HashMap<String, List<Order>> orderHistory = userManager.getOrderHistory(user.getEmail());
         assertEquals(Status.CLOSED,orderHistory.get(orderHistory.keySet().iterator().next()).get(0).getOrderState().getStatus());
     }
 

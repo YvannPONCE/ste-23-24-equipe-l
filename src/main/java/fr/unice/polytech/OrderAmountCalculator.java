@@ -29,7 +29,7 @@ public class OrderAmountCalculator {
 
 //              double discountAmount = (discountPercentage / 100) * order.calculateTotalPrice();
               double discountAmount = (discountPercentage / 100) * order.getTotalPrice();
-              System.out.println("discountAmount "+discountAmount);
+              //System.out.println("discountAmount "+discountAmount);
 
               userManager.get_user(email).addCredit(discountAmount);
 

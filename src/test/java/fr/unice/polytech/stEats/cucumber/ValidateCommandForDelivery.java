@@ -46,7 +46,7 @@ public class ValidateCommandForDelivery {
 
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), null, notificationCenter);
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
-        deliveryManager = new DeliveryManager(orderManager,userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
 
 

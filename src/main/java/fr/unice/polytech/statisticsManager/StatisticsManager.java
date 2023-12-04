@@ -4,7 +4,11 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.statisticsManager.object.VolumeInsight;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.Map;
 public class StatisticsManager implements StatisticManagerStudent, StatisticManagerRestaurant, StaticticsManagerCampus, StatisticManagerOrderManager {
 
     HashMap<Restaurant, HashMap<Menu, Integer>> menuStatisticsByRestaurants;
+    List<VolumeInsight> volumeInsights;
     HashMap<String, List<Order>> userStatistics;
     HashMap<Locations,Integer> locationStatistics;
     RestaurantManager restaurantManager;
@@ -22,6 +27,7 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         menuStatisticsByRestaurants = new HashMap<>();
         userStatistics = new HashMap<>();
         locationStatistics = new HashMap<>();
+        volumeInsights = new ArrayList<>();
         initLocationsStatistics();
         initRestaurantsStatistics();
     }
@@ -64,8 +70,27 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet())
         {
             addOrderToUser(entry.getKey(), entry.getValue());
+            addOrderToVolume(entry.getValue(), groupOrder.getDeliveryTime());
         }
     }
+
+    private void addOrderToVolume(List<Order> orders, LocalDateTime delevryTime) {
+        for(Order order : orders){
+            Instant instant = order.getCreation_time().toInstant(); // Convert Date to Instant
+            LocalDateTime orderTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+            VolumeInsight volumeInsight =  volumeInsights.stream()
+                    .filter(volumeInsight1 -> (volumeInsight1.getRestaurantName().equals(order.getRestaurantName())))
+                    .filter(volumeInsight1 -> volumeInsight1.inSameHour(orderTime))
+                    .findFirst().orElse(null);
+            if(volumeInsight != null){
+                volumeInsight.addOrders(order.getItemCount());
+            }else {
+                volumeInsight = new VolumeInsight(order.getItemCount(), delevryTime, order.getRestaurantName());
+                volumeInsights.add(volumeInsight);
+            }
+        }
+    }
+
     private void addMenuToRestaurant(String restaurantName, List<Menu> menus)
     {
         Restaurant corespondingRestaurant = menuStatisticsByRestaurants.entrySet().stream()
@@ -133,8 +158,23 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         if(userOrders == null)return new HashMap<>();
         for(Order order : userOrders)
         {
-            restaurantCount.put(order.getRestaurant_name(), restaurantCount.getOrDefault(order.getRestaurant_name(), 0)+1);
+            restaurantCount.put(order.getRestaurantName(), restaurantCount.getOrDefault(order.getRestaurantName(), 0)+1);
         }
         return restaurantCount;
+    }
+
+    @Override
+    public int getVolumeByHour(LocalDateTime time) {
+        return volumeInsights.stream()
+                .filter(volumeInsight -> (volumeInsight.inSameHour(time)))
+                .mapToInt(volumeInsight -> volumeInsight.getVolume())
+                .sum();
+    }
+    @Override
+    public int getVolumeByRestaurant(String restaurantName) {
+        return volumeInsights.stream()
+                .filter(volumeInsight -> (volumeInsight.getRestaurantName().equals(restaurantName)))
+                .mapToInt(volumeInsight -> volumeInsight.getVolume())
+                .sum();
     }
 }

@@ -3,10 +3,8 @@ package fr.unice.polytech.DeliveryManager;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.GroupOrder;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
-import fr.unice.polytech.OrderManager.OrderManager;
 import fr.unice.polytech.UserManager;
 
-import java.sql.SQLSyntaxErrorException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -14,14 +12,12 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
 
 
     private final UserManager userManager;
-    OrderManager orderManager;
     private Map<String, Boolean> deliveryMenAvailability;
     private Map<String, GroupOrder> deliveryMenOrders;
     private List<String> deliveryLocations;
     private NotificationCenter notificationCenter;
 
-    public DeliveryManager(OrderManager orderManager, UserManager userManager, NotificationCenter notificationCenter) {
-        this.orderManager = orderManager;
+    public DeliveryManager(UserManager userManager, NotificationCenter notificationCenter) {
         this.deliveryMenAvailability = new HashMap<>();
         this.userManager =userManager;
         this.deliveryMenOrders = new HashMap<>();

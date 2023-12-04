@@ -119,7 +119,7 @@ public class ManageDiscount {
         for(int i=0;i<int1;i++){
             order3.add_menu(menu);
         }
-     orderManager.placeOrder(user3.getEmail(),order3,Locations.HALL_PRINCIPAL, orderId2);
+     orderManager.placeOrder(user3.getEmail(),order3, orderId2);
         orderManager.payOrder(orderId2,user2.getEmail(),CreditCard);
         orderManager.payOrder(orderId2,user3.getEmail(),CreditCard);
     }

@@ -43,7 +43,7 @@ public class Ristournes {
         this.notificationCenter = new NotificationCenter(userManager);
         this.statisticsManager = new StatisticsManager(restaurantManager);
         this.orderManager = new OrderManager(restaurantManager,userManager,statisticsManager, notificationCenter );
-        this.deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        this.deliveryManager = new DeliveryManager(userManager, notificationCenter);
         this.orderManager.addDeliveryManager(deliveryManager);
         User user = new User("email", "password", Role.CUSTOMER_STUDENT);
         this.user = user;
@@ -73,7 +73,7 @@ public class Ristournes {
         this.notificationCenter = new NotificationCenter(userManager);
         this.statisticsManager = new StatisticsManager(restaurantManager);
         this.orderManager = new OrderManager(restaurantManager,userManager,statisticsManager, notificationCenter );
-        this.deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        this.deliveryManager = new DeliveryManager( userManager, notificationCenter);
         this.orderManager.addDeliveryManager(deliveryManager);
         User user = new User("email", "password", Role.CUSTOMER_STUDENT);
         this.user = user;
@@ -113,7 +113,7 @@ public class Ristournes {
         this.notificationCenter = new NotificationCenter(userManager);
         this.statisticsManager = new StatisticsManager(restaurantManager);
         this.orderManager = new OrderManager(restaurantManager,userManager,statisticsManager, notificationCenter );
-        this.deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        this.deliveryManager = new DeliveryManager(userManager, notificationCenter);
         this.orderManager.addDeliveryManager(deliveryManager);
         User user = new User("email", "password", Role.CUSTOMER_STUDENT);
         this.user = user;

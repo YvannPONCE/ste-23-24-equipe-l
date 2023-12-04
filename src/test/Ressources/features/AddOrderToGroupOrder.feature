@@ -11,9 +11,3 @@ Feature: Add order to group order
     When The first user add a "maxibest" menu at 7.50 euros from "mcdonald" to deliver at "hall principale"
     And  The second join a "maxibestplusplus" menu at 15.00 euros from "mcdonald" to his friend command
     Then Both users can see "maxibest" and "maxibestplusplus" menus in the cart at 7.50 and 15.00 delivered to "hall principale".
-
-  Scenario: Users have different tastes and different delivery location
-    Given One restaurant, two menu, two users "user1@exemple.com" and "user2@exemple.com" waiting in "hall principale"
-    When The first user add a "maxibest" menu at 7.50 euros from "mcdonald" to deliver at "hall principale"
-    And  The second join a "maxibestplusplus" menu at 15.00 euros from "mcdonald" to deliver at another location "Batiment F"
-    Then The order can not be taken by the system

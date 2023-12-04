@@ -42,7 +42,7 @@ public class CompleteMultiOrder {
         userManager = new UserManager();
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager),new NotificationCenter(userManager));
-        deliveryManager = new DeliveryManager(orderManager, userManager, notificationCenter);
+        deliveryManager = new DeliveryManager(userManager, notificationCenter);
         deliveryMan = new User(deliveryManName,"albert", Role.DELIVER_MAN);
         userManager.addUser(deliveryMan);
         orderManager.addDeliveryManager(deliveryManager);
@@ -65,7 +65,7 @@ public class CompleteMultiOrder {
         Menu menu = new Menu(menuName, menuPrice);
         order.add_menu(menu);
 
-        orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL, this.orderId);
+        orderManager.placeOrder(userEmail, order, this.orderId);
     }
 
     @Given("the user {string} pay his order")

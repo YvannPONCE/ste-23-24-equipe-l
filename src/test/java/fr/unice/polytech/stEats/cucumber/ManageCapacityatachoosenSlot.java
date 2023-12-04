@@ -57,7 +57,7 @@ public class ManageCapacityatachoosenSlot {
         order.add_menu(menu);
 
 
-        orderId = orderManager.placeOrderSlot(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
     }
     @Then("capacity at this restaurant should be {int}")
     public void capacity_at_this_restaurant_should_be(Integer int1) {
@@ -87,14 +87,13 @@ public class ManageCapacityatachoosenSlot {
         Menu menu = new Menu("chicken nuggets", 8.00);
         order.add_menu(menu);
         order.add_menu(menu);
-        orderId = orderManager.placeOrderSlot(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
 
 
     }
     @Then("we suggest next available slot")
     public void we_suggest_next_available_slot() {
-        Assert.assertEquals(orderId,null);
-        Assert.assertEquals(orderManager.getNextSlot().getHour(), 17);
+        Assert.assertNotEquals(LocalDateTime.from(localDateTime) ,orderManager.getCurrentOrders(orderId).getDeliveryTime());
     }
 
 
