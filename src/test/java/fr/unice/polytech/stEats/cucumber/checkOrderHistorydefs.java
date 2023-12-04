@@ -108,7 +108,7 @@ public class checkOrderHistorydefs {
     public void user_choose_a_order_from_history() {
         String restaurantName = user.getOrderHistory().keySet().iterator().next();
         this.oldOrder = user.getOrderHistory().get(restaurantName).get(0);
-        orderSelected = orderManager.reorderFromHistory(this.oldOrder.getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
+        UUID  orderID = orderManager.reorderFromHistory(this.oldOrder.getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
     }
     @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {

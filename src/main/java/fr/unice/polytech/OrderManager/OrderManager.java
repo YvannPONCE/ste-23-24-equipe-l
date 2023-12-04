@@ -214,24 +214,9 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
     }
 
-    public Order reorderFromHistory(UUID selectedOrderId, String userMail, Locations deliveryLocation) {
+    public UUID reorderFromHistory(UUID selectedOrderId, String userMail, Locations deliveryLocation) {
         Order selectedOrder = userManager.find_selectedOrder(selectedOrderId, userMail);
-
-        if (selectedOrder != null) {
-            UUID newOrderId = UUID.randomUUID();
-            Order newOrder = new Order(selectedOrder.getRestaurant_name());
-            for(Menu menu:selectedOrder.getMenus()){
-                newOrder.add_menu(menu);
-            }
-            placeOrder(userMail, newOrder, deliveryLocation, newOrderId);
-
-            return newOrder;
-        } else {
-            System.out.println("Commande sélectionnée introuvable dans l'historique de l'utilisateur.");
-            return null;
-        }
-
-
+        return placeOrder(userMail, selectedOrder, deliveryLocation);
     }
 
     public void addDeliveryManager(DeliveryManager newDeliveryManager) {
