@@ -6,6 +6,7 @@ import fr.unice.polytech.Schedule;
 import lombok.Getter;
 import net.bytebuddy.asm.Advice;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     int discountThreshold;
     int discountPeriod;
     double discountPercentage;
-    HashMap<String, LocalDateTime> discountedUsers;
+    HashMap<String, LocalDate> discountedUsers;
 
     public Restaurant(String name) {
         this.name = name;
@@ -36,6 +37,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         this.discountPercentage = 0.15;
         this.discountPeriod = 15;
         this.discountThreshold = 10;
+        this.discountedUsers = new HashMap<>();
         initializeHourlyCapacities();
     }
 
@@ -93,54 +95,16 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     }
 
     public void addUserToDiscountedUsers(String mail) {
-        LocalDateTime lastDiscountExpirationDate = discountedUsers.get(mail);
-        if (lastDiscountExpirationDate == null || lastDiscountExpirationDate.isBefore(LocalDateTime.now())) {
-            discountedUsers.put(mail, LocalDateTime.now().plusDays(this.discountPeriod));
+        LocalDate lastDiscountExpirationDate = discountedUsers.get(mail);
+        if (lastDiscountExpirationDate == null || lastDiscountExpirationDate.isBefore(LocalDate.now())) {
+            discountedUsers.put(mail, LocalDate.now().plusDays(this.discountPeriod));
         } else {
-            LocalDateTime newDiscount = lastDiscountExpirationDate.plusDays(this.discountPeriod);
+            LocalDate newDiscount = lastDiscountExpirationDate.plusDays(this.discountPeriod);
             discountedUsers.put(mail, newDiscount);
         }
     }
+
+    public LocalDate getDiscountExpirationDate(String mail) {
+        return discountedUsers.get(mail);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

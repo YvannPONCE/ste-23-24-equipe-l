@@ -13,6 +13,7 @@ import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -66,15 +67,15 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
         Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurant_name());
         capacityCalculator = new RestaurantCapacityCalculator(restaurant);
-        if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot)) {
-            capacityCalculator.placeOrderSlot(order.getMenus().size(), chosenSlot);
-            placeOrder(email, order, deliveryLocation, chosenSlot, uuid);
-            this.capacityCalculator.addObserver(this);
-            return uuid;
-        } else {
+        if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot)==false){
             nextSlot = capacityCalculator.getNextSlotChosen(chosenSlot);
-            return null;
         }
+        capacityCalculator.placeOrderSlot(order.getMenus().size(), nextSlot);
+        this.capacityCalculator.addObserver(this);
+        placeOrder(email, order, deliveryLocation, chosenSlot, uuid);
+
+        notificationCenter.order_confirmed(uuid,deliveryLocation,order.getCreation_time(),email);
+        return uuid;
     }
     private void placeOrder(String email, Order order, Locations deliveryLocation, LocalDateTime deliveryTime, UUID orderID)
     {
@@ -141,7 +142,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     public void payOrder(UUID orderId, String email, String card_number) {
         GroupOrder groupOrder = getCurrentOrders(orderId);
         this.orderAmountCalculator= new OrderAmountCalculator(groupOrder,this.userManager);
-        orderAmountCalculator.applyMenuDiscount(15);
+        orderAmountCalculator.applyMenuDiscount(15, email);
 
         if(paymentSystem.pay(card_number))
         {
