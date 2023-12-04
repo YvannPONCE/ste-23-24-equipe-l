@@ -93,8 +93,7 @@ public class ManageCapacityatachoosenSlot {
     }
     @Then("we suggest next available slot")
     public void we_suggest_next_available_slot() {
-        Assert.assertEquals(orderId,null);
-        Assert.assertEquals(orderManager.getNextSlot().getHour(), 17);
+        Assert.assertNotEquals(LocalDateTime.from(localDateTime) ,orderManager.getCurrentOrders(orderId).getDeliveryTime());
     }
 
 

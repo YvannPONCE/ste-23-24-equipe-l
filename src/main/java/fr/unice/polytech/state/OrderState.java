@@ -13,6 +13,7 @@ public class OrderState {
     private IOrderState state ;
     public OrderState(){
         this.state=new CreatedState();
+        this.status = this.state.getStatus();
     }
 
 

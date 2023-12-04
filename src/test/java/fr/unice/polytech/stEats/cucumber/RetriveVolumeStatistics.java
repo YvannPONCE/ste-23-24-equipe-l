@@ -41,16 +41,18 @@ public class RetriveVolumeStatistics {
     }
     @Given("The restaurant {string} has complete {int} orders of {string} at {int} h et {int} h")
     public void the_restaurant_has_complete_orders_of_at_h_et_h(String restaurantName, Integer numberOfOrders, String menuName, Integer hour1, Integer hour2) {
-        userManager.add_user(new User("user@exqmple.com", "pass"));
+        userManager.add_user(new User("user@example.com", "pass"));
         Restaurant restaurant = new Restaurant(restaurantName);
         restaurantManager.addRestaurant(restaurant);
 
         Menu menu = new Menu(menuName, 7.5);
         Order order1 = new Order(restaurantName);
+        Order order2 = new Order(restaurantName);
         order1.add_menu(menu);
+        order2.add_menu(menu);
         String location = deliveryManager.getLocations().get(0);
         orderManager.placeOrder("user@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(12));
-        orderManager.placeOrder("user@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(13));
+        orderManager.placeOrder("user@example.com", order2, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(13));
         orderManager.payOrders("user@example.com", "7936 3468 9302 8371");
     }
     @Given("The restaurant {string} has complete {int} orders of {string} at {int} h")

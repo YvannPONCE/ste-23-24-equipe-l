@@ -89,7 +89,7 @@ public class ConfirmOrder {
         List<Order> orders = orderManager.getCurrentOrders(restaurantName);
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
-        Assert.assertEquals(restaurantName, order.getRestaurant_name());
+        Assert.assertEquals(restaurantName, order.getRestaurantName());
         List<Menu> menus = order.getMenus();
         Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
@@ -129,7 +129,7 @@ public class ConfirmOrder {
         List<Order> orders = orderManager.getCurrentOrders(restaurant_name_1);
         Assert.assertEquals(1, orders.size());
         Order order = orders.get(0);
-        Assert.assertEquals(restaurant_name_1, order.getRestaurant_name());
+        Assert.assertEquals(restaurant_name_1, order.getRestaurantName());
         List<Menu> menus = order.getMenus();
         Assert.assertEquals(1, menus.size());
         Menu menu = menus.get(0);
@@ -139,7 +139,7 @@ public class ConfirmOrder {
         List<Order> orders_2 =  orderManager.getCurrentOrders(restaurant_name_2);
         Assert.assertEquals(1, orders_2.size());
         Order order_2 = orders_2.get(0);
-        Assert.assertEquals(restaurant_name_2, order_2.getRestaurant_name());
+        Assert.assertEquals(restaurant_name_2, order_2.getRestaurantName());
         List<Menu> menus_2 = order_2.getMenus();
         Assert.assertEquals(1, menus_2.size());
         Menu menu_2 = menus_2.get(0);

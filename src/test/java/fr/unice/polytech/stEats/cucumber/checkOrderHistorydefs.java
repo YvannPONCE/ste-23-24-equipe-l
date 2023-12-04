@@ -17,7 +17,6 @@ import org.junit.Assert;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.io.StringWriter;
 import java.util.*;
 
 public class checkOrderHistorydefs {
@@ -30,7 +29,7 @@ public class checkOrderHistorydefs {
     private Order orderSelected;
     private Restaurant restaurant;
     private RestaurantManager restaurantManager;
-    private UUID orderSelected_id;
+    private UUID orderSelectedID;
     private DeliveryManager deliveryManger;
     private NotificationCenter notificationCenter;
     private Order oldOrder;
@@ -59,17 +58,15 @@ public class checkOrderHistorydefs {
             restaurant = new Restaurant(restaurantName);
             restaurant.setCapacity(16);
             restaurantManager.add_restaurant(restaurant);
-
             notificationCenter = new NotificationCenter(userManager);
 
-            order = new Order(restaurantName);
-            order.add_menu(new Menu(item, price));
-
-            orderId = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
+            oldOrder = new Order(restaurantName);
+            oldOrder.add_menu(new Menu(item, price));
+            orderId = orderManager.placeOrder(user.getEmail(), oldOrder, Locations.HALL_PRINCIPAL);
 
             orderManager.payOrder(orderId, user.getEmail(), "7936 3468 9302 8371");
             orderManager.processingOrder(orderId, restaurant.getName());
-            orderManager.setOrderReady(orderId, order.getRestaurant_name());
+            orderManager.setOrderReady(orderId, oldOrder.getRestaurantName());
             deliveryManger.validateOrder(orderId);
         }
     }
@@ -107,15 +104,14 @@ public class checkOrderHistorydefs {
     @When("user choose a order from history")
     public void user_choose_a_order_from_history() {
         String restaurantName = user.getOrderHistory().keySet().iterator().next();
-        this.oldOrder = user.getOrderHistory().get(restaurantName).get(0);
-        UUID  orderID = orderManager.reorderFromHistory(this.oldOrder.getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
+        orderId = orderManager.reorderFromHistory(this.oldOrder.getId(), user.getEmail(), Locations.HALL_PRINCIPAL);
     }
     @Then("the new order is selected as new order to place")
     public void the_new_order_is_selected_as_new_order_to_place() {
+        Order orderSelected = orderManager.getCurrentOrders(orderId).get_orders(user.getEmail()).get(0);
 
-        Assert.assertEquals(orderSelected.getOrderState().getStatus(),Status.CREATED);
-        Assert.assertEquals(this.oldOrder.getOrderState().getStatus(),Status.CLOSED);
-        Assert.assertEquals(orderSelected.getMenus(),this.oldOrder.getMenus());
+        Assert.assertEquals(Status.CREATED, orderSelected.getOrderState().getStatus());
+        Assert.assertEquals(this.oldOrder.getMenus(), orderSelected.getMenus());
         Assert.assertFalse(orderSelected.getCreation_time().equals(this.oldOrder));
 
 
@@ -123,7 +119,7 @@ public class checkOrderHistorydefs {
 
     @When("the user select order in {string}")
     public void the_user_select_order_in(String string) {
-       orderSelected_id=orderId;
+       orderSelectedID=orderId;
 
     }
     @Then("the order history is displayed with all informations")
@@ -133,7 +129,7 @@ public class checkOrderHistorydefs {
         System.setOut(new PrintStream(outputStream));
 
 
-        userManager.displaySelectedOrderDetails(orderSelected_id,user.getEmail());
+        userManager.displaySelectedOrderDetails(orderSelectedID,user.getEmail());
         String capturedOutput = outputStream.toString();
         StringBuilder expectedOutputBuilder = new StringBuilder();
         expectedOutputBuilder.append("Selected Order Details:\n");

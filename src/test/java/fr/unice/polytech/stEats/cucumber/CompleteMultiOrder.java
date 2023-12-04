@@ -65,7 +65,7 @@ public class CompleteMultiOrder {
         Menu menu = new Menu(menuName, menuPrice);
         order.add_menu(menu);
 
-        orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL, this.orderId);
+        orderManager.placeOrder(userEmail, order, this.orderId);
     }
 
     @Given("the user {string} pay his order")

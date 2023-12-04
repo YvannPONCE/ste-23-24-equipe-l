@@ -108,7 +108,7 @@ public class UserNotificationdefs {
                 + "You can expect your delivery soon.\n\n"
                 + "Thank you for choosing our services!\n\n"
                 + "Best regards,\nThe Delivery Team", orderId, Locations.HALL_PRINCIPAL, "Albert@gmail.com");
-      Assert.assertEquals(user.getNotifications().get(1).getMessage(),userMessage);
+      Assert.assertEquals(userMessage, user.getNotifications().get(1).getMessage());
     }
 
 

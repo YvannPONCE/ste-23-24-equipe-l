@@ -16,7 +16,6 @@ public class User {
     String email;
     String username;
     Double Credit;
-    //List<Order> OrderHistory;
     HashMap<String, List<Order>> OrderHistory;
     Role role;
     private String password;
@@ -64,15 +63,15 @@ public class User {
     {
         for(Order o:orders)
         {
-            if(this.OrderHistory.containsKey(o.getRestaurant_name()))
+            if(this.OrderHistory.containsKey(o.getRestaurantName()))
             {
-                this.OrderHistory.get(o.getRestaurant_name()).add(o);
+                this.OrderHistory.get(o.getRestaurantName()).add(o);
             }
             else
             {
                 List<Order> newOrders=new ArrayList<>();
                 newOrders.add(o);
-                this.OrderHistory.put(o.getRestaurant_name(),newOrders);
+                this.OrderHistory.put(o.getRestaurantName(),newOrders);
             }
         }
     }

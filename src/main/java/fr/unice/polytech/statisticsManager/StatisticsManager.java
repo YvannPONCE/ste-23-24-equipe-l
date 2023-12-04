@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class StatisticsManager implements StatisticManagerStudent, StatisticManagerRestaurant, StaticticsManagerCampus, StatisticManagerOrderManager {
 
@@ -71,23 +70,22 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         for(Map.Entry<String, List<Order>> entry : globalOrders.entrySet())
         {
             addOrderToUser(entry.getKey(), entry.getValue());
-            addOrderToVolume(entry.getValue());
+            addOrderToVolume(entry.getValue(), groupOrder.getDeliveryTime());
         }
     }
 
-    private void addOrderToVolume(List<Order> orders) {
+    private void addOrderToVolume(List<Order> orders, LocalDateTime delevryTime) {
         for(Order order : orders){
             Instant instant = order.getCreation_time().toInstant(); // Convert Date to Instant
             LocalDateTime orderTime = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
             VolumeInsight volumeInsight =  volumeInsights.stream()
-                    .filter(volumeInsight1 -> (volumeInsight1.getRestaurantName().equals(order.getRestaurant_name())))
+                    .filter(volumeInsight1 -> (volumeInsight1.getRestaurantName().equals(order.getRestaurantName())))
                     .filter(volumeInsight1 -> volumeInsight1.inSameHour(orderTime))
                     .findFirst().orElse(null);
-
             if(volumeInsight != null){
                 volumeInsight.addOrders(order.getItemCount());
             }else {
-                volumeInsight = new VolumeInsight(order.getItemCount(), orderTime, order.getRestaurant_name());
+                volumeInsight = new VolumeInsight(order.getItemCount(), delevryTime, order.getRestaurantName());
                 volumeInsights.add(volumeInsight);
             }
         }
@@ -160,14 +158,13 @@ public class StatisticsManager implements StatisticManagerStudent, StatisticMana
         if(userOrders == null)return new HashMap<>();
         for(Order order : userOrders)
         {
-            restaurantCount.put(order.getRestaurant_name(), restaurantCount.getOrDefault(order.getRestaurant_name(), 0)+1);
+            restaurantCount.put(order.getRestaurantName(), restaurantCount.getOrDefault(order.getRestaurantName(), 0)+1);
         }
         return restaurantCount;
     }
 
     @Override
     public int getVolumeByHour(LocalDateTime time) {
-        System.out.println(volumeInsights);
         return volumeInsights.stream()
                 .filter(volumeInsight -> (volumeInsight.inSameHour(time)))
                 .mapToInt(volumeInsight -> volumeInsight.getVolume())

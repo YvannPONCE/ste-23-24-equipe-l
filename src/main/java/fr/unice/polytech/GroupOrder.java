@@ -53,7 +53,7 @@ public class GroupOrder {
         }
         List<Order> user_orders = globalOrders.get(user_email);
         if (user_orders != null) {
-            List<Order> orders = user_orders.stream().filter(filtered_order -> filtered_order.getRestaurant_name().equals(order.getRestaurant_name())).collect(Collectors.toList());
+            List<Order> orders = user_orders.stream().filter(filtered_order -> filtered_order.getRestaurantName().equals(order.getRestaurantName())).collect(Collectors.toList());
             if (orders.size() > 0) {
                 Order current_order = orders.get(0);
                 current_order.add_menu(order.getMenus().get(0));
@@ -93,12 +93,12 @@ public class GroupOrder {
         for (List<Order> orders : globalOrders.values()) {
             for (Order order : orders) {
                 Map<String, List<Menu>> orderByRestaurant = menusByRestaurant.entrySet().stream()
-                        .filter(entry -> entry.getKey().equals(order.getRestaurant_name()))
+                        .filter(entry -> entry.getKey().equals(order.getRestaurantName()))
                         .collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
                 if (orderByRestaurant.isEmpty()) {
-                    menusByRestaurant.put(order.getRestaurant_name(), order.getMenus());
+                    menusByRestaurant.put(order.getRestaurantName(), order.getMenus());
                 } else {
-                    menusByRestaurant.get(order.getRestaurant_name()).addAll(order.getMenus());
+                    menusByRestaurant.get(order.getRestaurantName()).addAll(order.getMenus());
                 }
             }
         }
@@ -114,12 +114,12 @@ public class GroupOrder {
         HashMap<String, List<Order>> restaurant_orders = new HashMap<>();
         for (List<Order> orders : this.globalOrders.values()) {
             for (Order order : orders) {
-                if (restaurant_orders.containsKey(order.getRestaurant_name())) {
-                    List<Order> orders_2 = restaurant_orders.get(order.getRestaurant_name());
+                if (restaurant_orders.containsKey(order.getRestaurantName())) {
+                    List<Order> orders_2 = restaurant_orders.get(order.getRestaurantName());
                     orders_2.add(order);
                 } else {
                     // Use new ArrayList<>(Arrays.asList(order)) to create a mutable list
-                    restaurant_orders.put(order.getRestaurant_name(), new ArrayList<>(Arrays.asList(order)));
+                    restaurant_orders.put(order.getRestaurantName(), new ArrayList<>(Arrays.asList(order)));
                 }
             }
         }
@@ -138,14 +138,12 @@ public class GroupOrder {
     }
 
     public void setOrderProcessing(String restaurantName) {
-
         for (List<Order> orders : globalOrders.values()) {
             List<Order> matchingOrders = orders.stream()
-                    .filter(order -> order.getRestaurant_name().equals(restaurantName))
+                    .filter(order -> order.getRestaurantName().equals(restaurantName))
                     .collect(Collectors.toList());
             for (Order order : matchingOrders) {
                 order.getOrderState().next();
-
             }
         }
 
@@ -161,7 +159,7 @@ public class GroupOrder {
 
         for (List<Order> orders : globalOrders.values()) {
             List<Order> matchingOrders = orders.stream()
-                    .filter(order -> order.getRestaurant_name().equals(restaurantName))
+                    .filter(order -> order.getRestaurantName().equals(restaurantName))
                     .collect(Collectors.toList());
             for (Order order : matchingOrders) {
 
@@ -182,7 +180,7 @@ public class GroupOrder {
     public void setOrderReady(String restaurantName) {
         for (List<Order> orders : globalOrders.values()) {
             List<Order> matchingOrders = orders.stream()
-                    .filter(order -> order.getRestaurant_name().equals(restaurantName))
+                    .filter(order -> order.getRestaurantName().equals(restaurantName))
                     .collect(Collectors.toList());
 
             for (Order order : matchingOrders) {
