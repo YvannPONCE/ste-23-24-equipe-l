@@ -80,7 +80,6 @@ public class GroupOrder {
         for (Order order : orders) {
             order.getOrderState().next();
         }
-
         for (List<Order> orders2 : this.globalOrders.values()) {
             for (Order order : orders2) {
                 if (order.getOrderState().getStatus() != Status.PAID) return;

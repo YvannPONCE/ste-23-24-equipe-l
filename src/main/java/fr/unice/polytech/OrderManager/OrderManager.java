@@ -11,6 +11,7 @@ import fr.unice.polytech.RestaurantManager.CapacityObserver;
 import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
+import org.mockito.internal.matchers.Or;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -106,7 +107,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             groupOrder.addOrder(user.getEmail(), order);
             this.groupOrders.add(groupOrder);
         }
-        notificationCenter.order_confirmed(orderID, deliveryLocation, order.getCreation_time(), user.getEmail());
+        notificationCenter.order_confirmed(orderID, deliveryLocation, groupOrder.getDeliveryTime(), user.getEmail());
     }
 
     public List<Order> getCurrentOrders(UUID order_id, String userEmail) {
@@ -167,16 +168,25 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
                 if (groupOrder.isPaid())
                 {
                     statisticsManager.addOrder(groupOrder);
+                    notifyStaffMembers(groupOrder);
                 }
             }
         }
     }
+    private void notifyStaffMembers(GroupOrder groupOrder)
+    {
+        UUID orderID = groupOrder.getUuid();
+        Locations locations = groupOrder.getDelivery_location();
+        LocalDateTime deliveryTime = groupOrder.getDeliveryTime();
+        List<String> emails = new ArrayList<>();
+        HashMap<String, List<Order>> ordersByRestaurants = groupOrder.getOrdersByRestaurants();
+        for(Map.Entry<String, List<Order>> entry : ordersByRestaurants.entrySet())
+        {
+            emails.addAll(restaurantManager.getRestaurant(entry.getKey()).getStaffMembers());
+        }
 
-    private void sendOrders(GroupOrder groupOrder) {
-        HashMap<String, List<Order>> restaurantOrders = groupOrder.getOrdersByRestaurants();
-        for (Map.Entry<String, List<Order>> entry : restaurantOrders.entrySet()) {
-            Restaurant restaurant = this.restaurantManager.getRestaurant(entry.getKey());
-            restaurant.placeOrder(entry.getValue());
+        for(String email : emails){
+            notificationCenter.orderSold(orderID, locations, deliveryTime, email);
         }
     }
 
