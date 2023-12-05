@@ -61,11 +61,14 @@ public class ManageCapacityatachoosenSlot {
     }
     @Then("capacity at this restaurant should be {int}")
     public void capacity_at_this_restaurant_should_be(Integer int1) {
-        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.from(localDateTime).getHour()));
+        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.from(localDateTime).minusHours(2).getHour()));
     }
 
     @Given("user {string} order at {int}:{int} at {string} but the chosen slot is full")
     public void user_order_at_at_but_the_chosen_slot_is_full(String string, Integer int1, Integer int2, String string2) {
+        time = LocalTime.of(int1, int2);
+        localDateTime = LocalDateTime.of(LocalDate.now(), time);
+
         userManager = new UserManager();
         notificationCenter = new NotificationCenter(userManager);
         this.user_email = string;
@@ -74,10 +77,7 @@ public class ManageCapacityatachoosenSlot {
         restaurant = new Restaurant(string2);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        restaurant.setHourlyCapacity(16,0);
-        time = LocalTime.of(int1, int2);
-
-        localDateTime = LocalDateTime.of(LocalDate.now(), time);
+        restaurant.setHourlyCapacity(localDateTime.minusHours(2).getHour(), 0);
 
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
     }
@@ -87,13 +87,13 @@ public class ManageCapacityatachoosenSlot {
         Menu menu = new Menu("chicken nuggets", 8.00);
         order.add_menu(menu);
         order.add_menu(menu);
-        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, localDateTime);
 
 
     }
     @Then("we suggest next available slot")
     public void we_suggest_next_available_slot() {
-        Assert.assertNotEquals(LocalDateTime.from(localDateTime) ,orderManager.getCurrentOrders(orderId).getDeliveryTime());
+        Assert.assertNotEquals(localDateTime,orderManager.getCurrentOrders(orderId).getDeliveryTime());
     }
 
 

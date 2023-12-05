@@ -62,7 +62,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         LocalDateTime deliveryTime = LocalDateTime.now();
         return placeOrder(email, order, deliveryLocation, deliveryTime);
     }
-    public UUID placeOrder(String email, Order order, Locations deliveryLocation, LocalDateTime chosenSlot) {
+    public UUID placeOrder(String email, Order order, Locations deliveryLocation, LocalDateTime delivryTime) {
         UUID uuid = UUID.randomUUID();
 
         User user = userManager.getUser(email);
@@ -71,16 +71,16 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         if(restaurant == null) return UUID.fromString("00000000-0000-0000-0000-000000000000");
 
         capacityCalculator = new RestaurantCapacityCalculator(restaurant);
-        LocalDateTime deliverySlot = chosenSlot;
+        LocalDateTime chosenSlot = delivryTime.minusHours(2);
         if (capacityCalculator.canPlaceOrder(order.getMenus().size(), chosenSlot) == false ){
-            deliverySlot = capacityCalculator.getNextSlotChosen(chosenSlot);
+            chosenSlot = capacityCalculator.getNextSlotChosen(chosenSlot);
             if(user.getNumberOfOrdersFromRestaurant(restaurant.getName())%restaurant.getDiscountThreshold()==0){
                 restaurant.addUserToDiscountedUsers(email);
             }
         }
 
-        capacityCalculator.placeOrderSlot(order.getMenus().size(), deliverySlot);
-        placeOrder(user, order, restaurant, deliveryLocation, deliverySlot, uuid);
+        capacityCalculator.placeOrderSlot(order.getMenus().size(), chosenSlot);
+        placeOrder(user, order, restaurant, deliveryLocation, chosenSlot.plusHours(2), uuid);
         this.capacityCalculator.addObserver(this);
         return uuid;
     }
@@ -211,7 +211,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
                 .filter(groupOrder1 -> groupOrder1.getUuid() == order_id)
                 .collect(Collectors.toList());
 
-        OrderObserver orderObserver = new OrderObserver(capacityCalculator);
+
         if(!groupOrders.isEmpty())
         {
 
