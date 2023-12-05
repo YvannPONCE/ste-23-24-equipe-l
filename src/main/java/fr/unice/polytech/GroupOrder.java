@@ -222,6 +222,18 @@ public class GroupOrder {
                 "globalOrders=" + globalOrders +
                 '}';
     }
+
+    public void modifyOrder(String userMail, Date deliveryTime, Locations locations) {
+        List<Order> orders = globalOrders.get(userMail);
+        setDelivery_location(locations);
+        if (orders == null) return;
+        for (Order order1 : orders) {
+                order1.setCreation_time(deliveryTime);
+
+            }
+        }
+
+
 }
 
 

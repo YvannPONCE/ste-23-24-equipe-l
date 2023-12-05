@@ -141,7 +141,19 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         }
         return Collections.unmodifiableList(orders);
     }
+        public  void modifyOrder(UUID order_id,String user_email, Locations locations,Date deliveryTime,Order order)
+    {
+        List<GroupOrder> group_orders = this.groupOrders.stream()
+                .filter(group_order -> group_order.getUuid().equals(order_id))
+                .collect(Collectors.toList());
+        if (!group_orders.isEmpty()) {
+            for ( GroupOrder groupOrder : group_orders)
+            {
+                groupOrder.modifyOrder(user_email,deliveryTime,locations);
+            }
 
+        }
+        }
     public GroupOrder getCurrentOrders(UUID order_id) {
         List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))
@@ -220,6 +232,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             groupOrder.validateOrderReceipt();
         }
     }
+
 
     public void setOrderAsClosed(UUID order_id) {
         GroupOrder groupOrder;
