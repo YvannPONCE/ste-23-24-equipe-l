@@ -1,5 +1,6 @@
 package fr.unice.polytech.Restaurant;
 
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Order;
 import fr.unice.polytech.Schedule;
@@ -26,6 +27,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     int discountThreshold;
     int discountPeriod;
     double discountPercentage;
+    private HashMap<Role, Double> roleDiscount;
     HashMap<String, LocalDate> discountedUsers;
 
     public Restaurant(String name) {
@@ -41,6 +43,11 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
         this.discountedUsers = new HashMap<>();
         this.staffMembers = new ArrayList<>();
         initializeHourlyCapacities();
+
+        roleDiscount = new HashMap<>();
+        roleDiscount.put(Role.CUSTOMER_TEACHER, 0.20);
+        roleDiscount.put(Role.DELIVER_MAN, 0.10);
+        roleDiscount.put(Role.CUSTOMER_STAFF, 0.15);
     }
 
     public void setHourlyCapacity(int hour, int capacity) {
@@ -86,6 +93,14 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     }
     public List<Menu> getListemenu() {
         return listemenu;
+    }
+    public List<Menu> getListemenu(Role role) {
+        List<Menu> newMenuList = new ArrayList<>();
+        for(Menu menu : listemenu){
+            Menu menu2 = new Menu(menu.getItemName(), menu.getPrice()*roleDiscount.get(role));
+            newMenuList.add(menu2);
+        }
+        return newMenuList;
     }
     public void setListemenu(List<Menu> listemenu) {
         this.listemenu = listemenu;
