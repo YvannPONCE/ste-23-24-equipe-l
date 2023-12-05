@@ -46,13 +46,15 @@ public class RetriveVolumeStatistics {
         restaurantManager.addRestaurant(restaurant);
 
         Menu menu = new Menu(menuName, 7.5);
-        Order order1 = new Order(restaurantName);
-        Order order2 = new Order(restaurantName);
-        order1.add_menu(menu);
-        order2.add_menu(menu);
-        String location = deliveryManager.getLocations().get(0);
-        orderManager.placeOrder("user@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(12));
-        orderManager.placeOrder("user@example.com", order2, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(13));
+        for(int i=0 ; i<numberOfOrders; ++i)
+        {
+            Order order1 = new Order(restaurantName);
+            Order order2 = new Order(restaurantName);
+            order1.add_menu(menu);
+            order2.add_menu(menu);
+            orderManager.placeOrder("user@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(hour1));
+            orderManager.placeOrder("user@example.com", order2, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(hour2));
+        }
         orderManager.payOrders("user@example.com", "7936 3468 9302 8371");
     }
     @Given("The restaurant {string} has complete {int} orders of {string} at {int} h")
@@ -62,10 +64,12 @@ public class RetriveVolumeStatistics {
         restaurantManager.addRestaurant(restaurant);
 
         Menu menu = new Menu(menuName, 7.5);
-        Order order1 = new Order(restaurantName);
-        order1.add_menu(menu);
-        String location = deliveryManager.getLocations().get(0);
-        orderManager.placeOrder("user2@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(13));
+        for(int i=0 ; i<numberOfOrders; ++i)
+        {
+            Order order1 = new Order(restaurantName);
+            order1.add_menu(menu);
+            orderManager.placeOrder("user2@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(hour));
+        }
         orderManager.payOrders("user2@example.com", "7936 3468 9302 8371");
     }
     @Then("The restaurant manager {string} can see {int} orders in {string} and {int} order for {string}")

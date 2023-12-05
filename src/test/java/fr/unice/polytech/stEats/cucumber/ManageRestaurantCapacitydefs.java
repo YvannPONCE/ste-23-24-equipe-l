@@ -102,7 +102,7 @@ public class ManageRestaurantCapacitydefs {
     public void user_have_a_created_order_status() {
         Assert.assertFalse(orderId.equals(null));
         Assert.assertEquals(order.getOrderState().getStatus(), Status.CREATED);
-        Assert.assertEquals(restaurant2.getHourlyCapacity(LocalDateTime.now().getHour()),9);
+        Assert.assertEquals(restaurant2.getHourlyCapacity(LocalDateTime.now().minusHours(2).getHour()),9);
     }
 
 
@@ -141,7 +141,7 @@ public class ManageRestaurantCapacitydefs {
         Assert.assertFalse(orderId2.equals(null));
         Assert.assertEquals(order.getOrderState().getStatus(), Status.CREATED);
         Assert.assertEquals(order2.getOrderState().getStatus(), Status.CREATED);
-        Assert.assertEquals(Optional.of(restaurant2.getHourlyCapacity(LocalDateTime.now().getHour())),Optional.of(int1));
+        Assert.assertEquals(Optional.of(restaurant2.getHourlyCapacity(LocalDateTime.now().minusHours(2).getHour())),Optional.of(int1));
     }
 
     @Given("user {string} ordered in a  Restaurant {string} with a capacity of {int} menus per hour with available slot")
@@ -177,7 +177,7 @@ public class ManageRestaurantCapacitydefs {
     @Then("the restaurant is set to {int}")
     public void the_restaurant_is_set_to(Integer int1) {
         Assert.assertFalse(orderId.equals(null));
-        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.now().getHour()));
+        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.now().minusHours(2).getHour()));
     }
 
 }
