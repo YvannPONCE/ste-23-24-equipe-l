@@ -52,8 +52,8 @@ public class RetriveVolumeStatistics {
             Order order2 = new Order(restaurantName);
             order1.add_menu(menu);
             order2.add_menu(menu);
-            orderManager.placeOrder("user@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(12));
-            orderManager.placeOrder("user@example.com", order2, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(13));
+            orderManager.placeOrder("user@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(hour1));
+            orderManager.placeOrder("user@example.com", order2, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(hour2));
         }
         orderManager.payOrders("user@example.com", "7936 3468 9302 8371");
     }
@@ -67,19 +67,16 @@ public class RetriveVolumeStatistics {
         for(int i=0 ; i<numberOfOrders; ++i)
         {
             Order order1 = new Order(restaurantName);
-            Order order2 = new Order(restaurantName);
             order1.add_menu(menu);
-            order2.add_menu(menu);
-            orderManager.placeOrder("user2@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(13));
-            orderManager.placeOrder("user2@example.com", order2, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(14));
+            orderManager.placeOrder("user2@example.com", order1, Locations.HALL_PRINCIPAL, LocalDateTime.now().withHour(hour));
         }
         orderManager.payOrders("user2@example.com", "7936 3468 9302 8371");
     }
     @Then("The restaurant manager {string} can see {int} orders in {string} and {int} order for {string}")
     public void the_restaurant_manager_can_see_orders_in_and_order_for(String manergerName, Integer numberOfOrders1, String restaurantName1, Integer numberOfOrders2, String restaurantName2) {
         StatisticManagerRestaurant statisticManagerRestaurant = statisticsManager;
-        Assert.assertEquals(numberOfOrders1.intValue()*2, statisticManagerRestaurant.getVolumeByRestaurant(restaurantName1));
-        Assert.assertEquals(numberOfOrders2.intValue()*2, statisticsManager.getVolumeByRestaurant(restaurantName2));
+        Assert.assertEquals(numberOfOrders1.intValue(), statisticManagerRestaurant.getVolumeByRestaurant(restaurantName1));
+        Assert.assertEquals(numberOfOrders2.intValue(), statisticsManager.getVolumeByRestaurant(restaurantName2));
     }
     @Then("a user can see {int} orders at {int} and {int} order at {int}")
     public void a_user_can_see_orders_at_and_order_at(Integer numberOfOrders1, Integer hours1, Integer numberOfOrders2, Integer hours2) {
