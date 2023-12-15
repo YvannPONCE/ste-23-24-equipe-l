@@ -119,4 +119,8 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
             notificationCenter.order_delivered(groupOrder.getUuid(), groupOrder.getDeliveryLocation(), LocalDateTime.now(), email);
         }
     }
+
+    public GroupOrder getOrder(String deliveryMan) {
+        return deliveryMenOrders.get(deliveryMan);
+    }
 }
