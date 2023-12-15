@@ -25,3 +25,11 @@ Feature: Rate client
     And  user "user" enters a rating to "deliveryGuy" for the user of 4
     And user "user" enters a rating to "deliveryGuy" for the user of 3
     Then the rating by the delivery personnel is added to the reviews of user "deliveryGuy" with 3.5
+
+  Scenario: User rates the Restaurant
+    Given Restaurant "Restaurant" is disponible
+    When an order is made in "Restaurant"
+    When  an order is made in "Restaurant"
+    And  user "user" enters a rating to "Restaurant" for the user of 4
+    And user "user" enters a rating to "Restaurant" for the user of 3
+    Then the rating by the user is added to the reviews of restaurant "Restaurant" with 3.5
