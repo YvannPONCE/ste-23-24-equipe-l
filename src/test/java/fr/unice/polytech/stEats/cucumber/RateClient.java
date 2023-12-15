@@ -17,7 +17,7 @@ import org.junit.Assert;
 
 import java.util.UUID;
 
-public class rateClient {
+public class RateClient {
 
     private RestaurantManager restaurantManager;
     private RatingManager ratingManager;
@@ -62,7 +62,7 @@ public class rateClient {
     public void delivery_personnel_enters_a_rating_to_for_the_user_of(String deliveryMan, String user, Double rate) {
         GroupOrder groupOrder = deliveryManager.getOrder(deliveryMan);
         String username = groupOrder.getUsers().get(0);
-        ratingManager.rateUser(username, rate);
+        ratingManager.rate(username, rate);
     }
 
     @Then("the rating by the delivery personnel is added to the reviews of user {string} with {int}")
@@ -73,6 +73,11 @@ public class rateClient {
     @Then("the rating by the delivery personnel is added to the reviews of user {string} with {double}")
     public void the_rating_by_the_delivery_personnel_is_added_to_the_reviews_of_user_with(String user, Double rate) {
         Assert.assertEquals(rate, ratingManager.getRate(user));
+    }
+
+    @When("user {string} enters a rating to {string} for the user of {double}")
+    public void user_enters_a_rating_to_for_the_user_of(String user, String deliveryMan, Double rate) {
+        ratingManager.rate(deliveryMan, rate);
     }
 
 
