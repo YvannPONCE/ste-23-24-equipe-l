@@ -17,7 +17,7 @@ import org.junit.Assert;
 
 import java.util.UUID;
 
-public class RateClient {
+public class Rating {
 
     private RestaurantManager restaurantManager;
     private RatingManager ratingManager;
@@ -38,7 +38,6 @@ public class RateClient {
         deliveryManager.addDeliveryLocation("Polytech Nice Hall");
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, deliveryManager, notificationCenter);
         orderManager.addDeliveryManager(deliveryManager);
-        System.out.println("App ready");
     }
 
     @Given("delivery personnel {string} logs into the delivery application")
@@ -78,6 +77,26 @@ public class RateClient {
     @When("user {string} enters a rating to {string} for the user of {double}")
     public void user_enters_a_rating_to_for_the_user_of(String user, String deliveryMan, Double rate) {
         ratingManager.rate(deliveryMan, rate);
+    }
+
+    @Given("Restaurant {string} is disponible")
+    public void restaurant_is_disponible(String restaurantName) {
+        restaurantManager.addRestaurant(new Restaurant(restaurantName));
+    }
+    @When("an order is made in {string}")
+    public void an_order_is_made_in(String restaurantName) {
+        restaurantManager.addRestaurant(new Restaurant("kfc"));
+        userManager.add_user(new User("user", "user", Role.CUSTOMER_STUDENT));
+        Order order = new Order(restaurantName);
+        order.add_menu(new Menu("chicken", 12));
+        UUID orderId = orderManager.placeOrder("user" ,order, Locations.HALL_PRINCIPAL);
+        orderManager.payOrders("user", "7936 3468 9302 8371");
+        orderManager.processingOrder(orderId, restaurantName);
+        orderManager.setOrderReady(orderId,restaurantName);
+    }
+    @Then("the rating by the user is added to the reviews of restaurant {string} with {double}")
+    public void the_rating_by_the_user_is_added_to_the_reviews_of_restaurant_with(String restaurantName, Double rate) {
+        Assert.assertEquals(rate, ratingManager.getRate(restaurantName));
     }
 
 
