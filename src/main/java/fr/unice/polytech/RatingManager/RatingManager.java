@@ -4,19 +4,19 @@ import java.util.*;
 
 public class RatingManager {
 
-    Map<String, List<Double>> usersRate;
+    Map<String, List<Double>> Rating;
 
     public RatingManager(){
-        usersRate = new HashMap<>();
+        Rating = new HashMap<>();
     }
 
-    public void rateUser(String email, Double rate) {
-        List<Double> rates = usersRate.get(email);
+    public void rate(String email, Double rate) {
+        List<Double> rates = Rating.get(email);
         if(rates == null)
         {
             rates = new ArrayList<>();
             rates.add(rate);
-            usersRate.put(email, rates);
+            Rating.put(email, rates);
         }
         else {
             rates.add(rate.doubleValue());
@@ -24,6 +24,6 @@ public class RatingManager {
     }
 
     public Double getRate(String user) {
-        return usersRate.get(user).stream().mapToDouble(Double::doubleValue).average().orElse(-1);
+        return Rating.get(user).stream().mapToDouble(Double::doubleValue).average().orElse(-1);
     }
 }
