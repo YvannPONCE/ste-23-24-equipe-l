@@ -58,8 +58,8 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     // Méthode pour obtenir la capacité à une heure spécifique
     public int getHourlyCapacity(int hour) {
         return hourlyCapacities.getOrDefault(hour, capacity);
-
     }
+
     private void initializeHourlyCapacities() {
         List<Integer> openingHoursList = horaires.getOpeningHours();
         for (int hour : openingHoursList) {
