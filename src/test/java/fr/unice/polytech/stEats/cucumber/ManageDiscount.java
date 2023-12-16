@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -59,7 +60,7 @@ public class ManageDiscount {
     }
     @When("the user selects {string} and adds {int} items ton his  order")
     public void the_user_selects_and_adds_items_ton_his_order(String string, Integer int1) {
-        Menu menu=new Menu("chickennuggets",8.00);
+        Menu menu=new Menu("chickennuggets",8.00, MenuType.BASIC_MENU);
         for(int i=0;i<int1;i++) {
             order.add_menu(menu);
         }
@@ -105,7 +106,7 @@ public class ManageDiscount {
     public void the_first_user_add_a_menu_at_euros_from_to_deliver_at(Integer int1, String string, Double double1, String string2, String string3) {
         order2 = new Order(string2);
         restaurantManager.add_restaurant(new Restaurant(string2));
-        Menu menu=new Menu(string,double1);
+        Menu menu=new Menu(string,double1, MenuType.BASIC_MENU);
         for(int i=0;i<int1;i++){
             order2.add_menu(menu);
         }
@@ -115,7 +116,7 @@ public class ManageDiscount {
     public void the_second_join_a_menu_at_euros_from_to_his_friend_command(Integer int1, String string, Double double1, String string2) {
        order3= new Order(string2);
         restaurantManager.add_restaurant(new Restaurant(string2));
-        Menu menu=new Menu(string,double1);
+        Menu menu=new Menu(string,double1, MenuType.BASIC_MENU);
         for(int i=0;i<int1;i++){
             order3.add_menu(menu);
         }
@@ -150,7 +151,7 @@ public class ManageDiscount {
 
         restaurant.setCapacity(10);
         order4=new Order(string2);
-       Menu menu=new Menu(string,double1);
+       Menu menu=new Menu(string,double1, MenuType.BASIC_MENU);
        for(int i=0;i<int1;i++){
            order4.add_menu(menu);
        }

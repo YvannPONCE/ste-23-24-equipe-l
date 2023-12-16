@@ -12,9 +12,14 @@ public class Menu {
     private double price;
     private MenuType menuType;
 
-    public Menu(String itemName, double price) {
+    public Menu(String itemName, double price, MenuType menuType) {
         this.itemName = itemName;
-        this.price = price;
+        this.menuType = menuType;
+        if(this.menuType == MenuType.AFTERWORK_MENU) {
+            this.price = 0;
+        } else {
+            this.price = price;
+        }
     }
 
     public Menu(Menu menu) {

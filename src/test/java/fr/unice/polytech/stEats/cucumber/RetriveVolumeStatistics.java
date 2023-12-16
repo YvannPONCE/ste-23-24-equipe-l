@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Order;
@@ -20,7 +21,6 @@ import org.junit.Assert;
 import java.time.LocalDateTime;
 
 public class RetriveVolumeStatistics {
-
     private RestaurantManager restaurantManager;
     private UserManager userManager;
     private StatisticsManager statisticsManager;
@@ -45,7 +45,7 @@ public class RetriveVolumeStatistics {
         Restaurant restaurant = new Restaurant(restaurantName);
         restaurantManager.addRestaurant(restaurant);
 
-        Menu menu = new Menu(menuName, 7.5);
+        Menu menu = new Menu(menuName, 7.5, MenuType.BASIC_MENU);
         for(int i=0 ; i<numberOfOrders; ++i)
         {
             Order order1 = new Order(restaurantName);
@@ -63,7 +63,7 @@ public class RetriveVolumeStatistics {
         Restaurant restaurant = new Restaurant(restaurantName);
         restaurantManager.addRestaurant(restaurant);
 
-        Menu menu = new Menu(menuName, 7.5);
+        Menu menu = new Menu(menuName, 7.5, MenuType.BASIC_MENU);
         for(int i=0 ; i<numberOfOrders; ++i)
         {
             Order order1 = new Order(restaurantName);

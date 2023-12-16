@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -52,7 +53,7 @@ public class ValidateCommandForDelivery {
 
 
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name, menu_price));
+        order.add_menu(new Menu(menu_name, menu_price, MenuType.BASIC_MENU));
 
         userManager.addUser(new User("Albert@gmail.com","Albert", Role.DELIVER_MAN));
         orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);

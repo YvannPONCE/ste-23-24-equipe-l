@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -42,7 +43,7 @@ public class AddMenuToCart {
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name, menu_price));
+        order.add_menu(new Menu(menu_name, menu_price, MenuType.BASIC_MENU));
         order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
     }
 
@@ -77,11 +78,11 @@ public class AddMenuToCart {
         restaurantManager.add_restaurant(new Restaurant(restaurant_name_2));
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name, menu_price));
+        order.add_menu(new Menu(menu_name, menu_price, MenuType.BASIC_MENU));
         order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         Order order_2 = new Order(restaurant_name_2);
-        order_2.add_menu(new Menu(menu_name_2, menu_price_2));
+        order_2.add_menu(new Menu(menu_name_2, menu_price_2, MenuType.BASIC_MENU));
         orderManager.placeOrder(user.getEmail(), order_2, order_id);
 
     }
@@ -125,11 +126,11 @@ public class AddMenuToCart {
         restaurantManager.add_restaurant(new Restaurant(restaurant_name));
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name_1, menu_price_1));
+        order.add_menu(new Menu(menu_name_1, menu_price_1, MenuType.BASIC_MENU));
         order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
 
         Order order_2 = new Order(restaurant_name);
-        order_2.add_menu(new Menu(menu_name_2, menu_price_2));
+        order_2.add_menu(new Menu(menu_name_2, menu_price_2, MenuType.BASIC_MENU));
         orderManager.placeOrder(user.getEmail(), order_2, order_id);
     }
     @Then("The {string} menu from {string} is stored in the current order and cost {double} euros as well as the {string} menu at {double} euros.")

@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -50,7 +51,7 @@ public class UserConsultStatistics {
     }
     @Given("User {string} order a {string} at {int} euros at {string}")
     public void user_order_a_at_euros_at(String userEmail, String menuName, Integer menuPrice, String menuRestaurant) {
-        Menu menu = new Menu(menuName, menuPrice);
+        Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
         Order order = new Order(menuRestaurant, new ArrayList<Menu>(Arrays.asList(menu)));
         orderManager.placeOrder(userEmail ,order, Locations.HALL_PRINCIPAL);
         orderManager.payOrders(userEmail, "7936 3468 9302 8371");
@@ -72,7 +73,7 @@ public class UserConsultStatistics {
         Order order;
 
         for(int i =0;i<numberOfOrders;++i) {
-            menu = new Menu("Bucket", 7.5);
+            menu = new Menu("Bucket", 7.5, MenuType.BASIC_MENU);
             order = new Order(restaurantName, new ArrayList<Menu>(Arrays.asList(menu)));
             orderManager.placeOrder("melanie@egmail.com", order, Locations.HALL_PRINCIPAL);
             orderManager.payOrders("melanie@egmail.com", "7936 3468 9302 8371");

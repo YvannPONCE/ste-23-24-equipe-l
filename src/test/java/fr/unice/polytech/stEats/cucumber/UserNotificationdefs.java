@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -49,7 +50,7 @@ public class UserNotificationdefs {
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
 
-        order.add_menu(new Menu(string3, 5.50));
+        order.add_menu(new Menu(string3, 5.50, MenuType.BASIC_MENU));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
 
         orderManager.setOrderReady(orderId, "chickenTacky");
@@ -87,7 +88,7 @@ public class UserNotificationdefs {
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
 
-        order.add_menu(new Menu("chickennuggets", 5.50));
+        order.add_menu(new Menu("chickennuggets", 5.50, MenuType.BASIC_MENU));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
         orderManager.payOrders((String) email,"7936 3468 9302 8371");
 
@@ -133,7 +134,7 @@ public class UserNotificationdefs {
         this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
 
-        order.add_menu(new Menu("chickennuggets", 5.50));
+        order.add_menu(new Menu("chickennuggets", 5.50, MenuType.BASIC_MENU));
         orderId = orderManager.placeOrder((String) email, order, Locations.HALL_PRINCIPAL);
         orderManager.payOrders(userEmail, "7936 3468 9302 8371");
         orderManager.processingOrder(orderId,"chickenTacky");

@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -60,7 +61,7 @@ public class ManageRestaurantCapacitydefs {
     @When("user attempt to choose the {int}:{int} PM time slot")
     public void user_attempt_to_choose_the_pm_time_slot(Integer int1, Integer int2) {
         Order order = new Order(restaurant.getName());
-        Menu menu = new Menu("nuggets", 8.00);
+        Menu menu = new Menu("nuggets", 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
 
@@ -91,7 +92,7 @@ public class ManageRestaurantCapacitydefs {
     @When("user order a {string} in the restaurant")
     public void user_order_a_in_the_restaurant(String string) {
          order = new Order(restaurant2.getName());
-        Menu menu = new Menu(string, 8.00);
+        Menu menu = new Menu(string, 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
 
@@ -126,7 +127,7 @@ public class ManageRestaurantCapacitydefs {
         order = new Order(restaurant2.getName());
         order2=new Order(restaurant2.getName());
 
-        Menu menu = new Menu(string, 8.00);
+        Menu menu = new Menu(string, 8.00, MenuType.BASIC_MENU);
 
             order2.add_menu(menu);
         order.add_menu(menu);
@@ -164,7 +165,7 @@ public class ManageRestaurantCapacitydefs {
     @When("user order a {string} and validate order receipt")
     public void user_order_a_and_validate_order_receipt(String string) {
         Order order = new Order(restaurant.getName());
-        Menu menu = new Menu(string, 8.00);
+        Menu menu = new Menu(string, 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
 
