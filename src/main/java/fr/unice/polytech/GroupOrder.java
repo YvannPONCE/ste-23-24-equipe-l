@@ -234,6 +234,10 @@ public class GroupOrder {
                 "globalOrders=" + globalOrders +
                 '}';
     }
+
+    public List<String> getUsers() {
+        return globalOrders.keySet().stream().collect(Collectors.toList());
+    }
 }
 
 
