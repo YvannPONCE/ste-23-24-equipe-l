@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -48,7 +49,7 @@ public class AddOrdertoGroupOrder {
         notificationCenter = new NotificationCenter(userManager);
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name, menu_price));
+        order.add_menu(new Menu(menu_name, menu_price, MenuType.BASIC_MENU));
 
 
         order_id = orderManager.placeOrder(user1.getEmail(), order, Locations.HALL_PRINCIPAL);
@@ -56,7 +57,7 @@ public class AddOrdertoGroupOrder {
     @When("The second user add a {string} menu at {double} euros from {string}")
     public void the_second_user_add_a_menu_at_euros_from_mcdonald(String menu_name, Double menu_price, String restaurant_name) {
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name, menu_price));
+        order.add_menu(new Menu(menu_name, menu_price, MenuType.BASIC_MENU));
         orderManager.placeOrder(user2.getEmail(), order, order_id);
     }
     @Then("Two {string} menu from {string} are stored in the current order and cost {double} euros each.")
@@ -109,7 +110,7 @@ public class AddOrdertoGroupOrder {
     @When("The second join a {string} menu at {double} euros from {string} to his friend command")
     public void the_second_join_a_menu_at_euros_from(String menu_name, Double menu_price, String restaurant_name) {
         Order order = new Order(restaurant_name);
-        order.add_menu(new Menu(menu_name, menu_price));
+        order.add_menu(new Menu(menu_name, menu_price, MenuType.BASIC_MENU));
         orderManager.placeOrder(user2.getEmail(), order, order_id);
     }
 

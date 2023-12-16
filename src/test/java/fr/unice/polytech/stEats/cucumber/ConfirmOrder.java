@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.OrderManager.OrderManagerStaff;
@@ -37,7 +38,7 @@ public class ConfirmOrder {
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, null, notificationCenter);
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
         this.order_id = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
@@ -73,7 +74,7 @@ public class ConfirmOrder {
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
         this.order_id = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL);
@@ -111,8 +112,8 @@ public class ConfirmOrder {
         orderManager.userManager.add_user(new User(user_email,"rrr", Role.CUSTOMER_STUDENT));
         Order order_1 = new Order(restaurant_name_1);
         Order order_2 = new Order(restaurant_name_2);
-        Menu menu_1 = new Menu(menu_name_1, menu_price_1);
-        Menu menu_2 = new Menu(menu_name_2, menu_price_2);
+        Menu menu_1 = new Menu(menu_name_1, menu_price_1, MenuType.BASIC_MENU);
+        Menu menu_2 = new Menu(menu_name_2, menu_price_2, MenuType.BASIC_MENU);
         order_1.add_menu(menu_1);
         order_2.add_menu(menu_2);
 

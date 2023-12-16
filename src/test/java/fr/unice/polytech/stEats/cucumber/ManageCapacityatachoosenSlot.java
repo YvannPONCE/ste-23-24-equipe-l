@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -19,8 +20,6 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public class ManageCapacityatachoosenSlot {
-
-
     private UserManager userManager;
     private String user_email;
     private User user;
@@ -52,11 +51,9 @@ public class ManageCapacityatachoosenSlot {
     @When("user choose a  {int} nuggets menu")
     public void user_choose_a_nuggets_menu(Integer int1) {
         order = new Order(restaurant.getName());
-        Menu menu = new Menu("chicken nuggets", 8.00);
+        Menu menu = new Menu("chicken nuggets", 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
-
-
         orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
     }
     @Then("capacity at this restaurant should be {int}")
@@ -84,7 +81,7 @@ public class ManageCapacityatachoosenSlot {
     @When("user order his demand is rejected")
     public void user_order_his_demand_is_rejected() {
         order = new Order(restaurant.getName());
-        Menu menu = new Menu("chicken nuggets", 8.00);
+        Menu menu = new Menu("chicken nuggets", 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
         orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, localDateTime);

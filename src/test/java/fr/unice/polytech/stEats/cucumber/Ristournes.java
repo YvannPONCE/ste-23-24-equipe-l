@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -51,7 +52,7 @@ public class Ristournes {
     @When("User orders for the first time {string} for {double}")
     public void user_orders_for_the_first_time_for(String menu_name, Double menu_price) {
         Order order = new Order(this.restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         order.add_menu(menu);
         this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
         orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
@@ -79,7 +80,7 @@ public class Ristournes {
         this.userManager.add_user(user);
         for (int i = 0; i < num_of_orders; i++) {
             Order order = new Order(this.restaurant_name);
-            Menu menu = new Menu("menu", 10.0);
+            Menu menu = new Menu("menu", 10.0, MenuType.BASIC_MENU);
             order.add_menu(menu);
             this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
             orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
@@ -88,7 +89,7 @@ public class Ristournes {
     @When("User orders for the 10th time {string} for {double}")
     public void user_orders_for_the_10th_time_for(String menu_name, Double menu_price) {
         Order order = new Order(this.restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         order.add_menu(menu);
         this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
         orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
@@ -119,7 +120,7 @@ public class Ristournes {
         this.userManager.add_user(user);
         for (int i = 0; i < 11; i++) {
             Order order = new Order(this.restaurant_name);
-            Menu menu = new Menu("menu", 10.0);
+            Menu menu = new Menu("menu", 10.0, MenuType.BASIC_MENU);
             order.add_menu(menu);
             this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
             orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");
@@ -128,7 +129,7 @@ public class Ristournes {
     @When("User orders {string} for {double}")
     public void user_orders_for(String menu_name, Double menu_price) {
         Order order = new Order(this.restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         order.add_menu(menu);
         this.order_id = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);
         orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");

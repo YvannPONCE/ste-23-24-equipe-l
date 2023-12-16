@@ -1,6 +1,7 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.state.OrderState;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class GroupOrder {
     Locations delivery_location;
     LocalDateTime deliveryTime;
     public HashMap<String, List<Order>> globalOrders;
+    private int numberOfParticipants = 0; //acts as a counter for the number of participants in the group order or afterWork
 
     public GroupOrder(UUID uuid, Locations delivery_location, LocalDateTime deliveryTime) {
         this.uuid = uuid;
@@ -51,6 +53,16 @@ public class GroupOrder {
         if (order.getMenus().size() < 1) {
             return false;
         }
+
+        if(!globalOrders.containsKey(user_email)){
+            this.numberOfParticipants++;
+        }
+
+        if(order.getMenus().get(0).getMenuType() == MenuType.AFTERWORK_MENU){
+            order.getOrderState().setStatus(Status.PROCESSING);
+            this.numberOfParticipants += order.getMenus().get(0).getNumberOfParticipants();
+        }
+
         List<Order> user_orders = globalOrders.get(user_email);
         if (user_orders != null) {
             List<Order> orders = user_orders.stream().filter(filtered_order -> filtered_order.getRestaurantName().equals(order.getRestaurantName())).collect(Collectors.toList());

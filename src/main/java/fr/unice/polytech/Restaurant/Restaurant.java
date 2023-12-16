@@ -1,5 +1,6 @@
 package fr.unice.polytech.Restaurant;
 
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Order;
@@ -57,8 +58,8 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     // Méthode pour obtenir la capacité à une heure spécifique
     public int getHourlyCapacity(int hour) {
         return hourlyCapacities.getOrDefault(hour, capacity);
-
     }
+
     private void initializeHourlyCapacities() {
         List<Integer> openingHoursList = horaires.getOpeningHours();
         for (int hour : openingHoursList) {
@@ -97,7 +98,7 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     public List<Menu> getListemenu(Role role) {
         List<Menu> newMenuList = new ArrayList<>();
         for(Menu menu : listemenu){
-            Menu menu2 = new Menu(menu.getItemName(), menu.getPrice()*roleDiscount.get(role));
+            Menu menu2 = new Menu(menu.getItemName(), menu.getPrice()*roleDiscount.get(role), menu.getMenuType());
             newMenuList.add(menu2);
         }
         return newMenuList;

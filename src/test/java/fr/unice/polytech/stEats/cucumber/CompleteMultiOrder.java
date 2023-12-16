@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -51,7 +52,7 @@ public class CompleteMultiOrder {
     public void the_user_order_a_at_for_euros(String userEmail, String menuName, String restaurantName, Double menuPrice) {
         userManager.add_user( new User(userEmail,userEmail, Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurantName);
-        Menu menu = new Menu(menuName, menuPrice);
+        Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
         groupeOrderId = orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL);
@@ -61,7 +62,7 @@ public class CompleteMultiOrder {
     public void the_user_order_a_at_for_euros_on_his_friend_order(String userEmail, String menuName, String restaurantName, Double menuPrice) {
         userManager.add_user( new User(userEmail,userEmail, Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurantName);
-        Menu menu = new Menu(menuName, menuPrice);
+        Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
         orderManager.placeOrder(userEmail, order, this.groupeOrderId);

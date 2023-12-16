@@ -1,6 +1,7 @@
 package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -20,7 +21,6 @@ import org.junit.Assert;
 import java.util.List;
 
 public class MenuPriceAdaptToUserRole {
-
     private RestaurantManager restaurantManager;
     private UserManager userManager;
     private StatisticsManager statisticsManager;
@@ -34,7 +34,7 @@ public class MenuPriceAdaptToUserRole {
     public void the_application_is_readyyy() {
         restaurantManager = new RestaurantManager();
         Restaurant restaurant = new Restaurant("BK");
-        restaurant.addMenu(new Menu("steakHouse", 100));
+        restaurant.addMenu(new Menu("steakHouse", 100, MenuType.BASIC_MENU));
         restaurantManager.addRestaurant(restaurant);
         userManager = new UserManager();
         notificationCenter = new NotificationCenter(userManager);

@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManageRestaurantOpeningdefs {
-
-
     private RestaurantManager restaurantmanager;
     private Restaurant restaurant1;
     private Restaurant restaurant2;

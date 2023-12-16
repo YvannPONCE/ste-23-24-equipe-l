@@ -1,5 +1,6 @@
 package fr.unice.polytech.stEats.cucumber;
 
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -73,8 +74,8 @@ public class ManageRestaurantInformationdefs {
     }
     @When("I add a new item to the menu:{string} priced at {int}")
     public void i_add_a_new_item_to_the_menu_priced_at(String string, Integer int1) {
-        restaurant.getListemenu().add(new Menu("chicken nuggets", 8));
-        Menu menuwings=new Menu(string,int1);
+        restaurant.getListemenu().add(new Menu("chicken nuggets", 8, MenuType.BASIC_MENU));
+        Menu menuwings=new Menu(string,int1, MenuType.BASIC_MENU);
         restaurant.getListemenu().add(menuwings);
 
     }

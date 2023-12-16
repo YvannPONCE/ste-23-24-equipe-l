@@ -1,5 +1,6 @@
 package fr.unice.polytech.stEats.cucumber;
 
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
@@ -16,7 +17,7 @@ public class ManageRestaurant {
     @Given("a restaurant {string} that is always closed and that offers {string} for {double} euros exists")
     public void a_restaurant_that_is_always_closed_and_that_offers_for_euros_exists(String restaurant_name, String menu_name, Double menu_price) {
         Restaurant restaurant = new Restaurant(restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         restaurant.getListemenu().add(menu);
         this.global_restaurant = restaurant;
     }
@@ -41,7 +42,7 @@ public class ManageRestaurant {
     @Given("the restaurant {string} is in the restaurant manager with menu {string} for {double} euros")
     public void the_restaurant_is_in_the_restaurant_manager_with_menu_for_euros(String restaurant_name, String menu_name, Double menu_price) {
         Restaurant restaurant = new Restaurant(restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         restaurant.getListemenu().add(menu);
         this.global_restaurant = restaurant;
         RestaurantManager restaurantManager = new RestaurantManager();
