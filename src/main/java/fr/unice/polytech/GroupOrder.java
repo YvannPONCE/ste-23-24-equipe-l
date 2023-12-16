@@ -18,7 +18,7 @@ public class GroupOrder {
     Locations delivery_location;
     LocalDateTime deliveryTime;
     public HashMap<String, List<Order>> globalOrders;
-    private int numberOfParticipants; //acts as a counter for the number of participants in the group order or afterWork
+    private int numberOfParticipants = 0; //acts as a counter for the number of participants in the group order or afterWork
 
     public GroupOrder(UUID uuid, Locations delivery_location, LocalDateTime deliveryTime) {
         this.uuid = uuid;
@@ -60,6 +60,7 @@ public class GroupOrder {
 
         if(order.getMenus().get(0).getMenuType() == MenuType.AFTERWORK_MENU){
             order.getOrderState().setStatus(Status.PROCESSING);
+            this.numberOfParticipants += order.getMenus().get(0).getNumberOfParticipants();
         }
 
         List<Order> user_orders = globalOrders.get(user_email);
