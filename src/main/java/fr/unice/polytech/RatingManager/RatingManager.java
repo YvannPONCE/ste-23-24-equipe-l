@@ -19,7 +19,7 @@ public class RatingManager {
             Rating.put(email, rates);
         }
         else {
-            rates.add(rate.doubleValue());
+            rates.add(rate);
         }
     }
 
