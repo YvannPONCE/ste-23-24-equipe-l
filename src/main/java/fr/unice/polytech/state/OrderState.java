@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OrderState {
+public class OrderState  {
 
     private Status status ;
     private IOrderState state ;
