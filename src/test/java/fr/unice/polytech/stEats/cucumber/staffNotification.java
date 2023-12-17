@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -53,7 +54,7 @@ public class staffNotification {
         Restaurant restaurant = new Restaurant("KFC");
         restaurantManager.addRestaurant(restaurant);
 
-        Menu menu = new Menu("menu 2", 7.5);
+        Menu menu = new Menu("menu 2", 7.5, MenuType.BASIC_MENU);
         Order order1 = new Order(restaurant.getName());
         order1.add_menu(menu);
         String location = deliveryManager.getLocations().get(0);

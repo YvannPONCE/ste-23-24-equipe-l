@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.OrderManager.OrderManager;
@@ -44,7 +45,7 @@ public class CancelOrder {
         restaurantManager.add_restaurant(restaurant);
         this.menuPrice = menuPrice;
 
-        Menu menu = new Menu(menuName, menuPrice);
+        Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
         Order order = new Order(restaurantName);
         order.add_menu(menu);
 

@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -60,7 +61,7 @@ public class ManageRestaurantCapacitydefs {
     @When("user attempt to choose the {int}:{int} PM time slot")
     public void user_attempt_to_choose_the_pm_time_slot(Integer int1, Integer int2) {
         Order order = new Order(restaurant.getName());
-        Menu menu = new Menu("nuggets", 8.00);
+        Menu menu = new Menu("nuggets", 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
 
@@ -91,7 +92,7 @@ public class ManageRestaurantCapacitydefs {
     @When("user order a {string} in the restaurant")
     public void user_order_a_in_the_restaurant(String string) {
          order = new Order(restaurant2.getName());
-        Menu menu = new Menu(string, 8.00);
+        Menu menu = new Menu(string, 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
 
@@ -102,7 +103,7 @@ public class ManageRestaurantCapacitydefs {
     public void user_have_a_created_order_status() {
         Assert.assertFalse(orderId.equals(null));
         Assert.assertEquals(order.getOrderState().getStatus(), Status.CREATED);
-        Assert.assertEquals(restaurant2.getHourlyCapacity(LocalDateTime.now().getHour()),9);
+        Assert.assertEquals(restaurant2.getHourlyCapacity(LocalDateTime.now().minusHours(2).getHour()),9);
     }
 
 
@@ -126,7 +127,7 @@ public class ManageRestaurantCapacitydefs {
         order = new Order(restaurant2.getName());
         order2=new Order(restaurant2.getName());
 
-        Menu menu = new Menu(string, 8.00);
+        Menu menu = new Menu(string, 8.00, MenuType.BASIC_MENU);
 
             order2.add_menu(menu);
         order.add_menu(menu);
@@ -141,7 +142,7 @@ public class ManageRestaurantCapacitydefs {
         Assert.assertFalse(orderId2.equals(null));
         Assert.assertEquals(order.getOrderState().getStatus(), Status.CREATED);
         Assert.assertEquals(order2.getOrderState().getStatus(), Status.CREATED);
-        Assert.assertEquals(Optional.of(restaurant2.getHourlyCapacity(LocalDateTime.now().getHour())),Optional.of(int1));
+        Assert.assertEquals(Optional.of(restaurant2.getHourlyCapacity(LocalDateTime.now().minusHours(2).getHour())),Optional.of(int1));
     }
 
     @Given("user {string} ordered in a  Restaurant {string} with a capacity of {int} menus per hour with available slot")
@@ -164,7 +165,7 @@ public class ManageRestaurantCapacitydefs {
     @When("user order a {string} and validate order receipt")
     public void user_order_a_and_validate_order_receipt(String string) {
         Order order = new Order(restaurant.getName());
-        Menu menu = new Menu(string, 8.00);
+        Menu menu = new Menu(string, 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
 
@@ -177,7 +178,7 @@ public class ManageRestaurantCapacitydefs {
     @Then("the restaurant is set to {int}")
     public void the_restaurant_is_set_to(Integer int1) {
         Assert.assertFalse(orderId.equals(null));
-        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.now().getHour()));
+        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.now().minusHours(2).getHour()));
     }
 
 }

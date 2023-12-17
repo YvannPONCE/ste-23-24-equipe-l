@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.*;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -18,9 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
-public class  ManageCapacityatachoosenSlot {
-
-
+public class ManageCapacityatachoosenSlot {
     private UserManager userManager;
     private String user_email;
     private User user;
@@ -52,20 +51,21 @@ public class  ManageCapacityatachoosenSlot {
     @When("user choose a  {int} nuggets menu")
     public void user_choose_a_nuggets_menu(Integer int1) {
         order = new Order(restaurant.getName());
-        Menu menu = new Menu("chicken nuggets", 8.00);
+        Menu menu = new Menu("chicken nuggets", 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
-
-
         orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
     }
     @Then("capacity at this restaurant should be {int}")
     public void capacity_at_this_restaurant_should_be(Integer int1) {
-        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.from(localDateTime).getHour()));
+        Assert.assertEquals(int1.intValue(), restaurant.getHourlyCapacity(LocalDateTime.from(localDateTime).minusHours(2).getHour()));
     }
 
     @Given("user {string} order at {int}:{int} at {string} but the chosen slot is full")
     public void user_order_at_at_but_the_chosen_slot_is_full(String string, Integer int1, Integer int2, String string2) {
+        time = LocalTime.of(int1, int2);
+        localDateTime = LocalDateTime.of(LocalDate.now(), time);
+
         userManager = new UserManager();
         notificationCenter = new NotificationCenter(userManager);
         this.user_email = string;
@@ -74,20 +74,17 @@ public class  ManageCapacityatachoosenSlot {
         restaurant = new Restaurant(string2);
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
-        restaurant.setHourlyCapacity(16,0);
-        time = LocalTime.of(int1, int2);
-
-        localDateTime = LocalDateTime.of(LocalDate.now(), time);
+        restaurant.setHourlyCapacity(localDateTime.minusHours(2).getHour(), 0);
 
         orderManager = new OrderManager(restaurantManager, userManager, new StatisticsManager(restaurantManager), notificationCenter);
     }
     @When("user order his demand is rejected")
     public void user_order_his_demand_is_rejected() {
         order = new Order(restaurant.getName());
-        Menu menu = new Menu("chicken nuggets", 8.00);
+        Menu menu = new Menu("chicken nuggets", 8.00, MenuType.BASIC_MENU);
         order.add_menu(menu);
         order.add_menu(menu);
-        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, LocalDateTime.from(localDateTime));
+        orderId = orderManager.placeOrder(user_email, order, Locations.HALL_PRINCIPAL, localDateTime);
 
 
     }

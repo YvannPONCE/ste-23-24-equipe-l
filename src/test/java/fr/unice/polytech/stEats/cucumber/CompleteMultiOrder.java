@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -21,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 
 public class CompleteMultiOrder {
 
-    private UUID orderId;
     private OrderManager orderManager;
     private RestaurantManager restaurantManager;
     private UserManager userManager;
@@ -30,7 +30,7 @@ public class CompleteMultiOrder {
     private DeliveryManager deliveryManager;
     private NotificationCenter notificationCenter;
     private  User deliveryMan;
-    private User user;
+    UUID groupeOrderId;
 
     @Given("restaurants {string} and {string} use st-eats and one delivery man {string}")
     public void restaurants_and_use_st_eats_and_one_delivery_man(String restaurantName1, String restaurantName2, String deliveryManName) {
@@ -52,49 +52,51 @@ public class CompleteMultiOrder {
     public void the_user_order_a_at_for_euros(String userEmail, String menuName, String restaurantName, Double menuPrice) {
         userManager.add_user( new User(userEmail,userEmail, Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurantName);
-        Menu menu = new Menu(menuName, menuPrice);
+        Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
-        orderId = orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL);
+        groupeOrderId = orderManager.placeOrder(userEmail, order, Locations.HALL_PRINCIPAL);
     }
 
     @Given("the user {string} order a {string} at {string} for {double} euros on his friend order")
     public void the_user_order_a_at_for_euros_on_his_friend_order(String userEmail, String menuName, String restaurantName, Double menuPrice) {
         userManager.add_user( new User(userEmail,userEmail, Role.CUSTOMER_STUDENT));
         Order order = new Order(restaurantName);
-        Menu menu = new Menu(menuName, menuPrice);
+        Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
-        orderManager.placeOrder(userEmail, order, this.orderId);
+        orderManager.placeOrder(userEmail, order, this.groupeOrderId);
+
+        Assert.assertTrue(orderManager.getCurrentOrders(groupeOrderId).getGlobalOrders().containsKey(userEmail));
     }
 
     @Given("the user {string} pay his order")
     public void the_user_pay_his_order(String userEmail) {
         orderManager.payOrders(userEmail, "7936 3468 9302 8371");
-        Assert.assertNotEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
+        Assert.assertNotEquals(Status.PAID, orderManager.getCurrentOrders(this.groupeOrderId).getOrderState().getStatus());
     }
     @Given("the user {string} pay his order in second")
     public void the_user_pay_his_order_in_second(String userEmail) {
         orderManager.payOrders(userEmail, "7936 3468 9302 8371");
-        assertEquals(Status.PAID, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
+        assertEquals(Status.PAID, orderManager.getCurrentOrders(this.groupeOrderId).getOrderState().getStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string}")
     public void the_simple_order_is_marked_ready_by_the_restaurant(String restaurantName) {
-        orderManager.processingOrder(orderId, restaurant1.getName());
-        orderManager.processingOrder(orderId, restaurant2.getName());
-        orderManager.setOrderReady(orderId, restaurantName);
-        Assert.assertNotEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
+        orderManager.processingOrder(groupeOrderId, restaurant1.getName());
+        orderManager.processingOrder(groupeOrderId, restaurant2.getName());
+        orderManager.setOrderReady(groupeOrderId, restaurantName);
+        Assert.assertNotEquals(Status.READY, orderManager.getCurrentOrders(this.groupeOrderId).getOrderState().getStatus());
     }
     @Given("The simple order is marked ready by the restaurant {string} in second")
     public void the_simple_order_is_marked_ready_by_the_restaurant_in_second(String restaurantName) {
-        orderManager.setOrderReady(orderId, restaurantName);
-        Assert.assertEquals(Status.READY, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
+        orderManager.setOrderReady(groupeOrderId, restaurantName);
+        Assert.assertEquals(Status.READY, orderManager.getCurrentOrders(this.groupeOrderId).getOrderState().getStatus());
     }
     @When("user {string} confirm the delivery")
     public void user_confirm_the_delivery(String userEmail) {
 
         deliveryManager.validateOrder(deliveryMan.getEmail());
-        Assert.assertEquals(Status.DELIVERED, orderManager.getCurrentOrders(this.orderId).getOrderState().getStatus());
+        Assert.assertEquals(Status.DELIVERED, orderManager.getCurrentOrders(this.groupeOrderId).getOrderState().getStatus());
     }
     @When("delivery man {string} confirm the delivery")
     public void delivery_man_confirm_the_delivery(String deliveryManName) {

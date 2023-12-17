@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -61,7 +62,7 @@ public class checkOrderHistorydefs {
             notificationCenter = new NotificationCenter(userManager);
 
             oldOrder = new Order(restaurantName);
-            oldOrder.add_menu(new Menu(item, price));
+            oldOrder.add_menu(new Menu(item, price, MenuType.BASIC_MENU));
             orderId = orderManager.placeOrder(user.getEmail(), oldOrder, Locations.HALL_PRINCIPAL);
 
             orderManager.payOrders(user.getEmail(), "7936 3468 9302 8371");

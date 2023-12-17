@@ -1,5 +1,6 @@
 package fr.unice.polytech;
 
+import fr.unice.polytech.Enum.MenuType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +10,22 @@ import java.util.Objects;
 public class Menu {
     private String itemName;
     private double price;
+    private MenuType menuType;
 
     public Menu(String itemName, double price) {
         this.itemName = itemName;
+        this.menuType = MenuType.BASIC_MENU;
         this.price = price;
+    }
+
+    public Menu(String itemName, double price, MenuType menuType) {
+        this.itemName = itemName;
+        this.menuType = menuType;
+        if(this.menuType == MenuType.AFTERWORK_MENU) {
+            this.price = 0;
+        } else {
+            this.price = price;
+        }
     }
 
     public Menu(Menu menu) {

@@ -1,6 +1,7 @@
 package fr.unice.polytech;
 
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.state.OrderState;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class GroupOrder {
     Locations delivery_location;
     LocalDateTime deliveryTime;
     public HashMap<String, List<Order>> globalOrders;
+    private int numberOfParticipants = 0; //acts as a counter for the number of participants in the group order or afterWork
 
     public GroupOrder(UUID uuid, Locations delivery_location, LocalDateTime deliveryTime) {
         this.uuid = uuid;
@@ -237,6 +239,10 @@ public class GroupOrder {
         }
     }
 
+
+    public List<String> getUsers() {
+        return globalOrders.keySet().stream().collect(Collectors.toList());
+    }
 }
 
 

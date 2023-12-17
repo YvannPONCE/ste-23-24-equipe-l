@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -56,7 +57,7 @@ public class CompleteSimpleOrder {
         userManager.add_user(user);
 
         Order order = new Order(restaurant_name);
-        Menu menu = new Menu(menu_name, menu_price);
+        Menu menu = new Menu(menu_name, menu_price, MenuType.BASIC_MENU);
         order.add_menu(menu);
 
         orderId = orderManager.placeOrder(user.getEmail(), order, Locations.HALL_PRINCIPAL);

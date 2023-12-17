@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -36,7 +37,7 @@ public class DeliveryValidation {
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         Order order = new Order(restaurant.getName());
-        order.add_menu(new Menu("Bucket",21));
+        order.add_menu(new Menu("Bucket",21, MenuType.BASIC_MENU));
         notificationCenter = new NotificationCenter(userManager);
         StatisticsManager statisticsManager = new StatisticsManager(restaurantManager);
         orderManager = new OrderManager(restaurantManager, userManager, statisticsManager, notificationCenter);

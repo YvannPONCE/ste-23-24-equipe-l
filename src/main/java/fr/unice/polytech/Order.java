@@ -40,6 +40,10 @@ public class Order {
 
     public void add_menu(Menu menu)
     {
+        if(!(this.menus.isEmpty()) && menu.getMenuType() != this.menus.get(0).getMenuType())
+        {
+            throw new IllegalArgumentException("You can't add a menu of a different type");
+        }
         this.menus.add(menu);
         this.totalPrice += menu.getPrice();
     }

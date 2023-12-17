@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -47,7 +48,7 @@ public class DeliveryManNotificationdefs {
     this.notificationCenter=new NotificationCenter(orderManager.userManager);
 
     order = new Order(string2);
-        order.add_menu(new Menu("chicken nuggets", 5.50));
+        order.add_menu(new Menu("chicken nuggets", 5.50, MenuType.BASIC_MENU));
 
 
         orderId = orderManager.placeOrder(string, order, Locations.HALL_PRINCIPAL);

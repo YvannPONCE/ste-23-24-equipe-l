@@ -3,6 +3,7 @@ package fr.unice.polytech.stEats.cucumber;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
@@ -37,9 +38,9 @@ public class ConsultStatistics {
     @Given("his restaurant {string} has complete multiple orders")
     public void his_restaurant_has_complete_multiple_orders(String restaurantName) {
         restaurant = new Restaurant(restaurantName);
-        restaurant.addMenu(new Menu("bigMac", 7.5));
+        restaurant.addMenu(new Menu("bigMac", 7.5, MenuType.BASIC_MENU));
         Restaurant restaurant2 = new Restaurant("Second restaurant");
-        restaurant2.addMenu(new Menu("tartare", 15.5));
+        restaurant2.addMenu(new Menu("tartare", 15.5, MenuType.BASIC_MENU));
         restaurantManager = new RestaurantManager();
         restaurantManager.add_restaurant(restaurant);
         statisticsManager = new StatisticsManager(restaurantManager);
@@ -56,9 +57,9 @@ public class ConsultStatistics {
         Order order2 = new Order(restaurantName);
         Order order3 = new Order(restaurantName);
 
-        order1.add_menu(new Menu("bigMac", 7.5));
-        order2.add_menu(new Menu("bigMac", 7.5));
-        order3.add_menu(new Menu("tartare", 15.5));
+        order1.add_menu(new Menu("bigMac", 7.5, MenuType.BASIC_MENU));
+        order2.add_menu(new Menu("bigMac", 7.5, MenuType.BASIC_MENU));
+        order3.add_menu(new Menu("tartare", 15.5, MenuType.BASIC_MENU));
             orderManager.userManager.add_user(customer1);
             orderManager.userManager.add_user(customer2);
         UUID orderId1 = orderManager.placeOrder(customer1.getEmail() ,order1, Locations.HALL_PRINCIPAL);
@@ -86,7 +87,7 @@ public class ConsultStatistics {
 
     @Then("I see a list of delivery locations and their popularity")
     public void i_see_a_list_of_delivery_locations_and_their_popularity() {
-        Assert.assertEquals(5, statisticsManager.get_popular_locations().size());
+        Assert.assertEquals(6, statisticsManager.get_popular_locations().size());
         Assert.assertEquals(2, statisticsManager.get_popular_locations().get(Locations.BATIMENT_E).intValue());
         Assert.assertEquals(1, statisticsManager.get_popular_locations().get(Locations.HALL_PRINCIPAL).intValue());
     }
@@ -99,8 +100,8 @@ public class ConsultStatistics {
     public void the_manager_get_the_most_populars_menus() {
         HashMap<Menu, Integer> menuStatistics = statisticsManager.get_popular_menus(restaurant.getName());
         Assert.assertEquals(2, menuStatistics.size());
-        Assert.assertEquals(2, menuStatistics.get(new Menu("bigMac", 7.5)).intValue());
-        Assert.assertEquals(1, menuStatistics.get(new Menu("tartare", 15.5)).intValue());
+        Assert.assertEquals(2, menuStatistics.get(new Menu("bigMac", 7.5, MenuType.BASIC_MENU)).intValue());
+        Assert.assertEquals(1, menuStatistics.get(new Menu("tartare", 15.5, MenuType.BASIC_MENU)).intValue());
     }
 
 

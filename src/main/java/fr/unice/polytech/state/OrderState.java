@@ -16,6 +16,9 @@ public class OrderState  {
         this.status = this.state.getStatus();
     }
 
+    public void SetProcessingForAfterWork(){
+        this.status = Status.PROCESSING;
+    }
 
     public void next() {
         state.next(this);

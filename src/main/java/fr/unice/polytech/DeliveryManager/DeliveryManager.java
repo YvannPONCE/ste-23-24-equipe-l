@@ -121,6 +121,7 @@ public class DeliveryManager implements  DeliveryManagerCampusManager, DeliveryM
         }
     }
 
-
-
+    public GroupOrder getOrder(String deliveryMan) {
+        return deliveryMenOrders.get(deliveryMan);
+    }
 }

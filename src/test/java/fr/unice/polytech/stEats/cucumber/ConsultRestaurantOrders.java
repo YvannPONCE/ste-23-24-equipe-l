@@ -2,6 +2,7 @@ package fr.unice.polytech.stEats.cucumber;
 
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Menu;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -49,7 +50,7 @@ public class ConsultRestaurantOrders {
     public void the_restaurant_has_complete_orders_of_a_menu_at_euros(Integer n, String menuName, Double menuPrice) {
         for(int i=0; i<n; ++i)
         {
-            Menu menu = new Menu(menuName, menuPrice);
+            Menu menu = new Menu(menuName, menuPrice, MenuType.BASIC_MENU);
             Order order = new Order(restaurant.getName());
             order.add_menu(menu);
 
