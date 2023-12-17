@@ -12,6 +12,7 @@ import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.state.OrderState;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.mockito.internal.matchers.Or;
 
 import java.time.LocalDate;
@@ -112,6 +113,10 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     }
 
     public UUID placeOrder(User user, Order order, int numberOfParticipants){
+        if(numberOfParticipants > order.getMenus().get(0).getMaximumAfterWorkAttendees()){
+            order.getOrderState().setStatus(Status.CANCELED);
+            throw new IllegalArgumentException("Number of participants is too high");
+        }
         UUID uuid = UUID.randomUUID();
         order.setId(uuid);
         GroupOrder groupOrder = new GroupOrder(uuid, Locations.RESTAURANT, null);
