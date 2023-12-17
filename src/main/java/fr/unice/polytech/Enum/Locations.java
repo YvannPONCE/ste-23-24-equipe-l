@@ -5,6 +5,6 @@ public enum Locations  {
     BATIMENT_E,
     BATIMENT_A,
     BATIMENT_B,
-    BATIMENT_C;
-
+    BATIMENT_C,
+    RESTAURANT;
 }

@@ -129,4 +129,13 @@ public class Restaurant implements RestaurantUser, RestaurantManager, Restaurant
     public LocalDate getDiscountExpirationDate(String mail) {
         return discountedUsers.get(mail);
     }
+
+    public Menu getMenu(String menuName) {
+        for (Menu menu : listemenu) {
+            if (menu.getItemName().equals(menuName)) {
+                return menu;
+            }
+        }
+        return null;
+    }
 }

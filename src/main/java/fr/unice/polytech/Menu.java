@@ -11,7 +11,6 @@ public class Menu {
     private String itemName;
     private double price;
     private MenuType menuType;
-    private int numberOfParticipants = 0 ; //in case of afterwork
 
     public Menu(String itemName, double price) {
         this.itemName = itemName;
@@ -24,17 +23,6 @@ public class Menu {
         this.menuType = menuType;
         if(this.menuType == MenuType.AFTERWORK_MENU) {
             this.price = 0;
-        } else {
-            this.price = price;
-        }
-    }
-
-    public Menu(String itemName, double price, MenuType menuType, int numberOfParticipants) {
-        this.itemName = itemName;
-        this.menuType = menuType;
-        if(this.menuType == MenuType.AFTERWORK_MENU) {
-            this.price = 0;
-            this.numberOfParticipants = numberOfParticipants;
         } else {
             this.price = price;
         }
