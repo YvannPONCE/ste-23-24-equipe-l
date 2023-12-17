@@ -10,6 +10,7 @@ import fr.unice.polytech.Restaurant.Restaurant;
 import fr.unice.polytech.RestaurantManager.CapacityObserver;
 import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
+import fr.unice.polytech.state.OrderState;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
 import org.mockito.internal.matchers.Or;
 
@@ -110,13 +111,17 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         notificationCenter.order_confirmed(orderID, deliveryLocation, groupOrder.getDeliveryTime(), user.getEmail());
     }
 
-    private void placeOrder(User user, Order order, LocalDateTime afterWorkTime, Integer numberOfParticipants){
+    public UUID placeOrder(User user, Order order, int numberOfParticipants){
         UUID uuid = UUID.randomUUID();
         order.setId(uuid);
-        GroupOrder groupOrder = new GroupOrder(uuid, Locations.RESTAURANT, afterWorkTime);
+        GroupOrder groupOrder = new GroupOrder(uuid, Locations.RESTAURANT, null);
         groupOrder.addOrder(user.getEmail(), order);
         groupOrder.setNumberOfParticipants(numberOfParticipants);
+        OrderState state = new OrderState();
+        state.SetProcessingForAfterWork();
+        groupOrder.setOrderState(state);
         this.groupOrders.add(groupOrder);
+        return uuid;
     }
 
     public List<Order> getCurrentOrders(UUID order_id, String userEmail) {
