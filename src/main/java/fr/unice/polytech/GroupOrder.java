@@ -53,15 +53,6 @@ public class GroupOrder {
         if (order.getMenus().size() < 1) {
             return false;
         }
-
-        if(!globalOrders.containsKey(user_email)){
-            this.numberOfParticipants++;
-        }
-
-        if(order.getMenus().get(0).getMenuType() == MenuType.AFTERWORK_MENU){
-            order.getOrderState().setStatus(Status.PROCESSING);
-        }
-
         List<Order> user_orders = globalOrders.get(user_email);
         if (user_orders != null) {
             List<Order> orders = user_orders.stream().filter(filtered_order -> filtered_order.getRestaurantName().equals(order.getRestaurantName())).collect(Collectors.toList());
@@ -233,6 +224,21 @@ public class GroupOrder {
                 "globalOrders=" + globalOrders +
                 '}';
     }
+
+    public void modifyOrderLocation(String userMail ,Locations locations) {
+        List<Order> orders = globalOrders.get(userMail);
+        setDelivery_location(locations);
+        }
+
+    public void modifyOrderTime(String userMail ,Date deliveryTime) {
+        List<Order> orders = globalOrders.get(userMail);
+        if (orders == null) return;
+        for (Order order1 : orders) {
+            order1.setCreation_time(deliveryTime);
+
+        }
+    }
+
 
     public List<String> getUsers() {
         return globalOrders.keySet().stream().collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package fr.unice.polytech.DeliveryManager;
 
+import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.GroupOrder;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
