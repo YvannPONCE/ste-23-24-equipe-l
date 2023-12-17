@@ -156,23 +156,36 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             }
         }
     }
-    public void modifyOrderTime(UUID order_id, String user_email,Date deliveryTime) throws OrderAlreadyPaidException {
+    public void modifyOrderTime(UUID order_id, String user_email, LocalDateTime newDeliveryTime) throws OrderAlreadyPaidException {
         List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))
                 .collect(Collectors.toList());
 
         if (!group_orders.isEmpty()) {
             for (GroupOrder groupOrder : group_orders) {
-                // Check if the order has been paid for and throw an exception if it has
-                if (groupOrder.getOrderState().getStatus().equals(Status.PAID)) {
+                Order order = groupOrder.getOrders(user_email).stream()
+                        .filter(o -> o.getId().equals(order_id))
+                        .findFirst()
+                        .orElse(null);
+
+                if (order.getOrderState().getStatus().equals(Status.PAID)) {
                     throw new OrderAlreadyPaidException("Order with ID " + order_id + " has already been paid for and cannot be modified.");
                 }
 
-                // Continue with the modification
-                groupOrder.modifyOrderTime(user_email,deliveryTime);
+                Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurantName());
+
+                capacityCalculator = new RestaurantCapacityCalculator(restaurant);
+                if (!capacityCalculator.canPlaceOrder(order.getMenus().size(), newDeliveryTime)) {
+                    newDeliveryTime = capacityCalculator.getNextSlotChosen(newDeliveryTime);
+                }
+
+                capacityCalculator.placeOrderSlot(order.getMenus().size(), newDeliveryTime);
+                groupOrder.setDeliveryTime(newDeliveryTime);
+
             }
         }
     }
+
 
     public GroupOrder getCurrentOrders(UUID order_id) {
         List<GroupOrder> group_orders = this.groupOrders.stream()
@@ -323,4 +336,5 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         GroupOrder groupOrder = getCurrentOrders(orderId);
         groupOrder.setOrderProcessing(restaurantName);
     }
+
 }

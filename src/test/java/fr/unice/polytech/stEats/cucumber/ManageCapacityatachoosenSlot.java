@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
-public class ManageCapacityatachoosenSlot {
+public class  ManageCapacityatachoosenSlot {
 
 
     private UserManager userManager;
