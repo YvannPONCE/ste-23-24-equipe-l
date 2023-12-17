@@ -110,6 +110,15 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         notificationCenter.order_confirmed(orderID, deliveryLocation, groupOrder.getDeliveryTime(), user.getEmail());
     }
 
+    private void placeOrder(User user, Order order, LocalDateTime afterWorkTime, Integer numberOfParticipants){
+        UUID uuid = UUID.randomUUID();
+        order.setId(uuid);
+        GroupOrder groupOrder = new GroupOrder(uuid, Locations.RESTAURANT, afterWorkTime);
+        groupOrder.addOrder(user.getEmail(), order);
+        groupOrder.setNumberOfParticipants(numberOfParticipants);
+        this.groupOrders.add(groupOrder);
+    }
+
     public List<Order> getCurrentOrders(UUID order_id, String userEmail) {
         List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))

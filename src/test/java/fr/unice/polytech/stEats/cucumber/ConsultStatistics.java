@@ -87,7 +87,7 @@ public class ConsultStatistics {
 
     @Then("I see a list of delivery locations and their popularity")
     public void i_see_a_list_of_delivery_locations_and_their_popularity() {
-        Assert.assertEquals(5, statisticsManager.get_popular_locations().size());
+        Assert.assertEquals(6, statisticsManager.get_popular_locations().size());
         Assert.assertEquals(2, statisticsManager.get_popular_locations().get(Locations.BATIMENT_E).intValue());
         Assert.assertEquals(1, statisticsManager.get_popular_locations().get(Locations.HALL_PRINCIPAL).intValue());
     }

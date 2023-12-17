@@ -60,7 +60,6 @@ public class GroupOrder {
 
         if(order.getMenus().get(0).getMenuType() == MenuType.AFTERWORK_MENU){
             order.getOrderState().setStatus(Status.PROCESSING);
-            this.numberOfParticipants += order.getMenus().get(0).getNumberOfParticipants();
         }
 
         List<Order> user_orders = globalOrders.get(user_email);
