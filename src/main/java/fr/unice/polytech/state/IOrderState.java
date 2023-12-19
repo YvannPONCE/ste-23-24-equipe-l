@@ -7,6 +7,7 @@ import lombok.Getter;
 public abstract class IOrderState {
 
         protected Status status ;
+
         public abstract void next(OrderState orderState);
 
 }

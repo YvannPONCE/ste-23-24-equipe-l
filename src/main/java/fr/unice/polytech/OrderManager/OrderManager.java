@@ -4,6 +4,7 @@ import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
 import fr.unice.polytech.Enum.Status;
+import fr.unice.polytech.Exception.OrderAlreadyPaidException;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
 import fr.unice.polytech.Restaurant.Restaurant;
 
@@ -12,8 +13,6 @@ import fr.unice.polytech.RestaurantManager.RestaurantCapacityCalculator;
 import fr.unice.polytech.RestaurantManager.RestaurantManager;
 import fr.unice.polytech.state.OrderState;
 import fr.unice.polytech.statisticsManager.StatisticManagerOrderManager;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.mockito.internal.matchers.Or;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -161,6 +160,51 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         return Collections.unmodifiableList(orders);
     }
 
+    public void modifyOrderLocation(UUID order_id, String user_email, Locations locations,Order order) throws OrderAlreadyPaidException {
+        List<GroupOrder> group_orders = this.groupOrders.stream()
+                .filter(group_order -> group_order.getUuid().equals(order_id))
+                .collect(Collectors.toList());
+        if (!group_orders.isEmpty()) {
+            for (GroupOrder groupOrder : group_orders) {
+                if (order.getOrderState().getStatus().equals(Status.PAID)) {
+                    throw new OrderAlreadyPaidException("Order with ID " + order_id + " has already been paid for and cannot be modified.");
+                } else {
+                    groupOrder.modifyOrderLocation(user_email, locations);
+                }
+            }
+        }
+    }
+    public void modifyOrderTime(UUID order_id, String user_email, LocalDateTime newDeliveryTime) throws OrderAlreadyPaidException {
+        List<GroupOrder> group_orders = this.groupOrders.stream()
+                .filter(group_order -> group_order.getUuid().equals(order_id))
+                .collect(Collectors.toList());
+
+        if (!group_orders.isEmpty()) {
+            for (GroupOrder groupOrder : group_orders) {
+                Order order = groupOrder.getOrders(user_email).stream()
+                        .filter(o -> o.getId().equals(order_id))
+                        .findFirst()
+                        .orElse(null);
+
+                if (order.getOrderState().getStatus().equals(Status.PAID)) {
+                    throw new OrderAlreadyPaidException("Order with ID " + order_id + " has already been paid for and cannot be modified.");
+                }
+
+                Restaurant restaurant = restaurantManager.getRestaurant(order.getRestaurantName());
+
+                capacityCalculator = new RestaurantCapacityCalculator(restaurant);
+                if (!capacityCalculator.canPlaceOrder(order.getMenus().size(), newDeliveryTime)) {
+                    newDeliveryTime = capacityCalculator.getNextSlotChosen(newDeliveryTime);
+                }
+
+                capacityCalculator.placeOrderSlot(order.getMenus().size(), newDeliveryTime);
+                groupOrder.setDeliveryTime(newDeliveryTime);
+
+            }
+        }
+    }
+
+
     public GroupOrder getCurrentOrders(UUID order_id) {
         List<GroupOrder> group_orders = this.groupOrders.stream()
                 .filter(group_order -> group_order.getUuid().equals(order_id))
@@ -211,12 +255,14 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
 
     public void setOrderReady(UUID orderID, String restaurant_name) {
         GroupOrder groupOrder;
+
         List<GroupOrder> groupOrders = this.groupOrders.stream()
                 .filter(groupOrder1 -> groupOrder1.getUuid() == orderID)
                 .collect(Collectors.toList());
         if(!groupOrders.isEmpty()) {
             groupOrder = groupOrders.get(0);
             groupOrder.setOrderReady(restaurant_name);
+
 
             if (groupOrder.isReady()) {
                 deliveryManager.addOrder(groupOrder);
@@ -239,6 +285,7 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
             groupOrder.validateOrderReceipt();
         }
     }
+
 
     public void setOrderAsClosed(UUID order_id) {
         GroupOrder groupOrder;
@@ -307,4 +354,5 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
         GroupOrder groupOrder = getCurrentOrders(orderId);
         groupOrder.setOrderProcessing(restaurantName);
     }
+
 }
