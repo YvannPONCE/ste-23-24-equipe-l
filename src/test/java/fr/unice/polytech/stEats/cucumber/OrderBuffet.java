@@ -46,7 +46,7 @@ public class OrderBuffet {
 
     @Given("a customer user {string}")
     public void a_customer_user(String user_email) {
-        this.user = new User(user_email, "password", Role.CUSTOMER_STUDENT);
+        this.user = new User(user_email, "password", Role.CUSTOMER_STAFF);
         this.userManager.add_user(this.user);
     }
     @When("the user places an order for the {string} menu")
