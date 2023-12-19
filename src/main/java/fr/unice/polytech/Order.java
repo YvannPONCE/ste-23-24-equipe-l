@@ -1,5 +1,6 @@
 package fr.unice.polytech;
 
+import fr.unice.polytech.Enum.MenuType;
 import fr.unice.polytech.state.OrderState;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,6 +44,12 @@ public class Order {
         if(!(this.menus.isEmpty()) && menu.getMenuType() != this.menus.get(0).getMenuType())
         {
             throw new IllegalArgumentException("You can't add a menu of a different type");
+        }
+        if(!this.menus.isEmpty() && this.menus.get(0).getMenuType() == MenuType.AFTERWORK_MENU){
+            throw new IllegalArgumentException("an afterwork order can only have one menu");
+        }
+        if(!this.menus.isEmpty() && this.menus.get(0).getMenuType() == MenuType.BUFFET_MENU){
+            throw new IllegalArgumentException("a buffet order can only have one menu");
         }
         this.menus.add(menu);
         this.totalPrice += menu.getPrice();
