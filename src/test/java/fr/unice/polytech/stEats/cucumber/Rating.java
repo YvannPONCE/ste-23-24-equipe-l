@@ -64,14 +64,9 @@ public class Rating {
         ratingManager.rate(username, rate);
     }
 
-    @Then("the rating by the delivery personnel is added to the reviews of user {string} with {int}")
-    public void the_rating_by_the_delivery_personnel_is_added_to_the_reviews_of_user_with(String user, Integer rate) {
-        Assert.assertEquals(rate, ratingManager.getRate(user), 0.01);
-    }
-
     @Then("the rating by the delivery personnel is added to the reviews of user {string} with {double}")
     public void the_rating_by_the_delivery_personnel_is_added_to_the_reviews_of_user_with(String user, Double rate) {
-        Assert.assertEquals(rate, ratingManager.getRate(user));
+        Assert.assertEquals(rate, ratingManager.getRate(user), 0.01);
     }
 
     @When("user {string} enters a rating to {string} for the user of {double}")
