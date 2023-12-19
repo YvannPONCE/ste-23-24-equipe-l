@@ -11,11 +11,19 @@ public class Menu {
     private String itemName;
     private double price;
     private MenuType menuType;
+    private int MaximumAfterWorkAttendees;
 
     public Menu(String itemName, double price) {
         this.itemName = itemName;
         this.menuType = MenuType.BASIC_MENU;
         this.price = price;
+    }
+
+    public Menu(String itemName, int MaximumAfterWorkAttendees) {
+        this.itemName = itemName;
+        this.menuType = MenuType.AFTERWORK_MENU;
+        this.MaximumAfterWorkAttendees = MaximumAfterWorkAttendees;
+        this.price = 0;
     }
 
     public Menu(String itemName, double price, MenuType menuType) {

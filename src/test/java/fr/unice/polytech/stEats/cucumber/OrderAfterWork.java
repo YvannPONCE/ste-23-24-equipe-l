@@ -33,14 +33,14 @@ public class OrderAfterWork {
     @Given("a restaurant that offers the afterwork menu {string}")
     public void a_restaurant_that_offers_the_afterwork_menu(String menu_name) {
         Restaurant restaurant = new Restaurant("restaurant");
-        restaurant.addMenu(new Menu(menu_name, 0.0, MenuType.AFTERWORK_MENU));
+        restaurant.addMenu(new Menu(menu_name, 66));
         this.restaurant = restaurant;
         this.restaurantManager = new RestaurantManager();
         this.restaurantManager.add_restaurant(this.restaurant);
         this.statisticsManager = new StatisticsManager(this.restaurantManager);
         this.userManager = new UserManager();
         this.notificationCenter = new NotificationCenter(this.userManager);
-        OrderManager orderManager = new OrderManager(null, null, null, null, null);
+        OrderManager orderManager = new OrderManager(this.restaurantManager, this.userManager, this.statisticsManager, this.deliveryManager, this.notificationCenter);
         this.orderManager = orderManager;
         this.menu_name = menu_name;
     }

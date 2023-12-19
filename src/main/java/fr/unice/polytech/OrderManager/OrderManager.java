@@ -112,6 +112,10 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     }
 
     public UUID placeOrder(User user, Order order, int numberOfParticipants){
+        if(numberOfParticipants > order.getMenus().get(0).getMaximumAfterWorkAttendees()){
+            order.getOrderState().setStatus(Status.CANCELED);
+            throw new IllegalArgumentException("Number of participants is too high");
+        }
         UUID uuid = UUID.randomUUID();
         order.setId(uuid);
         GroupOrder groupOrder = new GroupOrder(uuid, Locations.RESTAURANT, null);
