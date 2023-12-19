@@ -3,6 +3,8 @@ package fr.unice.polytech.OrderManager;
 import fr.unice.polytech.*;
 import fr.unice.polytech.DeliveryManager.DeliveryManager;
 import fr.unice.polytech.Enum.Locations;
+import fr.unice.polytech.Enum.MenuType;
+import fr.unice.polytech.Enum.Role;
 import fr.unice.polytech.Enum.Status;
 import fr.unice.polytech.Exception.OrderAlreadyPaidException;
 import fr.unice.polytech.NotificationCenter.NotificationCenter;
@@ -87,6 +89,12 @@ public class OrderManager  implements CapacityObserver, OrderManagerConnectedUse
     }
     private void placeOrder(User user, Order order, Restaurant restaurant, Locations deliveryLocation, LocalDateTime deliveryTime, UUID orderID)
     {
+        if(order.getMenus().get(0).getMenuType() == MenuType.BUFFET_MENU){
+            if(user.getRole() != Role.CUSTOMER_STAFF){
+                order.getOrderState().setStatus(Status.CANCELED);
+                throw new IllegalArgumentException("Only staff members can order buffet menus");
+            }
+        }
         order.setId(orderID);
         order.getOrderState().setStatus(Status.CREATED);
         GroupOrder groupOrder = groupOrders.stream()
