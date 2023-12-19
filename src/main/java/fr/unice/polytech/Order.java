@@ -45,11 +45,11 @@ public class Order {
         {
             throw new IllegalArgumentException("You can't add a menu of a different type");
         }
-        if(!this.menus.isEmpty() && menu.getMenuType() == MenuType.AFTERWORK_MENU){
-            throw new IllegalArgumentException("You can't add 2 afterworks to an existing order");
+        if(!this.menus.isEmpty() && this.menus.get(0).getMenuType() == MenuType.AFTERWORK_MENU){
+            throw new IllegalArgumentException("an afterwork order can only have one menu");
         }
-        if(!this.menus.isEmpty() && menu.getMenuType() == MenuType.BUFFET_MENU){
-            throw new IllegalArgumentException("You can't add 2 Buffets to an existing order");
+        if(!this.menus.isEmpty() && this.menus.get(0).getMenuType() == MenuType.BUFFET_MENU){
+            throw new IllegalArgumentException("a buffet order can only have one menu");
         }
         this.menus.add(menu);
         this.totalPrice += menu.getPrice();
